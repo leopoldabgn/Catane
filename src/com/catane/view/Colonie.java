@@ -1,4 +1,4 @@
-package com.catane.model;
+package com.catane.view;
 
 public class Colonie {
 

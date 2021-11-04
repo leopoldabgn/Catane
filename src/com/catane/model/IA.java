@@ -1,5 +1,5 @@
 package com.catane.model;
 
-public class IA {
+public class IA extends Joueur {
 
 }

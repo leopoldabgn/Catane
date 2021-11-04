@@ -1,5 +1,5 @@
 package com.catane.model;
 
-public class Plateau {
+public class Ville {
 
 }

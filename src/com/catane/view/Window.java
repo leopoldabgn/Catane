@@ -14,14 +14,14 @@ public class Window extends JFrame {
 		this.setSize(w, h);
 		this.setResizable(true);
 		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		setDefaultLookAndFeelDecorated(true);
 		//this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		
 		this.setLayout(new GridBagLayout());
 		
-		Plateau p = new Plateau(4);
+		Board p = new Board(4);
 		p.setPreferredSize(new Dimension((int)(w*0.65), (int)(h*0.65)));
 		
 		this.getContentPane().add(p);

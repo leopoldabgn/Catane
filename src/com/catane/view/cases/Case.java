@@ -53,6 +53,8 @@ public abstract class Case extends JPanel {
 		
 	}
 	
+	public abstract void gainRessources();
+	
 	public class Circle extends JPanel {
 		private static final long serialVersionUID = 1L;
 
@@ -65,8 +67,8 @@ public abstract class Case extends JPanel {
 				this.number.setForeground(Color.RED); // Couleur rouge pour le 6 et le 8
 			else
 				this.number.setForeground(Color.BLACK);
-			setOpaque(false); // Comme on va dessiner un rond, il ne faut pas qu'on voit les coins carrés du panel
-			setLayout(new GridBagLayout()); // Pour centrer les élements à l'intérieur
+			setOpaque(false); // Comme on va dessiner un rond, il ne faut pas qu'on voit les coins carrï¿½s du panel
+			setLayout(new GridBagLayout()); // Pour centrer les ï¿½lements ï¿½ l'intï¿½rieur
 			add(this.number); // On ajoute le JLabel au panel
 		}
 		

@@ -7,7 +7,15 @@ public class Pre extends Case {
 
 	public Pre(int number) {
 		super(number, new Color(166, 255, 163)); // Light green
-		this.name = "Pré";
+		this.name = "Prï¿½";
+	}
+
+	@Override
+	public void gainRessources() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
+
+

@@ -1,5 +1,5 @@
 package com.catane.view;
 
-public class Colonie {
+public class Colony {
 
 }

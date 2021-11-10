@@ -6,20 +6,22 @@ import java.util.Random;
 import javax.swing.JPanel;
 
 import com.catane.view.cases.Case;
-import com.catane.view.cases.Champs;
-import com.catane.view.cases.Colline;
+import com.catane.view.cases.Field;
+import com.catane.view.cases.Hill;
 import com.catane.view.cases.Desert;
-import com.catane.view.cases.Foret;
-import com.catane.view.cases.Montagne;
+import com.catane.view.cases.Forest;
+import com.catane.view.cases.Mountain;
 import com.catane.view.cases.Pre;
 
-public class Plateau extends JPanel {
+public class Board extends JPanel {
 	private static final long serialVersionUID = 1L;
+	
+	// Fonctions dés
 	
 	private int size;
 	private Case[][] cases;
 	
-	public Plateau(int size) {
+	public Board(int size) {
 		this.size = size;
 		setLayout(new GridLayout(size, size));
 		cases = generateAndAddCases();
@@ -47,13 +49,13 @@ public class Plateau extends JPanel {
 		case 0:
 			return new Desert(i);
 		case 1:
-			return new Champs(i);
+			return new Field(i);
 		case 2:
-			return new Colline(i);
+			return new Hill(i);
 		case 3:
-			return new Foret(i);
+			return new Forest(i);
 		case 4:
-			return new Montagne(i);
+			return new Mountain(i);
 		case 5:
 			return new Pre(i);
 		}

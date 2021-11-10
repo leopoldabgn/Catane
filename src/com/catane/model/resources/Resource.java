@@ -1,6 +1,6 @@
-package com.catane.model.ressources;
+package com.catane.model.resources;
 
-public class Ressource {
+public class Resource {
 
 	@Override
 	public String toString() {

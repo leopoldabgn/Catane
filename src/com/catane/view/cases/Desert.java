@@ -2,17 +2,18 @@ package com.catane.view.cases;
 
 import java.awt.Color;
 
-public class Desert extends Case {
+import com.catane.view.Board;
+
+public class Desert extends ResourceCase {
 	private static final long serialVersionUID = 1L;
 
-	public Desert(int number) {
-		super(number, Color.WHITE);
-		this.name = "Désert";
+	public Desert(Board board) {
+		super(board, -1, Color.WHITE);
+		setThief(true);
 	}
-
+	
 	@Override
-	public void gainRessources() {
-		// TODO Auto-generated method stub
+	public void giveResources() {
 		
 	}
 

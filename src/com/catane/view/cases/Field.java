@@ -2,16 +2,17 @@ package com.catane.view.cases;
 
 import java.awt.Color;
 
-public class Field extends Case {
+import com.catane.view.Board;
+
+public class Field extends ResourceCase {
 	private static final long serialVersionUID = 1L;
 
-	public Field(int number) {
-		super(number, Color.YELLOW);
+	public Field(Board board, int number) {
+		super(board, number, Color.YELLOW);
 	}
 
 	@Override
-	public void gainRessources() {
-		// TODO Auto-generated method stub
+	public void giveResources() {
 		
 	}
 

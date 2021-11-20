@@ -15,6 +15,10 @@ public class Town extends Colony {
 		this.resourceGain = 2;
 	}
 
+	public Town(Colony colony) {
+		this(colony.board, colony.player);
+	}
+	
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		super.mouseEntered(e);
@@ -32,7 +36,8 @@ public class Town extends Colony {
 		// super.paintComponent(g); // On n'appelle pas cette methode pour eviter que ça dessine le cercle de Colony sous le triangle.
 		if(player == null) // Si la case est vide, rien a afficher.
 			return;
-		Color color = player.getColor(); // Plus tard on mettra la couleur du joueur ici.
+
+		Color color = player.getColor(); // On applique la couleur du joueur.
 		g.setColor(color);
 		double coeff = 0.1;
 		int space = (int)(coeff*getWidth()); // Le panel est un carré normalement, donc getWidth == getHeigt.

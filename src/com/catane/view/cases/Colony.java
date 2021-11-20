@@ -25,7 +25,13 @@ public class Colony extends MovableCase {
 	public void mouseReleased(MouseEvent e) { // Pas besoin de redefinir cette methode dans Town.
 		super.mouseReleased(e);
 		// if(isSelectable)
-		// setPlayer(board.getActualPlayer());
+		if(player == null) {
+			player = board.getActualPlayer();
+		}
+		else if(player != null) { // && player.canCreateTown....
+			board.replaceColonyByTown(this);
+		}
+		repaint();
 	}
 	
 	@Override

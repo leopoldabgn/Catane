@@ -2,24 +2,36 @@ package com.catane.view;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.JPanel;
 
 import com.catane.model.Player;
-import com.catane.view.cases.*;
+import com.catane.view.cases.Case;
+import com.catane.view.cases.Colony;
+import com.catane.view.cases.Desert;
+import com.catane.view.cases.Field;
+import com.catane.view.cases.Forest;
+import com.catane.view.cases.Hill;
+import com.catane.view.cases.Mountain;
+import com.catane.view.cases.Pre;
+import com.catane.view.cases.Road;
+import com.catane.view.cases.Town;
 
 public class Board extends JPanel {
 	private static final long serialVersionUID = 1L;
 		
 	private int size;
 	private Case[][] cases;
-
+	private Player actualPlayer;
+	
 	public Board(int size) {
 		this.size = size * 2 + 1;
 		setLayout(new GridLayout(this.size, this.size));
 		cases = generateAndAddCases();
 		cases = mixCases(cases);
+		this.actualPlayer = new Player(Color.BLUE);
 		for (int i = 0; i < this.size; i++) {
 			for (int j = 0; j < this.size; j++) {
 //				if (cases[i][j] != null) {
@@ -107,11 +119,11 @@ public class Board extends JPanel {
 	}
 	
 	private Case createRoad(boolean up) {
-		return new Road(this,new Player(Color.RED), up);
+		return new Road(this, null, up);
 	}
 		
 	private Case createColony() {
-		return new Colony(this, new Player(Color.BLUE));
+		return new Colony(this, null);
 	}
 	
 	private Case[][] mixCases(Case[][] cases){
@@ -137,6 +149,42 @@ public class Board extends JPanel {
 		
 		return cases;
 	}
+	
+	public int[] getIndexesOf(Case c) {
+		if(c == null)
+			return null;
 		
+		for(int j=0;j<cases.length;j++)
+			for(int i=0;i<cases[0].length;i++)
+				if(cases[j][i] == c)
+					return new int[] {j, i};
+		
+		return null;
+	}
+	
+	public void replaceCaseBy(Case c, Case newCase) { // newCase peut etre null, c'est autorisé.
+		int[] coord = getIndexesOf(c);
+		if(coord == null)
+			return;
+		cases[coord[0]][coord[1]] = newCase;
+		newCase.mouseEntered(null); // Sinon le contour s'enleve meme si on a la souris dessus.
+		this.remove(c);
+		this.add(newCase, coord[0]*cases.length+coord[1]);
+		this.revalidate();
+		this.repaint();
+	}
+	
+	public void replaceColonyByTown(Colony colony) {
+		if(colony == null || colony.getPlayer() == null) // Il faut que le joueur associé à la colonie soit également non null.
+			return;
+		Town town = new Town(colony);
+		replaceCaseBy(colony, town);
+		town.repaint();
+	}
+	
+	public Player getActualPlayer() {
+		return actualPlayer;
+	}
+	
 }
 

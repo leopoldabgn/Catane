@@ -33,7 +33,10 @@ public class Road extends MovableCase {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
-		// setPlayer(board.getActualPlayer());
+		if(player == null)
+			this.player = board.getActualPlayer();
+		revalidate();
+		repaint();
 	}
 	
 	@Override

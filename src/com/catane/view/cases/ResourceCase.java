@@ -35,7 +35,7 @@ public abstract class ResourceCase extends Case {
 		
 		JLabel label = new JLabel(toString());
 		label.setForeground(Color.BLACK);
-		Circle circle = new Circle(number, 22);
+		Circle circle = new Circle(number, (int)getPreferredSize().getWidth()/5);
 		
 	    gbc.gridx = 0;
 	    gbc.gridy = 0; 
@@ -68,6 +68,7 @@ public abstract class ResourceCase extends Case {
 		
 		public Circle(int number, int size) {
 			setPreferredSize(new Dimension(size, size)); // On change la dimension du panel
+			
 			this.number = new JLabel(number+"");
 			if(number == 6 || number == 8)
 				this.number.setForeground(Color.RED); // Couleur rouge pour le 6 et le 8
@@ -76,14 +77,17 @@ public abstract class ResourceCase extends Case {
 			setOpaque(false); // Comme on va dessiner un rond, il ne faut pas qu'on voit les coins carr�s du panel
 			setLayout(new GridBagLayout()); // Pour centrer les �lements � l'int�rieur
 			add(this.number); // On ajoute le JLabel au panel
+			
 		}
 		
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
+			double width = getPreferredSize().getWidth();
+			double height = getPreferredSize().getHeight();
 			g.setColor(Color.WHITE);
-			g.fillOval(0, 0, getWidth(), getHeight()); // On dessine un cercle au centre qui fait la taille du panel
+			g.fillOval(0, 0, (int)width, (int)height); // On dessine un cercle au centre qui fait la taille du panel
 			g.setColor(Color.BLACK);
-			g.drawOval(0, 0, getWidth(), getHeight());
+			g.drawOval(0, 0, (int)width, (int)height);
 		}
 		
 	}
@@ -125,7 +129,7 @@ public abstract class ResourceCase extends Case {
 			add(new Thief(10, 20), gbc);
 		}
 		else if(!(this instanceof Desert)) { // Le desert n'a pas de chiffre.
-			add(new Circle(number, 22), gbc);
+			add(new Circle(number, 80), gbc);
 		}
 		repaint();
 	}

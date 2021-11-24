@@ -5,18 +5,18 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 import com.catane.model.Player;
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public class Colony extends MovableCase {
+public class ColonyView extends MovableCaseView {
 	private static final long serialVersionUID = 1L;
 
 	protected int resourceGain = 1;
 	
-	public Colony(Board board) {
+	public ColonyView(BoardView board) {
 		super(board, null); // Utilisé uniquement pour les cases vides.
 	}
 	
-	public Colony(Board board, Player player) {
+	public ColonyView(BoardView board, Player player) {
 		super(board, player);
 		//setPreferredSize(new Dimension()); ?
 	}

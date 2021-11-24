@@ -21,16 +21,12 @@ public class Window extends JFrame {
 		
 		this.setLayout(new GridBagLayout());
 		
-		Board p = new Board(6);
+		BoardView p = new BoardView(6);
 		p.setPreferredSize(new Dimension((int)(w*0.8), (int)(h*0.8)));
 		
 		this.getContentPane().add(p);
 		
 		this.setVisible(true);
-	}
-	
-	public static void main(String[] args) {
-		new Window(600, 600);
 	}
 	
 }

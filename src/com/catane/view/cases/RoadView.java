@@ -5,26 +5,26 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 import com.catane.model.Player;
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public class Road extends MovableCase {
+public class RoadView extends MovableCaseView {
 	private static final long serialVersionUID = 1L;
 	
 	private boolean sens = false; // false -> horizontal, true -> vertical.
 	
-	public Road(Board board) {
+	public RoadView(BoardView board) {
 		this(board, null);
 	}
 	
-	public Road(Board board, boolean sens) {
+	public RoadView(BoardView board, boolean sens) {
 		this(board, null, sens);
 	}
 	
-	public Road(Board board, Player player) {
+	public RoadView(BoardView board, Player player) {
 		this(board, player, false);
 	}
 	
-	public Road(Board board, Player player, boolean sens) {
+	public RoadView(BoardView board, Player player, boolean sens) {
 		super(board, player);
 		// setPreferredSize(new Dimension(100, 100)); // On le fait uniquement dans ce constructeur. Il est appele a coup sur.
 		this.sens = sens;

@@ -7,9 +7,9 @@ import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public abstract class Case extends JPanel implements MouseListener {
+public abstract class CaseView extends JPanel implements MouseListener {
 	private static final long serialVersionUID = 1L;
 	
 	// Par exemple si le joueur doit selectionner une route,
@@ -19,9 +19,9 @@ public abstract class Case extends JPanel implements MouseListener {
 	// Et si le joueur clique sur une case avec isSelectable = false;
 	// Alors l'action est directement ignoree.
 	protected boolean isSelectable = true;
-	protected Board board;
+	protected BoardView board;
 	
-	public Case(Board board) {
+	public CaseView(BoardView board) {
 		this.board = board;
 		this.addMouseListener(this);
 	}

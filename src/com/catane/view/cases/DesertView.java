@@ -2,12 +2,12 @@ package com.catane.view.cases;
 
 import java.awt.Color;
 
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public class Desert extends ResourceCase {
+public class DesertView extends ResourceCaseView {
 	private static final long serialVersionUID = 1L;
 
-	public Desert(Board board) {
+	public DesertView(BoardView board) {
 		super(board, -1, Color.WHITE);
 		setThief(true);
 	}

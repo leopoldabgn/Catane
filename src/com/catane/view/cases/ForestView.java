@@ -2,12 +2,12 @@ package com.catane.view.cases;
 
 import java.awt.Color;
 
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public class Forest extends ResourceCase {
+public class ForestView extends ResourceCaseView {
 	private static final long serialVersionUID = 1L;
 
-	public Forest(Board board, int number) {
+	public ForestView(BoardView board, int number) {
 		super(board, number, new Color(0, 125, 33)); // Dark green*
 	}
 

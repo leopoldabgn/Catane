@@ -5,17 +5,17 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 import com.catane.model.Player;
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public class Town extends Colony {
+public class TownView extends ColonyView {
 	private static final long serialVersionUID = 1L;
 
-	public Town(Board board, Player player) {
+	public TownView(BoardView board, Player player) {
 		super(board, player);
 		this.resourceGain = 2;
 	}
 
-	public Town(Colony colony) {
+	public TownView(ColonyView colony) {
 		this(colony.board, colony.player);
 	}
 	

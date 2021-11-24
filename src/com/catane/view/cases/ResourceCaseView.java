@@ -12,9 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public abstract class ResourceCase extends Case {
+public abstract class ResourceCaseView extends CaseView {
 	private static final long serialVersionUID = 1L;
 
 	private Color color;
@@ -23,7 +23,7 @@ public abstract class ResourceCase extends Case {
 	
 	private GridBagConstraints gbc = new GridBagConstraints();
 	
-	public ResourceCase(Board board, int number, Color color) {
+	public ResourceCaseView(BoardView board, int number, Color color) {
 		super(board);
 		this.number = number;
 		this.color = color;
@@ -128,7 +128,7 @@ public abstract class ResourceCase extends Case {
 		if(thief) {
 			add(new Thief(10, 20), gbc);
 		}
-		else if(!(this instanceof Desert)) { // Le desert n'a pas de chiffre.
+		else if(!(this instanceof DesertView)) { // Le desert n'a pas de chiffre.
 			add(new Circle(number, 80), gbc);
 		}
 		repaint();

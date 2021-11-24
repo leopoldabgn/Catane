@@ -2,12 +2,12 @@ package com.catane.view.cases;
 
 import java.awt.Color;
 
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public class Pre extends ResourceCase {
+public class PreView extends ResourceCaseView {
 	private static final long serialVersionUID = 1L;
 
-	public Pre(Board board, int number) {
+	public PreView(BoardView board, int number) {
 		super(board, number, new Color(166, 255, 163)); // Light green
 	}
 

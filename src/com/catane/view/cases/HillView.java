@@ -2,12 +2,12 @@ package com.catane.view.cases;
 
 import java.awt.Color;
 
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public class Hill extends ResourceCase {
+public class HillView extends ResourceCaseView {
 	private static final long serialVersionUID = 1L;
 
-	public Hill(Board board, int number) {
+	public HillView(BoardView board, int number) {
 		super(board, number, new Color(8, 255, 0));
 	}
 

@@ -1,18 +1,18 @@
 package com.catane.view.cases;
 
 import com.catane.model.Player;
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public class MovableCase extends Case {
+public class MovableCaseView extends CaseView {
 	private static final long serialVersionUID = 1L;
 	
 	protected Player player;
 	
-	public MovableCase(Board board) {
+	public MovableCaseView(BoardView board) {
 		this(board, null);
 	}
 	
-	public MovableCase(Board board, Player player) {
+	public MovableCaseView(BoardView board, Player player) {
 		super(board);
 		this.player = player;
 		setOpaque(false);

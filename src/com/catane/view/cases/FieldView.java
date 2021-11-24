@@ -2,12 +2,12 @@ package com.catane.view.cases;
 
 import java.awt.Color;
 
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public class Field extends ResourceCase {
+public class FieldView extends ResourceCaseView {
 	private static final long serialVersionUID = 1L;
 
-	public Field(Board board, int number) {
+	public FieldView(BoardView board, int number) {
 		super(board, number, Color.YELLOW);
 	}
 

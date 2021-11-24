@@ -2,12 +2,12 @@ package com.catane.view.cases;
 
 import java.awt.Color;
 
-import com.catane.view.Board;
+import com.catane.view.BoardView;
 
-public class Mountain extends ResourceCase {
+public class MountainView extends ResourceCaseView {
 	private static final long serialVersionUID = 1L;
 
-	public Mountain(Board board, int number) {
+	public MountainView(BoardView board, int number) {
 		super(board, number, Color.GRAY);
 	}
 

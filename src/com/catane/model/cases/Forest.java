@@ -6,8 +6,8 @@ import com.catane.model.Board;
 
 public class Forest extends ResourceCase {
 
-	public Forest(Board board, int number) {
-		super(board, number, new Color(0, 125, 33)); // Dark green*
+	public Forest(int number) {
+		super(number, new Color(0, 125, 33)); // Dark green*
 	}
 
 	@Override

@@ -2,12 +2,10 @@ package com.catane.model.cases;
 
 import java.awt.Color;
 
-import com.catane.model.Board;
-
 public class Hill extends ResourceCase {
 
-	public Hill(Board board, int number) {
-		super(board, number, new Color(8, 255, 0));
+	public Hill(int number) {
+		super(number, new Color(8, 255, 0));
 	}
 
 	@Override

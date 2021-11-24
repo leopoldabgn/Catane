@@ -2,16 +2,13 @@ package com.catane.model.cases;
 
 import java.awt.Color;
 
-import com.catane.model.Board;
-
 public abstract class ResourceCase extends Case {
 
 	private Color color;
 	private int number;
 	private boolean thief = false;
 	
-	public ResourceCase(Board board, int number, Color color) {
-		super(board);
+	public ResourceCase(int number, Color color) {
 		this.number = number;
 		this.color = color;
 	}

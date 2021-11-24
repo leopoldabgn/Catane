@@ -1,18 +1,16 @@
 package com.catane.model.cases;
 
 import com.catane.model.Player;
-import com.catane.model.Board;
 
 public class MovableCase extends Case {
 	
 	protected Player player;
 	
-	public MovableCase(Board board) {
-		this(board, null);
+	public MovableCase() {
+		this(null);
 	}
 	
-	public MovableCase(Board board, Player player) {
-		super(board);
+	public MovableCase(Player player) {
 		this.player = player;
 	}
 	
@@ -26,6 +24,13 @@ public class MovableCase extends Case {
 	
 	public boolean isEmpty() {
 		return player == null;
+	}
+	
+	public String toString() {
+		if(player == null)
+			return "  ";
+		else
+			return getClass().getSimpleName().charAt(0)+player.getNumber()+"";
 	}
 	
 }

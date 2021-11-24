@@ -1,17 +1,17 @@
 package com.catane.model.cases;
-import com.catane.model.Board;
 
 public abstract class Case {
 	
-	protected Board board;
-	
-	public Case(Board board) {
-		this.board = board;
-	}
-	
 	@Override
 	public String toString() {
-		return getClass().getSimpleName();
-	}
+		String str = getClass().getSimpleName();
+		int max = 10;
+		if(str.length() >= max)
+			return str;
+		int reste = max-str.length();
+		str = (reste % 2 == 1 ? " " : "")+" ".repeat(reste/2)+str+" ".repeat(reste/2);
+
+		return str;
+	} 
 
 }

@@ -10,11 +10,14 @@ import com.catane.model.resources.*;
 import com.catane.model.cases.Road;
 
 public class Player {
+	public static int nextPlayerNb = 1; // Le premier joueur est J1, le deuxieme J2...
+	private int number;
 	private List<Resource> resources;
 	private List<Road> roads;
 	private Color color;
 	
 	public Player(Color color) {
+		this.number = nextPlayerNb++;
 		this.resources = new ArrayList<Resource>();
 		this.roads = new ArrayList<Road>();
 		this.color = color;
@@ -152,6 +155,10 @@ public class Player {
 
 	public void buyDev(){
 
+	}
+	
+	public int getNumber() {
+		return number;
 	}
 	
 }

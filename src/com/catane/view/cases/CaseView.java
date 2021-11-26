@@ -28,7 +28,7 @@ public abstract class CaseView extends JPanel implements MouseListener {
 	
 	@Override
 	public String toString() {
-		return getClass().getSimpleName();
+		return getClass().getSimpleName().substring(0, getClass().getSimpleName().length()-4);
 	}
 	
 	@Override

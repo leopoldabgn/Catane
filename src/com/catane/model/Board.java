@@ -1,6 +1,8 @@
 package com.catane.model;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.catane.model.cases.Case;
@@ -20,13 +22,14 @@ public class Board {
 	private int size;
 	private Case[][] cases;
 	private int[] thief;
+	private List<Player> players;
 	private Player actualPlayer;
 	
 	public Board(int size) {
 		this.size = size * 2 + 1;
 		cases = generateAndAddCases();
 		cases = mixCases(cases);
-		this.actualPlayer = new Player(Color.BLUE);
+		this.players = new ArrayList<Player>();
 	}	
 	
 	public void display() {
@@ -204,8 +207,57 @@ public class Board {
 		replaceCaseBy(colony, town);
 	}
 	
+	public int[] rollDices() {
+		Random rd = new Random();
+		return new int[] {rd.nextInt(6)+1, rd.nextInt(6)+1};
+	}
+	
+	public boolean outOfBorders(int x, int y) {
+		return !((x >= 0 && x < size) && (y >= 0 && y < size));
+	}
+	
+	public boolean putColony(int x, int y) {
+		return putColony(getActualPlayer(), x, y);
+	}
+	
+	public boolean putColony(Player player, int x, int y) {
+		if(outOfBorders(x, y) || player == null )//|| !player.canBuildColonyOn(x, y)) // En commentaire pour le moment.
+			return false;
+		Case c = cases[x][y];
+		
+		if(c instanceof Colony) {
+			Colony colony = (Colony)c;
+			if(colony.getPlayer() != null) // La case colonie est deja a un joueur.
+				return false;
+			colony.setPlayer(player); // Sinon, on place la colonie.
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public void setPlayers(List<Player> players) {
+		this.players = players;
+		if(players != null && players.size() > 1)
+			actualPlayer = players.get(0);
+	}
+	
+	public void nextRound() { // On passe au joueur suivant dans la liste.
+		if(actualPlayer == null || players == null || players.size() < 3)
+			return;
+		int index = players.indexOf(actualPlayer);
+		if(index == -1)
+			return;
+		
+		actualPlayer = players.get(index  == players.size()-1 ? 0 : index+1);
+	}
+	
 	public Player getActualPlayer() {
 		return actualPlayer;
+	}
+	
+	public int getSize() {
+		return size;
 	}
 	
 }

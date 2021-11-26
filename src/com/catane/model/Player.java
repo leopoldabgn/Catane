@@ -7,18 +7,21 @@ import java.util.Random;
 import java.util.Scanner;
 
 import com.catane.model.resources.*;
+import com.catane.model.cases.Colony;
 import com.catane.model.cases.Road;
 
 public class Player {
 	public static int nextPlayerNb = 1; // Le premier joueur est J1, le deuxieme J2...
 	private int number;
 	private List<Resource> resources;
+	private List<Colony> colonies; // Comprend egalement les villes...
 	private List<Road> roads;
 	private Color color;
 	
 	public Player(Color color) {
 		this.number = nextPlayerNb++;
 		this.resources = new ArrayList<Resource>();
+		this.colonies = new ArrayList<Colony>();
 		this.roads = new ArrayList<Road>();
 		this.color = color;
 	}
@@ -56,32 +59,25 @@ public class Player {
 		return (getResource(new Clay()) >= 1 && getResource(new Wood()) >= 1);
 	}
 
-	public boolean canBuildColonyOn(char h, char v){ // Le joueur peut construire une colonie sur la case données
+	public boolean canBuildColonyOn(int x, int y){ // Le joueur peut construire une colonie sur la case données
 		return canAffordColony();
 	}
 
-	public boolean canBuildTownOn(char h, char v){ // Le joueur peut construire une ville sur la case données
+	public boolean canBuildTownOn(int x, int y){ // Le joueur peut construire une ville sur la case données
 		return canAffordTown();
 	}
 
-	public boolean canBuildRoadOn(char h, char v){ // Le joueur peut construire une route sur la case données
+	public boolean canBuildRoadOn(int x, int y){ // Le joueur peut construire une route sur la case données
 		return (canAffordRoad());
 	}
 
 	// Méthodes interactions avec plateau :
-
-	public int throwDice(){
-		Random r = new Random();
-		int x = r.nextInt(6) + 1;
-		int y = r.nextInt(6) + 1;
-		return x + y;
-	}
 	
-	public void gainResource(Resource r){
+	public void gainResource(Resource r) {
 		resources.add(r);
 	}
 
-	public void askAction(){
+	public void askAction() {
 		System.out.println("Choisissez une action à effectuer :");
 		System.out.println("- Construire une colonie -> tapez 'c'");
 		System.out.println("- Construire une ville -> tapez 'v'");
@@ -105,15 +101,15 @@ public class Player {
 		sc.close();
 	}
 
-	public void buildColony(){
+	public void buildColony() {
 
 	}
 
-	public void buildRoad(){
+	public void buildRoad() {
 
 	}
 
-	public void buildTown(){
+	public void buildTown() {
 
 	}
 
@@ -126,7 +122,7 @@ public class Player {
 			resources.remove(toRemove);
 	}
 
-	public void payColony(){ // Payer une colonie
+	public void payColony() { // Payer une colonie
 		pay(new Clay());
 		pay(new Wood());
 		pay(new Sheep());

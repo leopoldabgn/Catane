@@ -2,6 +2,7 @@ package com.catane.view.cases;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,6 +35,7 @@ public abstract class ResourceCaseView extends CaseView {
 		setLayout(new GridBagLayout());
 		
 		JLabel label = new JLabel(toString());
+		label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 12));
 		label.setForeground(Color.BLACK);
 		Circle circle = new Circle(number, (int)getPreferredSize().getWidth()/5);
 		
@@ -124,6 +126,7 @@ public abstract class ResourceCaseView extends CaseView {
 		if((thief && hasThief()) || (!thief && !hasThief()))
 			return;
 		this.thief = thief;
+		// TODO : ATTENTION : cas ou le voleur revient sur le desert peut causer une erreur
 		remove(getComponentCount()-1); // On retire le dernier element
 		if(thief) {
 			add(new Thief(10, 20), gbc);

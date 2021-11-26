@@ -21,7 +21,7 @@ public class Window extends JFrame {
 		
 		this.setLayout(new GridBagLayout());
 		
-		BoardView p = new BoardView(6);
+		BoardView p = new BoardView(4);
 		p.setPreferredSize(new Dimension((int)(w*0.8), (int)(h*0.8)));
 		
 		this.getContentPane().add(p);

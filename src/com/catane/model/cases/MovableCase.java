@@ -30,7 +30,7 @@ public class MovableCase extends Case {
 		if(player == null)
 			return "  ";
 		else
-			return getClass().getSimpleName().charAt(0)+player.getNumber()+"";
+			return getClass().getSimpleName().charAt(0)+""+player.getNumber()+"";
 	}
 	
 }

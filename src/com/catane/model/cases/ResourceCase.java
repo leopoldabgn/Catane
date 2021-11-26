@@ -15,6 +15,20 @@ public abstract class ResourceCase extends Case {
 	
 	public abstract void giveResources();
 	
+	@Override
+	public String toString() {
+		String str = getClass().getSimpleName();
+		if(!(this instanceof Desert))
+			str += " "+number;
+		int max = 13;
+		if(str.length() >= max)
+			return str;
+		int reste = max-str.length();
+		str = (reste % 2 == 1 ? " " : "")+" ".repeat(reste/2)+str+" ".repeat(reste/2);
+
+		return str;
+	} 
+	
 	public int getNumber() {
 		return number;
 	}

@@ -33,11 +33,11 @@ public class Board {
 	}	
 	
 	public void display() {
-		int space = 4, maxSize = 10;
+		int space = 4, maxSize = 13;
 		char letter = 'A';
 		System.out.print(" ".repeat(space));
 		for(int i=0;i<size;i++)
-			System.out.print((letter++)+" ".repeat(7));
+			System.out.print((letter++)+" ".repeat(9));
 		System.out.println();
 		int line = 1;
 		if(size%2 == 0)
@@ -63,7 +63,7 @@ public class Board {
 		 			if(i%2 == 0)
 		 				System.out.print(" "+c+" ");
 		 			else {
-		 				System.out.print(" ".repeat(space/2)+c+" ".repeat(space/2));
+		 				System.out.print(" ".repeat(space/2+1)+c+" ".repeat(space/2));
 		 			}
 		 		}
 		 		System.out.print("|");

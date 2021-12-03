@@ -14,4 +14,9 @@ public class Colony extends MovableCase {
 		super(player);
 	}
 	
+	public boolean isBuildable(){
+		
+		return false;
+	}
+	
 }

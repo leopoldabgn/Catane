@@ -2,8 +2,6 @@ package com.catane.model.cases;
 
 import java.awt.Color;
 
-import com.catane.model.Board;
-
 public class Forest extends ResourceCase {
 
 	public Forest(int number) {

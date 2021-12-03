@@ -3,12 +3,10 @@ package com.catane.model;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 import com.catane.model.resources.*;
-import com.catane.model.cases.Colony;
-import com.catane.model.cases.Road;
+import com.catane.model.cases.*;
 
 public class Player {
 	public static int nextPlayerNb = 1; // Le premier joueur est J1, le deuxieme J2...
@@ -59,16 +57,18 @@ public class Player {
 		return (getResource(new Clay()) >= 1 && getResource(new Wood()) >= 1);
 	}
 
-	public boolean canBuildColonyOn(int x, int y){ // Le joueur peut construire une colonie sur la case données
+	public boolean canBuildColonyOn(Colony colony){ // Le joueur peut construire une colonie sur la case données
 		return canAffordColony();
+		// Il faut aussi vérifier que les quatre colonies adjacentes ne sont pas occupées
+		// Peut être utiliser les coordonnées ?
 	}
 
-	public boolean canBuildTownOn(int x, int y){ // Le joueur peut construire une ville sur la case données
-		return canAffordTown();
+	public boolean canBuildTownOn(Colony colony){ // Le joueur peut construire une ville sur la case données
+		return canAffordTown() && colony.getPlayer() == this;
 	}
 
-	public boolean canBuildRoadOn(int x, int y){ // Le joueur peut construire une route sur la case données
-		return (canAffordRoad());
+	public boolean canBuildRoadOn(Road road){ // Le joueur peut construire une route sur la case données
+		return canAffordRoad() && road.isEmpty();
 	}
 
 	// Méthodes interactions avec plateau :
@@ -77,7 +77,7 @@ public class Player {
 		resources.add(r);
 	}
 
-	public void askAction() {
+	public void askAction(Board board){
 		System.out.println("Choisissez une action à effectuer :");
 		System.out.println("- Construire une colonie -> tapez 'c'");
 		System.out.println("- Construire une ville -> tapez 'v'");
@@ -87,6 +87,7 @@ public class Player {
 		char action = sc.nextLine().charAt(0);
 		switch (action){
 			case 'c':	System.out.println("c");
+
 					break;
 			case 'v':	System.out.println("v");
 					break;
@@ -95,22 +96,25 @@ public class Player {
 			case 'e':	System.out.println("e");
 					break;
 			default:	System.out.println("Valeur invalide !");
-						askAction();
+						askAction(board);
 					break;
 		}
 		sc.close();
 	}
 
-	public void buildColony() {
-
+	public void buildColony(Colony colony){
+		payColony();
+		colonies.add(colony);
 	}
 
-	public void buildRoad() {
-
+	public void buildRoad(Road road){
+		payRoad();
+		roads.add(road);
 	}
 
-	public void buildTown() {
-
+	public void buildTown(Colony colony){ // Comment transformer une colonie en ville ?
+		payTown();						// Problème puisqu'une ville est de type Town et Colony
+		colony = new Town(colony);
 	}
 
 	public void pay(Resource r){ // Supprime une ressource

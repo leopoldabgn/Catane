@@ -13,5 +13,9 @@ public class Town extends Colony {
 	public Town(Colony colony) {
 		this(colony.player);
 	}
+
+	public boolean isBuildible(Player p){
+		return true;
+	}
 	
 }

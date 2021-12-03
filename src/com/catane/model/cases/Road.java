@@ -1,7 +1,6 @@
 package com.catane.model.cases;
 
 import com.catane.model.Player;
-import com.catane.model.Board;
 
 public class Road extends MovableCase {
 	

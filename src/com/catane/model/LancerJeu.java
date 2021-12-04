@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.catane.model.resources.Clay;
+import com.catane.model.resources.Sheep;
+import com.catane.model.resources.Wheat;
+import com.catane.model.resources.Wood;
 import com.catane.view.Window;
 
 public class LancerJeu {
@@ -22,15 +26,22 @@ public class LancerJeu {
 				new Player(Color.GREEN)})));
 		
 		board.display();
-
-		for(int i=0;i<board.getSize();i+=2) {
-			board.putColony(board.getActualPlayer(), i, i);
-			board.nextRound();
-		}
-		board.display();
 		
 		if(jouer.equals("command")) {
+			board.openScan();
+			//while(true) {
+			// Ressources pour pouvoir construire une colonie
+			board.getActualPlayer().gainResource(new Clay());
+			board.getActualPlayer().gainResource(new Sheep());
+			board.getActualPlayer().gainResource(new Wood());
+			board.getActualPlayer().gainResource(new Wheat());
 			
+			board.playRound();
+			board.display();
+			
+			//}
+			
+			board.closeScan();
 		}
 		else if(jouer.equals("gui")){
 			new Window(600, 600);

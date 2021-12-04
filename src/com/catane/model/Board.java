@@ -55,7 +55,7 @@ public class Board {
 			System.out.print("|");
 			
 			for(int i=0;i<size;i++) {
-				Case c = cases[j][i];
+				Case c = cases[i][j];
 		 		if(c instanceof ResourceCase) {
 		 			System.out.print(c);
 		 		}
@@ -223,11 +223,14 @@ public class Board {
 	}
 	
 	public void putTown(Player player, int x, int y) {
-		
+		Colony c = (Colony)cases[x][y];
+		Town t = new Town(c);
+		cases[x][y] = t;
 	}
 	
 	public void putRoad(Player player, int x, int y) {
-		
+		Road r = (Road)cases[x][y];
+		r.setPlayer(player);
 	}
 	
 	public void setPlayers(List<Player> players) {
@@ -258,6 +261,7 @@ public class Board {
 		do {
 			if(coord != null) // Si != null, forcement les coordonnees sont outOfBorders.
 				System.out.println("Ces coordonnées ne sont pas sur le plateau !");
+			System.out.print("Donner les coordonnées (ex: A8) : ");
 			coordStr = actualPlayer.askCoord(sc);
 			coord = convertCoord(coordStr);
 		} while(outOfBorders(coord[0], coord[1]));
@@ -276,6 +280,7 @@ public class Board {
 		do {
 			endRound = true;
 			c = actualPlayer.askAction(sc);
+			System.out.println(c);
 			coord = null;
 			error = true;
 			
@@ -285,7 +290,7 @@ public class Board {
 						if(!actualPlayer.canAffordColony()) {// Si il n'a pas assez d'argent. Ou il n'a pas de colony dans son inventaire.
 							System.out.println("Vous n'avez pas les ressources pour construire une colonie !");
 							endRound = false;
-							break;
+							error = false;
 						}
 						else {
 							coord = askCoord(); // Coordonnees forcement dans le plateau.
@@ -304,7 +309,7 @@ public class Board {
 						if(!actualPlayer.canAffordTown()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
 							System.out.println("Vous n'avez pas les ressources pour construire une ville !");
 							endRound = false;
-							break;
+							error = false;
 						}
 						else {
 							coord = askCoord(); // Coordonnees forcement dans le plateau.
@@ -323,7 +328,7 @@ public class Board {
 						if(!actualPlayer.canAffordRoad()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
 							System.out.println("Vous n'avez pas les ressources pour construire une route !");
 							endRound = false;
-							break;
+							error = false;
 						}
 						else {
 							coord = askCoord(); // Coordonnees forcement dans le plateau.

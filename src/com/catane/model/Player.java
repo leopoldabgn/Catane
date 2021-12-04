@@ -134,12 +134,12 @@ public class Player {
 					break;
 		}
 		
-		return '0';
+		return action;
 	}
 
 
-	public String askCoord(Scanner sc) {
-		return "A12";
+	public String askCoord(Scanner sc) { // exemple : A12
+		return sc.nextLine();
 	}
 	
 	public void buildColony(Colony colony){

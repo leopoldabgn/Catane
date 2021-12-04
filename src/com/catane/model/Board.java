@@ -1,9 +1,9 @@
 package com.catane.model;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import com.catane.model.cases.Case;
 import com.catane.model.cases.Colony;
@@ -24,6 +24,7 @@ public class Board {
 	private int[] thief;
 	private List<Player> players;
 	private Player actualPlayer;
+	private Scanner sc;
 	
 	public Board(int size) {
 		this.size = size * 2 + 1;
@@ -216,30 +217,148 @@ public class Board {
 		return !((x >= 0 && x < size) && (y >= 0 && y < size));
 	}
 	
-	public boolean putColony(int x, int y) {
-		return putColony(getActualPlayer(), x, y);
+	public void putColony(Player player, int x, int y) {
+		Colony c = (Colony)cases[x][y];
+		c.setPlayer(player);
 	}
 	
-	public boolean putColony(Player player, int x, int y) {
-		if(outOfBorders(x, y) || player == null )//|| !player.canBuildColonyOn(x, y)) // En commentaire pour le moment.
-			return false;
-		Case c = cases[x][y];
+	public void putTown(Player player, int x, int y) {
 		
-		if(c instanceof Colony) {
-			Colony colony = (Colony)c;
-			if(colony.getPlayer() != null) // La case colonie est deja a un joueur.
-				return false;
-			colony.setPlayer(player); // Sinon, on place la colonie.
-			return true;
-		}
+	}
+	
+	public void putRoad(Player player, int x, int y) {
 		
-		return false;
 	}
 	
 	public void setPlayers(List<Player> players) {
 		this.players = players;
 		if(players != null && players.size() > 1)
 			actualPlayer = players.get(0);
+	}
+	
+	public boolean checkColoniesAround(int x, int y) { // Colonie ou Ville autour de ces coordonnees.
+		int[] coord = {x-2, y, x, y-2, x+2, y, x, y+2}; // gauche, haut, droite, bas.
+		
+		for(int i=0;i<coord.length;i+=2) {
+			if(outOfBorders(coord[i], coord[i+1]))
+				continue;
+			Case c = cases[coord[i]][coord[i+1]];
+			if(c instanceof Colony) {
+				if(!((Colony)c).isEmpty())
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public int[] askCoord() {
+		int[] coord = null;
+		String coordStr;
+		do {
+			if(coord != null) // Si != null, forcement les coordonnees sont outOfBorders.
+				System.out.println("Ces coordonnées ne sont pas sur le plateau !");
+			coordStr = actualPlayer.askCoord(sc);
+			coord = convertCoord(coordStr);
+		} while(outOfBorders(coord[0], coord[1]));
+		
+		return coord;
+	}
+	
+	public void playRound() {
+		
+		System.out.println("Au tour de "+actualPlayer.getName());
+		boolean endRound;
+		char c;
+		int[] coord;
+		boolean error;
+		
+		do {
+			endRound = true;
+			c = actualPlayer.askAction(sc);
+			coord = null;
+			error = true;
+			
+			do {
+				switch(c) {
+					case 'c':
+						if(!actualPlayer.canAffordColony()) {// Si il n'a pas assez d'argent. Ou il n'a pas de colony dans son inventaire.
+							System.out.println("Vous n'avez pas les ressources pour construire une colonie !");
+							endRound = false;
+							break;
+						}
+						else {
+							coord = askCoord(); // Coordonnees forcement dans le plateau.
+							int ans = actualPlayer.canBuildColonyOn(this, coord); // ans ne peut pas etre egale a 1 ici.
+							if(ans == 2)
+									System.out.println("Vous ne pouvez pas poser de colonie ici !");
+							else if(ans == 3)
+									System.out.println("Il y a deja une colonie ou une ville aux alentours !");
+							else {
+								error = false;
+								putColony(actualPlayer, coord[0], coord[1]);
+							}
+						}
+						break;
+					case 'v':
+						if(!actualPlayer.canAffordTown()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
+							System.out.println("Vous n'avez pas les ressources pour construire une ville !");
+							endRound = false;
+							break;
+						}
+						else {
+							coord = askCoord(); // Coordonnees forcement dans le plateau.
+							int ans = actualPlayer.canBuildTownOn(this, coord); // ans ne peut pas etre egale a 1 ici.
+							if(ans == 2)
+									System.out.println("Cette case n'est pas une colonie !");
+							else if(ans == 3)
+									System.out.println("Cette colonie n'est pas a vous !");
+							else {
+								error = false;
+								putTown(actualPlayer, coord[0], coord[1]);
+							}
+						}
+						break;
+					case 'r':
+						if(!actualPlayer.canAffordRoad()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
+							System.out.println("Vous n'avez pas les ressources pour construire une route !");
+							endRound = false;
+							break;
+						}
+						else {
+							coord = askCoord(); // Coordonnees forcement dans le plateau.
+							int ans = actualPlayer.canBuildRoadOn(this, coord); // ans ne peut pas etre egale a 1 ici.
+							if(ans == 2)
+									System.out.println("Vous ne pouvez pas poser de route ici !");
+							else {
+								error = false;
+								putRoad(actualPlayer, coord[0], coord[1]);
+							}
+						}
+						break;
+					case 'e':
+						break;
+				}
+				
+			} while(error);
+			
+		} while(!endRound);
+		
+		nextRound();
+	}
+	
+	public int[] convertCoord(String coord) // A modifier quand on rajoutera les ports.
+	{
+		if(coord == null || coord.length() != 2)
+			return null;
+		int[] tab = new int[2];
+		try {
+			tab[0] = coord.charAt(0)-'A';
+			tab[1] = Integer.parseInt(coord.substring(1))-1;
+		} catch(Exception e) {
+			return null;
+		}
+		return tab;
 	}
 	
 	public void nextRound() { // On passe au joueur suivant dans la liste.
@@ -250,6 +369,38 @@ public class Board {
 			return;
 		
 		actualPlayer = players.get(index  == players.size()-1 ? 0 : index+1);
+	}
+	
+	public Case getCase(int x, int y) {
+		if(outOfBorders(x, y))
+			return null;
+		return cases[x][y];
+	}
+	
+	// Les coordonnees sont forcement sur le plateau lorsqu'on
+	// appelle les fonctions suivantes :
+	
+	// Une colonie est une case de type colonie et non vide.
+	public boolean isColony(int x, int y) {
+		return cases[x][y].getClass() == Colony.class && !((Colony)cases[x][y]).isEmpty();
+	}
+	
+	public boolean isEmptyColony(int x, int y) {
+		return cases[x][y].isEmptyColony();
+	}
+	
+	public boolean isEmptyRoad(int x, int y) {
+		return cases[x][y].isEmptyRoad();
+	}
+	
+	///////////////////////////////////////////
+	
+	public void openScan() {
+		this.sc = new Scanner(System.in);
+	}
+	
+	public void closeScan() {
+		this.sc.close();
 	}
 	
 	public Player getActualPlayer() {

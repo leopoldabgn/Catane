@@ -7,4 +7,28 @@ public abstract class Case {
 		return getClass().getSimpleName();
 	} 
 
+	public boolean isRoad() {
+		return (this instanceof Road);
+	}
+	
+	public boolean isEmptyRoad() {
+		if(isRoad())
+			return ((Road)this).isEmpty();
+		return false;
+	}
+	
+	public boolean isColony() {
+		return (this instanceof Colony);
+	}
+	
+	public boolean isEmptyColony() {
+		if(isColony())
+			return ((Colony)this).isEmpty();
+		return false;
+	}
+	
+	public boolean isTown() {
+		return (this instanceof Town);
+	}
+
 }

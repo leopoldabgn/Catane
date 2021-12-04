@@ -56,18 +56,53 @@ public class Player {
 	public boolean canAffordRoad(){ // Le joueur a les ressources nécessaires pour construire une route
 		return (getResource(new Clay()) >= 1 && getResource(new Wood()) >= 1);
 	}
-
-	public boolean canBuildColonyOn(Colony colony){ // Le joueur peut construire une colonie sur la case données
-		return canAffordColony();
-		// Il faut aussi vérifier que les quatre colonies adjacentes ne sont pas occupées
-		// Peut être utiliser les coordonnées ?
+	
+	// Pour l'interface graphique on appelle celle-la directement.
+	public int canBuildColonyOn(Board board, int[] coord) { // Le joueur peut construire une colonie sur la case donnée
+		if(!canAffordColony())// Si il n'a pas assez d'argent. Ou il n'a pas de colonie dans son inventaire.
+			return 1;
+		else {
+			if(!board.isEmptyColony(coord[0], coord[1]))
+				return 2;
+			else if(board.checkColoniesAround(coord[0], coord[1]))
+				return 3;
+		}
+		
+		return 0;
 	}
 
-	public boolean canBuildTownOn(Colony colony){ // Le joueur peut construire une ville sur la case données
+	// Pour l'interface graphique on appelle celle-la directement.
+	public int canBuildTownOn(Board board, int[] coord) { // Le joueur peut construire une ville sur la case donnée
+		if(!canAffordTown())// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
+			return 1;
+		else {
+			if(!board.isColony(coord[0], coord[1]))
+				return 2;
+			Colony c = (Colony)board.getCase(coord[0], coord[1]);
+			if(c.getPlayer() != this) // Si ce n'est pas ma colonie.
+				return 3;
+		}
+		
+		return 0;
+	}
+	
+	// Pour l'interface graphique on appelle celle-la directement.
+	public int canBuildRoadOn(Board board, int[] coord) { // Le joueur peut construire une route sur la case donnée
+		if(!canAffordRoad())// Si il n'a pas assez d'argent. Ou il n'a pas de route dans son inventaire.
+			return 1;
+		else {
+			if(!board.isEmptyRoad(coord[0], coord[1]))
+				return 2;
+		}
+		
+		return 0;
+	}
+	
+	public boolean canBuildTownOn(Colony colony){ // Le joueur peut construire une ville sur la case donnée
 		return canAffordTown() && colony.getPlayer() == this;
 	}
 
-	public boolean canBuildRoadOn(Road road){ // Le joueur peut construire une route sur la case données
+	public boolean canBuildRoadOn(Road road){ // Le joueur peut construire une route sur la case donnée
 		return canAffordRoad() && road.isEmpty();
 	}
 
@@ -77,13 +112,12 @@ public class Player {
 		resources.add(r);
 	}
 
-	public void askAction(Board board){
+	public char askAction(Scanner sc) {
 		System.out.println("Choisissez une action à effectuer :");
 		System.out.println("- Construire une colonie -> tapez 'c'");
 		System.out.println("- Construire une ville -> tapez 'v'");
 		System.out.println("- Construire une route -> tapez 'r'");
 		System.out.println("- Echanger des ressources -> tapez 'e'");
-		Scanner sc = new Scanner(System.in);
 		char action = sc.nextLine().charAt(0);
 		switch (action){
 			case 'c':	System.out.println("c");
@@ -96,12 +130,18 @@ public class Player {
 			case 'e':	System.out.println("e");
 					break;
 			default:	System.out.println("Valeur invalide !");
-						askAction(board);
+						askAction(sc);
 					break;
 		}
-		sc.close();
+		
+		return '0';
 	}
 
+
+	public String askCoord(Scanner sc) {
+		return "A12";
+	}
+	
 	public void buildColony(Colony colony){
 		payColony();
 		colonies.add(colony);
@@ -159,6 +199,10 @@ public class Player {
 	
 	public int getNumber() {
 		return number;
+	}
+	
+	public String getName() {
+		return "J"+number;
 	}
 	
 }

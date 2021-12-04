@@ -8,4 +8,8 @@ public class AI extends Player {
 		super(color);
 	}
 
+	public String getName() {
+		return "Ordi"+getNumber();
+	}
+	
 }

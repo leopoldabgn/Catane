@@ -24,7 +24,7 @@ public class LancerJeu {
 		board.display();
 
 		for(int i=0;i<board.getSize();i+=2) {
-			board.putColony(i, i);
+			board.putColony(board.getActualPlayer(), i, i);
 			board.nextRound();
 		}
 		board.display();

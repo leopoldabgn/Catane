@@ -112,34 +112,36 @@ public class Player {
 		resources.add(r);
 	}
 
-	public char askAction(Scanner sc) {
-		System.out.println("Choisissez une action à effectuer :");
-		System.out.println("- Construire une colonie -> tapez 'c'");
-		System.out.println("- Construire une ville -> tapez 'v'");
-		System.out.println("- Construire une route -> tapez 'r'");
-		System.out.println("- Echanger des ressources -> tapez 'e'");
-		char action = sc.nextLine().charAt(0);
-		switch (action){
-			case 'c':	System.out.println("c");
-
-					break;
-			case 'v':	System.out.println("v");
-					break;
-			case 'r':	System.out.println("r");
-					break;
-			case 'e':	System.out.println("e");
-					break;
-			default:	System.out.println("Valeur invalide !");
-						askAction(sc);
-					break;
+	public char askAction(Scanner sc){
+		char c = sc.nextLine().charAt(0);
+		while (!charAction(c)) {
+			System.out.println("Caractère non reconnu");
+			c = sc.nextLine().charAt(0);
 		}
-		
-		return action;
+		return c;
 	}
 
+	private boolean charAction(char c) {
+		if (c != 'c' || c != 'v' || c != 'r' | c != 'e')
+			return false;
+		return true;
+	}
 
-	public String askCoord(Scanner sc) { // exemple : A12
-		return sc.nextLine();
+	public String askCoord(Scanner sc) {
+		String s = sc.nextLine();
+		while (!coord(s)) {
+			System.out.println("Coordonnées incorrectes");
+			s = sc.nextLine();
+		}
+		return s.substring(0, 3).toUpperCase();
+	}
+
+	private boolean coord(String s) {
+		if (s.isEmpty() || !Character.isLetter(s.charAt(0)) || !Character.isDigit(s.charAt(1)))
+			return false;
+		if (s.length() > 2 && !Character.isDigit(s.charAt(2)))
+			return false;
+		return true;
 	}
 	
 	public void buildColony(Colony colony){

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.catane.model.resources.*;
 import com.catane.model.cases.*;
 
 public class Player {
@@ -14,6 +13,7 @@ public class Player {
 	private List<Resource> resources;
 	private List<Colony> colonies; // Comprend egalement les villes...
 	private List<Road> roads;
+
 	private Color color;
 	
 	public Player(Color color) {
@@ -34,7 +34,7 @@ public class Player {
 
 		/***************************************
 		*  exemple pour avoir nombre de bois :
-		*  getResource(new Wood())
+		*  getResource(Resource.WOOD)
 		*  retourne le nombre de bois 
 		***************************************/
 
@@ -45,16 +45,25 @@ public class Player {
 		return x;
 	}
 
+	public void printResources() {
+		System.out.println("Argile = " + getResource(Resource.CLAY));
+		System.out.println("Laine = " + getResource(Resource.SHEEP));
+		System.out.println("Pierre = " + getResource(Resource.STONE));
+		System.out.println("Blé = " + getResource(Resource.WHEAT));
+		System.out.println("Bois = " + getResource(Resource.WOOD));
+	}
+
 	public boolean canAffordColony(){ // Le joueur a les ressources nécessaires pour construire une colonie
-		return (getResource(new Clay()) >= 1 && getResource(new Wood()) >= 1 && getResource(new Sheep()) >= 1 && getResource(new Wheat()) >= 1);
+		return (getResource(Resource.CLAY) >= 1 && getResource(Resource.WOOD) >= 1 &&
+				getResource(Resource.SHEEP) >= 1 && getResource(Resource.WHEAT) >= 1);
 	}
 
 	public boolean canAffordTown(){ // Le joueur a les ressources nécessaires pour construire une ville
-		return (getResource(new Stone()) >= 3 && getResource(new Wheat()) >= 2);
+		return (getResource(Resource.STONE) >= 3 && getResource(Resource.WHEAT) >= 2);
 	}
 
 	public boolean canAffordRoad(){ // Le joueur a les ressources nécessaires pour construire une route
-		return (getResource(new Clay()) >= 1 && getResource(new Wood()) >= 1);
+		return (getResource(Resource.CLAY) >= 1 && getResource(Resource.WOOD) >= 1);
 	}
 	
 	// Pour l'interface graphique on appelle celle-la directement.
@@ -120,7 +129,7 @@ public class Player {
 		System.out.println("- Echanger des ressources -> tapez 'e'");
 		char c = sc.nextLine().charAt(0);
 		while (!charAction(c)) {
-			System.out.println("Caractère non reconnu");
+			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r ou e)");
 			c = sc.nextLine().charAt(0);
 		}
 		return c;
@@ -135,7 +144,7 @@ public class Player {
 	public String askCoord(Scanner sc) {
 		String s = sc.nextLine();
 		while (!coord(s)) {
-			System.out.println("Coordonnées incorrectes");
+			System.out.println("Coordonnées incorrectes\nDonnez les coordonnées (ex: A8) : ");
 			s = sc.nextLine();
 		}
 		return s.substring(0, (s.length() == 2 ? 2 : 3)).toUpperCase(); // Le string a forcement une taille >= 2
@@ -176,23 +185,23 @@ public class Player {
 	}
 
 	public void payColony() { // Payer une colonie
-		pay(new Clay());
-		pay(new Wood());
-		pay(new Sheep());
-		pay(new Wheat());
+		pay(Resource.CLAY);
+		pay(Resource.WOOD);
+		pay(Resource.SHEEP);
+		pay(Resource.WHEAT);
 	}
 
 	public void payTown() { // Payer une ville
-		pay(new Stone());
-		pay(new Stone());
-		pay(new Stone());
-		pay(new Wheat());
-		pay(new Wheat());
+		pay(Resource.STONE);
+		pay(Resource.STONE);
+		pay(Resource.STONE);
+		pay(Resource.WHEAT);
+		pay(Resource.WHEAT);
 	}
 	
 	public void payRoad() { // Payer une route
-		pay(new Wood());
-		pay(new Clay());
+		pay(Resource.WOOD);
+		pay(Resource.CLAY);
 	}
 
 	public void echange(Resource aPayer, Resource aGagner){

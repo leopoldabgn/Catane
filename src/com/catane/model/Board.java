@@ -1,36 +1,19 @@
 package com.catane.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
-import com.catane.model.cases.Case;
-import com.catane.model.cases.Colony;
-import com.catane.model.cases.Desert;
-import com.catane.model.cases.Field;
-import com.catane.model.cases.Forest;
-import com.catane.model.cases.Hill;
-import com.catane.model.cases.Mountain;
-import com.catane.model.cases.Pre;
-import com.catane.model.cases.ResourceCase;
-import com.catane.model.cases.Road;
-import com.catane.model.cases.Town;
+import com.catane.model.cases.*;
 
 public class Board {
 		
 	private int size;
 	private Case[][] cases;
 	private int[] thief;
-	private List<Player> players;
-	private Player actualPlayer;
-	private Scanner sc;
 	
 	public Board(int size) {
 		this.size = size * 2 + 1;
 		cases = generateAndAddCases();
 		cases = mixCases(cases);
-		this.players = new ArrayList<Player>();
 	}	
 	
 	public void display() {
@@ -208,11 +191,6 @@ public class Board {
 		replaceCaseBy(colony, town);
 	}
 	
-	public int[] rollDices() {
-		Random rd = new Random();
-		return new int[] {rd.nextInt(6)+1, rd.nextInt(6)+1};
-	}
-	
 	public boolean outOfBorders(int x, int y) {
 		return !((x >= 0 && x < size) && (y >= 0 && y < size));
 	}
@@ -233,12 +211,6 @@ public class Board {
 		r.setPlayer(player);
 	}
 	
-	public void setPlayers(List<Player> players) {
-		this.players = players;
-		if(players != null && players.size() > 1)
-			actualPlayer = players.get(0);
-	}
-	
 	public boolean checkColoniesAround(int x, int y) { // Colonie ou Ville autour de ces coordonnees.
 		int[] coord = {x-2, y, x, y-2, x+2, y, x, y+2}; // gauche, haut, droite, bas.
 		
@@ -253,127 +225,6 @@ public class Board {
 		}
 		
 		return false;
-	}
-	
-	public int[] askCoord() {
-		int[] coord = null;
-		String coordStr;
-		do {
-			if(coord != null) // Si != null, forcement les coordonnees sont outOfBorders.
-				System.out.println("Ces coordonnées ne sont pas sur le plateau !");
-			System.out.print("Donner les coordonnées (ex: A8) : ");
-			coordStr = actualPlayer.askCoord(sc);
-			coord = convertCoord(coordStr);
-		} while(outOfBorders(coord[0], coord[1]));
-		
-		return coord;
-	}
-	
-	public void playRound() {
-		
-		System.out.println("Au tour de "+actualPlayer.getName());
-		boolean endRound;
-		char c;
-		int[] coord;
-		boolean error;
-		
-		do {
-			endRound = true;
-			c = actualPlayer.askAction(sc);
-			System.out.println(c);
-			coord = null;
-			error = true;
-			
-			do {
-				switch(c) {
-					case 'c':
-						if(!actualPlayer.canAffordColony()) {// Si il n'a pas assez d'argent. Ou il n'a pas de colony dans son inventaire.
-							System.out.println("Vous n'avez pas les ressources pour construire une colonie !");
-							endRound = false;
-							error = false;
-						}
-						else {
-							coord = askCoord(); // Coordonnees forcement dans le plateau.
-							int ans = actualPlayer.canBuildColonyOn(this, coord); // ans ne peut pas etre egale a 1 ici.
-							if(ans == 2)
-									System.out.println("Vous ne pouvez pas poser de colonie ici !");
-							else if(ans == 3)
-									System.out.println("Il y a deja une colonie ou une ville aux alentours !");
-							else {
-								error = false;
-								putColony(actualPlayer, coord[0], coord[1]);
-							}
-						}
-						break;
-					case 'v':
-						if(!actualPlayer.canAffordTown()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
-							System.out.println("Vous n'avez pas les ressources pour construire une ville !");
-							endRound = false;
-							error = false;
-						}
-						else {
-							coord = askCoord(); // Coordonnees forcement dans le plateau.
-							int ans = actualPlayer.canBuildTownOn(this, coord); // ans ne peut pas etre egale a 1 ici.
-							if(ans == 2)
-									System.out.println("Cette case n'est pas une colonie !");
-							else if(ans == 3)
-									System.out.println("Cette colonie n'est pas a vous !");
-							else {
-								error = false;
-								putTown(actualPlayer, coord[0], coord[1]);
-							}
-						}
-						break;
-					case 'r':
-						if(!actualPlayer.canAffordRoad()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
-							System.out.println("Vous n'avez pas les ressources pour construire une route !");
-							endRound = false;
-							error = false;
-						}
-						else {
-							coord = askCoord(); // Coordonnees forcement dans le plateau.
-							int ans = actualPlayer.canBuildRoadOn(this, coord); // ans ne peut pas etre egale a 1 ici.
-							if(ans == 2)
-									System.out.println("Vous ne pouvez pas poser de route ici !");
-							else {
-								error = false;
-								putRoad(actualPlayer, coord[0], coord[1]);
-							}
-						}
-						break;
-					case 'e':
-						break;
-				}
-				
-			} while(error);
-			
-		} while(!endRound);
-		
-		nextRound();
-	}
-	
-	public int[] convertCoord(String coord) // A modifier quand on rajoutera les ports.
-	{
-		if(coord == null || coord.length() < 2 || coord.length() > 3)
-			return null;
-		int[] tab = new int[2];
-		try {
-			tab[0] = coord.charAt(0)-'A';
-			tab[1] = Integer.parseInt(coord.substring(1))-1;
-		} catch(Exception e) {
-			return null;
-		}
-		return tab;
-	}
-	
-	public void nextRound() { // On passe au joueur suivant dans la liste.
-		if(actualPlayer == null || players == null || players.size() < 3)
-			return;
-		int index = players.indexOf(actualPlayer);
-		if(index == -1)
-			return;
-		
-		actualPlayer = players.get(index  == players.size()-1 ? 0 : index+1);
 	}
 	
 	public Case getCase(int x, int y) {
@@ -396,20 +247,6 @@ public class Board {
 	
 	public boolean isEmptyRoad(int x, int y) {
 		return cases[x][y].isEmptyRoad();
-	}
-	
-	///////////////////////////////////////////
-	
-	public void openScan() {
-		this.sc = new Scanner(System.in);
-	}
-	
-	public void closeScan() {
-		this.sc.close();
-	}
-	
-	public Player getActualPlayer() {
-		return actualPlayer;
 	}
 	
 	public int getSize() {

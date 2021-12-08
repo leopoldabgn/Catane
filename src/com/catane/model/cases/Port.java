@@ -1,6 +1,6 @@
 package com.catane.model.cases;
 
-import com.catane.model.resources.Resource;
+import com.catane.model.Resource;
 
 public class Port extends Case {
 

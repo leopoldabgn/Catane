@@ -354,7 +354,7 @@ public class Board {
 	
 	public int[] convertCoord(String coord) // A modifier quand on rajoutera les ports.
 	{
-		if(coord == null || coord.length() != 2)
+		if(coord == null || coord.length() < 2 || coord.length() > 3)
 			return null;
 		int[] tab = new int[2];
 		try {

@@ -30,7 +30,7 @@ public class Player {
 
 	// Méthodes pour vérification des actions
 
-	public int getResource(Resource r1){
+	public int getResource(Resource r1) {
 
 		/***************************************
 		*  exemple pour avoir nombre de bois :
@@ -112,7 +112,12 @@ public class Player {
 		resources.add(r);
 	}
 
-	public char askAction(Scanner sc){
+	public char askAction(Scanner sc) {
+		System.out.println("Choisissez une action à effectuer :");
+		System.out.println("- Construire une colonie -> tapez 'c'");
+		System.out.println("- Construire une ville -> tapez 'v'");
+		System.out.println("- Construire une route -> tapez 'r'");
+		System.out.println("- Echanger des ressources -> tapez 'e'");
 		char c = sc.nextLine().charAt(0);
 		while (!charAction(c)) {
 			System.out.println("Caractère non reconnu");
@@ -122,7 +127,7 @@ public class Player {
 	}
 
 	private boolean charAction(char c) {
-		if (c != 'c' || c != 'v' || c != 'r' | c != 'e')
+		if (c != 'c' && c != 'v' && c != 'r' && c != 'e')
 			return false;
 		return true;
 	}
@@ -133,33 +138,35 @@ public class Player {
 			System.out.println("Coordonnées incorrectes");
 			s = sc.nextLine();
 		}
-		return s.substring(0, 3).toUpperCase();
+		return s.substring(0, (s.length() == 2 ? 2 : 3)).toUpperCase(); // Le string a forcement une taille >= 2
 	}
 
 	private boolean coord(String s) {
-		if (s.isEmpty() || !Character.isLetter(s.charAt(0)) || !Character.isDigit(s.charAt(1)))
+		if(s == null || s.length() < 2)
+			return false;
+		if (!Character.isLetter(s.charAt(0)) || !Character.isDigit(s.charAt(1)))
 			return false;
 		if (s.length() > 2 && !Character.isDigit(s.charAt(2)))
 			return false;
 		return true;
 	}
 	
-	public void buildColony(Colony colony){
+	public void buildColony(Colony colony) {
 		payColony();
 		colonies.add(colony);
 	}
 
-	public void buildRoad(Road road){
+	public void buildRoad(Road road) {
 		payRoad();
 		roads.add(road);
 	}
 
-	public void buildTown(Colony colony){ // Comment transformer une colonie en ville ?
+	public void buildTown(Colony colony) { // Comment transformer une colonie en ville ?
 		payTown();						// Problème puisqu'une ville est de type Town et Colony
 		colony = new Town(colony);
 	}
 
-	public void pay(Resource r){ // Supprime une ressource
+	public void pay(Resource r) { // Supprime une ressource
 		Resource toRemove = null;
 		for (Resource r1 : resources)
 			if (r1.getClass() == r.getClass())
@@ -175,7 +182,7 @@ public class Player {
 		pay(new Wheat());
 	}
 
-	public void payTown(){ // Payer une ville
+	public void payTown() { // Payer une ville
 		pay(new Stone());
 		pay(new Stone());
 		pay(new Stone());
@@ -183,7 +190,7 @@ public class Player {
 		pay(new Wheat());
 	}
 	
-	public void payRoad(){ // Payer une route
+	public void payRoad() { // Payer une route
 		pay(new Wood());
 		pay(new Clay());
 	}
@@ -195,7 +202,7 @@ public class Player {
 		gainResource(aGagner);
 	}
 
-	public void buyDev(){
+	public void buyDev() {
 
 	}
 	

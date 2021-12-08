@@ -1,15 +1,12 @@
 package com.catane.model.cards;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedList;
 
-public class DevelopmentCardsDeck {
-	
-	private List<DevelopmentCard> cards;
-	
+public class DevelopmentCardsDeck extends LinkedList<DevelopmentCard> {
+	private static final long serialVersionUID = 1L;
+
 	public DevelopmentCardsDeck() {
-		this.cards = new ArrayList<DevelopmentCard>();
 		int nb = 2;
 		
 		DevelopmentCard[] tab;
@@ -18,7 +15,6 @@ public class DevelopmentCardsDeck {
 		tab = Progress.values();
 		addCards(tab, nb);
 		addCards(new Knight(), nb);
-		
 		mixCards();
 	}
 	
@@ -29,21 +25,15 @@ public class DevelopmentCardsDeck {
 	
 	private void addCards(DevelopmentCard c, int nb) {
 		for(int i=0;i<nb;i++)
-			cards.add(c);
+			this.push(c);
 	}
 	
 	private void mixCards() {
-		Collections.shuffle(cards);
+		Collections.shuffle(this);
 	}
 	
 	public DevelopmentCard getCard() {
-		if(cards.size() == 0)
-			return null;
-		int last = cards.size()-1;
-		DevelopmentCard card = cards.get(last);
-		cards.remove(cards.get(last));
-		
-		return card;
+		return this.poll();
 	}
 	
 }

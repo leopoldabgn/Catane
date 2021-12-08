@@ -249,6 +249,8 @@ public class Board {
 		return cases[x][y].isEmptyRoad();
 	}
 	
+	/////////////////////////////::
+	
 	public int getSize() {
 		return size;
 	}

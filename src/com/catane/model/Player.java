@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.catane.model.cards.DevelopmentCard;
+import com.catane.model.cards.Knight;
+import com.catane.model.cards.Progress;
+import com.catane.model.cards.VictoryPoints;
 import com.catane.model.cases.*;
 
 public class Player {
@@ -13,6 +17,7 @@ public class Player {
 	private List<Resource> resources;
 	private List<Colony> colonies; // Comprend egalement les villes...
 	private List<Road> roads;
+	private List<DevelopmentCard> developmentCards;
 
 	private Color color;
 	
@@ -21,6 +26,7 @@ public class Player {
 		this.resources = new ArrayList<Resource>();
 		this.colonies = new ArrayList<Colony>();
 		this.roads = new ArrayList<Road>();
+		this.developmentCards = new ArrayList<DevelopmentCard>();
 		this.color = color;
 	}
 	
@@ -40,19 +46,66 @@ public class Player {
 
 		int x = 0;
 		for (Resource r2 : resources)
-			if (r2.getClass() == r1.getClass())
+			if (r2.equals(r1))
 				x++;
 		return x;
 	}
 
+	public int getNbDevCard(DevelopmentCard card) {
+		int sum = 0;
+		for(DevelopmentCard c : developmentCards)
+			if(c.equals(card))
+				sum++;
+		return sum;
+	}
+	
 	public void printResources() {
-		System.out.println("Argile = " + getResource(Resource.CLAY));
-		System.out.println("Laine = " + getResource(Resource.SHEEP));
-		System.out.println("Pierre = " + getResource(Resource.STONE));
-		System.out.println("Blé = " + getResource(Resource.WHEAT));
-		System.out.println("Bois = " + getResource(Resource.WOOD));
+		System.out.print("Ressources : ");
+		Resource[] resources = Resource.values();
+		boolean comma = false;
+		int count = 0;
+		for(Resource r : resources) {
+			System.out.print(r+" = "+getResource(r));
+			if(++count < resources.length)
+				System.out.print(", ");
+		}
+		
+		System.out.println();
 	}
 
+	public void printDevelopmentCards() {
+		System.out.print("Cartes de developpement : ");
+		DevelopmentCard[] tab;
+		boolean nothing = true, comma = false;
+		int nb = getNbDevCard(new Knight());
+		if(nb != 0) {
+			System.out.print(nb+" "+(new Knight()));
+			comma = true;
+			nothing = false;
+		}
+		for(int i=0;i<2;i++) {
+			if(i == 0)
+				tab = VictoryPoints.values();
+			else
+				tab = Progress.values();
+			for(DevelopmentCard card : tab) {
+				nb = getNbDevCard(card);
+				if(nb != 0) {
+					if(nothing)
+						nothing = false;
+					if(comma)
+						System.out.print(", ");
+					System.out.print(nb+" "+card);
+					if(!comma)
+						comma = true;
+				}
+			}
+		}
+		
+		if(nothing)
+			System.out.print(" Aucune carte.");
+	}
+	
 	public boolean canAffordColony(){ // Le joueur a les ressources nécessaires pour construire une colonie
 		return (getResource(Resource.CLAY) >= 1 && getResource(Resource.WOOD) >= 1 &&
 				getResource(Resource.SHEEP) >= 1 && getResource(Resource.WHEAT) >= 1);
@@ -64,6 +117,11 @@ public class Player {
 
 	public boolean canAffordRoad(){ // Le joueur a les ressources nécessaires pour construire une route
 		return (getResource(Resource.CLAY) >= 1 && getResource(Resource.WOOD) >= 1);
+	}
+	
+	public boolean canAffordDevCard() {
+		return getResource(Resource.STONE) >= 1 && getResource(Resource.SHEEP) >= 1 &&
+			   getResource(Resource.WHEAT) >= 1;
 	}
 	
 	// Pour l'interface graphique on appelle celle-la directement.
@@ -126,17 +184,18 @@ public class Player {
 		System.out.println("- Construire une colonie -> tapez 'c'");
 		System.out.println("- Construire une ville -> tapez 'v'");
 		System.out.println("- Construire une route -> tapez 'r'");
+		System.out.println("- Acheter une carte de developpement -> tapez 'd'");
 		System.out.println("- Echanger des ressources -> tapez 'e'");
 		char c = sc.nextLine().charAt(0);
 		while (!charAction(c)) {
-			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r ou e)");
+			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r, d ou e)");
 			c = sc.nextLine().charAt(0);
 		}
 		return c;
 	}
 
 	private boolean charAction(char c) {
-		if (c != 'c' && c != 'v' && c != 'r' && c != 'e')
+		if (c != 'c' && c != 'v' && c != 'r' && c != 'd' && c != 'e')
 			return false;
 		return true;
 	}
@@ -178,7 +237,7 @@ public class Player {
 	public void pay(Resource r) { // Supprime une ressource
 		Resource toRemove = null;
 		for (Resource r1 : resources)
-			if (r1.getClass() == r.getClass())
+			if (r1.equals(r))
 				toRemove = r1;
 		if (toRemove != null)
 			resources.remove(toRemove);
@@ -211,8 +270,25 @@ public class Player {
 		gainResource(aGagner);
 	}
 
-	public void buyDev() {
-
+	public int canBuyDevCard(Game game) {
+		if(!canAffordDevCard())
+			return 1;
+		else if(game.getDevCardsDeck().isEmpty())
+			return 2;
+		return 0;
+	}
+	
+	public void payDevCard() {
+		pay(Resource.STONE);
+		pay(Resource.SHEEP);
+		pay(Resource.WHEAT);
+	}
+	
+	public void getDevCard(Game game) {
+		payDevCard();
+		DevelopmentCard card = game.getDevCard();
+		if(card != null) // Normalement il est impossible que card soit null !
+			developmentCards.add(card);
 	}
 	
 	public int getNumber() {

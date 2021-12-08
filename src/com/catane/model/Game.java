@@ -6,26 +6,30 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import com.catane.model.cards.DevelopmentCard;
+import com.catane.model.cards.DevelopmentCardsDeck;
 import com.catane.view.Window;
 
-public class Jeu {
+public class Game {
 
 	private List<Player> players;
 	private Player actualPlayer;
 	private Scanner sc;
 	private Board board;
-
+	private DevelopmentCardsDeck developmentCardsDeck;
+	
 	public static void main(String[] args) {
-		new Jeu();
+		new Game();
 	}
 
-	public Jeu() {
+	public Game() {
 		
 		String jouer = "command";
 
 		// Demander taille plateau.
 		
 		board = new Board(4);
+		developmentCardsDeck = new DevelopmentCardsDeck();
 		
 		if(jouer.equals("command")) {
 			startGame();
@@ -45,6 +49,9 @@ public class Jeu {
 		boolean error;
 		
 		do {
+			actualPlayer.printResources();
+			actualPlayer.printDevelopmentCards();
+			System.out.println();
 			endRound = true;
 			c = actualPlayer.askAction(sc);
 			coord = null;
@@ -107,7 +114,22 @@ public class Jeu {
 							}
 						}
 						break;
+					case 'd':
+						if(!actualPlayer.canAffordDevCard()) {
+							System.out.println("Vous n'avez pas les ressources pour acheter une carte de developpement !");
+						}
+						else {
+							int ans = actualPlayer.canBuyDevCard(this);
+							if(ans == 2) 
+								System.out.println("Il n'y a plus de carte developpement dans le paquet !");
+							else
+								actualPlayer.getDevCard(this);
+						}
+						error = false;
+						endRound = false; // Le tour continu meme quand on achete une carte de dev ?
+						break;
 					case 'e':
+						error = false;
 						break;
 				}
 				
@@ -189,10 +211,17 @@ public class Jeu {
 		sc.nextLine();
 
 		//ajout des ressources pour test
+		/*
 		actualPlayer.gainResource(Resource.CLAY);
 		actualPlayer.gainResource(Resource.WHEAT);
 		actualPlayer.gainResource(Resource.WOOD);
 		actualPlayer.gainResource(Resource.SHEEP);
+		*/
+		for(int i=0;i<5;i++) {
+		actualPlayer.gainResource(Resource.WHEAT);
+		actualPlayer.gainResource(Resource.STONE);
+		actualPlayer.gainResource(Resource.SHEEP);
+		}
 
 		board.display();
 
@@ -215,7 +244,13 @@ public class Jeu {
 		actualPlayer = players.get(index  == players.size()-1 ? 0 : index+1);
 	}
 	
-	///////////////////////////////////////////
+	public DevelopmentCardsDeck getDevCardsDeck() {
+		return developmentCardsDeck;
+	}
+	
+	public DevelopmentCard getDevCard() {
+		return developmentCardsDeck.getCard();
+	}
 	
 	public void openScan() {
 		sc = new Scanner(System.in);

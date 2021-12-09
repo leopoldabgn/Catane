@@ -14,6 +14,7 @@ import com.catane.model.cases.*;
 public class Player {
 	public static int nextPlayerNb = 1; // Le premier joueur est J1, le deuxieme J2...
 	private int number;
+	private Score score;
 	private List<Resource> resources;
 	private List<Colony> colonies; // Comprend egalement les villes...
 	private List<Road> roads;
@@ -62,7 +63,6 @@ public class Player {
 	public void printResources() {
 		System.out.print("Ressources : ");
 		Resource[] resources = Resource.values();
-		boolean comma = false;
 		int count = 0;
 		for(Resource r : resources) {
 			System.out.print(r+" = "+getResource(r));
@@ -104,6 +104,10 @@ public class Player {
 		
 		if(nothing)
 			System.out.print(" Aucune carte.");
+	}
+	
+	public void printScore() {
+		System.out.println("Score : "+getScore());
 	}
 	
 	public boolean canAffordColony(){ // Le joueur a les ressources nécessaires pour construire une colonie
@@ -291,12 +295,55 @@ public class Player {
 			developmentCards.add(card);
 	}
 	
+	public int getNbVictoryCards() {
+		if(developmentCards.size() == 0)
+			return 0;
+		int sum = 0;
+		for(DevelopmentCard card : developmentCards)
+			if(card instanceof VictoryPoints)
+				sum++;
+		return sum;
+	}
+	
+	public int getNbColonies() {
+		return colonies.size() - getNbTowns();
+	}
+	
+	public int getNbTowns() {
+		if(colonies.size() == 0)
+			return 0;
+		int nb = 0;
+		for(Colony c : colonies)
+			if(c instanceof Town)
+				nb++;
+		return nb;
+	}
+	
+	public boolean hasWon() {
+		return getScore() == Score.SCORE_WIN;
+	}
+	
+	public int getScore() {
+		if(score == null)
+			return 0;
+		return score.getScore();
+	}
+	
+	public void setScore(Score score) {
+		this.score = score;
+	}
+	
 	public int getNumber() {
 		return number;
 	}
 	
 	public String getName() {
 		return "J"+number;
+	}
+	
+	@Override
+	public String toString() {
+		return getName();
 	}
 	
 }

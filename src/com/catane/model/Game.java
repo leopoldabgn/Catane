@@ -14,6 +14,7 @@ public class Game {
 
 	private List<Player> players;
 	private Player actualPlayer;
+	private Player longestRoadOwner, mostPowerfulArmyOwner; // On sait qui detient les cartes.
 	private Scanner sc;
 	private Board board;
 	private DevelopmentCardsDeck developmentCardsDeck;
@@ -49,6 +50,7 @@ public class Game {
 		boolean error;
 		
 		do {
+			actualPlayer.printScore();
 			actualPlayer.printResources();
 			actualPlayer.printDevelopmentCards();
 			System.out.println();
@@ -133,9 +135,9 @@ public class Game {
 						break;
 				}
 				
-			} while(error);
+			} while(error && !actualPlayer.hasWon());
 			
-		} while(!endRound);
+		} while(!endRound && !actualPlayer.hasWon());
 		
 		nextRound();
 	}
@@ -181,18 +183,22 @@ public class Game {
 
 	private void setupPlayers(int p) {
 		players = new ArrayList<Player>();
+		Player player = null;
 		for (int i = 0; i < p; i++) {
 			switch (i) {
-				case 0:	players.add(new Player(Color.ORANGE));
+				case 0:	player = new Player(Color.ORANGE);
 						break;
-				case 1:	players.add(new Player(Color.BLUE));
+				case 1:	player = new Player(Color.BLUE);
 						break;
-				case 2:	players.add(new Player(Color.YELLOW));
+				case 2:	player = new Player(Color.YELLOW);
 						break;
-				case 3:	players.add(new Player(Color.RED));
+				default:player = new Player(Color.RED);
 						break;
 			}
+			player.setScore(new Score(this, player));
+			players.add(player);
 		}
+		
 		actualPlayer = players.get(0);
 	}
 
@@ -204,8 +210,8 @@ public class Game {
 		System.out.println("Vous vous apprêtez à lancer une partie des Colons de Catane.");
 		int p;
 		do {
-		System.out.println("Voulez vous jouer à 3 ou 4 joueurs ? (3/4)");
-		p = sc.nextInt();
+			System.out.println("Voulez vous jouer à 3 ou 4 joueurs ? (3/4)");
+			p = sc.nextInt();
 		} while (p != 3 && p != 4);
 		setupPlayers(p);
 		sc.nextLine();
@@ -217,19 +223,21 @@ public class Game {
 		actualPlayer.gainResource(Resource.WOOD);
 		actualPlayer.gainResource(Resource.SHEEP);
 		*/
-		for(int i=0;i<5;i++) {
-		actualPlayer.gainResource(Resource.WHEAT);
-		actualPlayer.gainResource(Resource.STONE);
-		actualPlayer.gainResource(Resource.SHEEP);
+		for(int i=0;i<20;i++) {
+			actualPlayer.gainResource(Resource.WHEAT);
+			actualPlayer.gainResource(Resource.STONE);
+			actualPlayer.gainResource(Resource.SHEEP);
 		}
 
 		board.display();
 
-		//while (true) {
+		while(!endGame()) {
 			playRound();
 			board.display();
-		//}
+		}
 
+		System.out.println(actualPlayer+" a gagné !"); // J2 non !!! C est J1 !!
+		
 		closeScan();
 
 	}
@@ -242,6 +250,21 @@ public class Game {
 			return;
 		
 		actualPlayer = players.get(index  == players.size()-1 ? 0 : index+1);
+	}
+	
+	public boolean endGame() { // Ou alors on dit que celui qui vient de jouer a gagné ? actualPlayer.hasWon() ?
+		for(Player p : players)
+			if(p.hasWon())
+				return true;
+		return false;
+	}
+	
+	public Player longestRoadOwner() {
+		return longestRoadOwner;
+	}
+	
+	public Player mostPowerfulArmyOwner() {
+		return mostPowerfulArmyOwner;
 	}
 	
 	public DevelopmentCardsDeck getDevCardsDeck() {

@@ -13,41 +13,42 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
+import com.catane.model.cases.ResourceCase;
 import com.catane.view.BoardView;
 
 public abstract class ResourceCaseView extends CaseView {
 	private static final long serialVersionUID = 1L;
 
-	private Color color;
-	private int number;
-	private boolean thief = false;
+	private ResourceCase modelCase;
 	
 	private GridBagConstraints gbc = new GridBagConstraints();
 	
-	public ResourceCaseView(BoardView board, int number, Color color) {
+	public ResourceCaseView(BoardView board, ResourceCase rC) {
 		super(board);
-		this.number = number;
-		this.color = color;
+		this.modelCase = rC;
 		setBorder(BorderFactory.createBevelBorder(EtchedBorder.RAISED));
 		setPreferredSize(new Dimension(80, 80));
-		setBackground(color);
+		setBackground(getColor());
 		
 		setLayout(new GridBagLayout());
 		
 		JLabel label = new JLabel(toString());
 		label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 12));
 		label.setForeground(Color.BLACK);
-		Circle circle = new Circle(number, (int)getPreferredSize().getWidth()/5);
 		
 	    gbc.gridx = 0;
 	    gbc.gridy = 0; 
 		add(label, gbc); // On place le label en haut(gridy=0)
+		
 		gbc.gridx = 0;
-		gbc.gridy = 1;
-		add(circle, gbc); // Puis le cercle en desous (gridy=1)
+		gbc.gridy = 1; // On place un cercle ou le voleur en dessous.(gridy=1)
+		if(hasThief()) {
+			add(new Thief(10, 20), gbc);
+		}
+		else if(!(this instanceof DesertView)) { // Le desert n'a pas de chiffre.
+			add(new Circle(getNumber(), (int)getPreferredSize().getWidth()/5), gbc); // 80
+		}
 	}
-	
-	public abstract void giveResources();
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -70,14 +71,13 @@ public abstract class ResourceCaseView extends CaseView {
 		
 		public Circle(int number, int size) {
 			setPreferredSize(new Dimension(size, size)); // On change la dimension du panel
-			
 			this.number = new JLabel(number+"");
 			if(number == 6 || number == 8)
 				this.number.setForeground(Color.RED); // Couleur rouge pour le 6 et le 8
 			else
 				this.number.setForeground(Color.BLACK);
-			setOpaque(false); // Comme on va dessiner un rond, il ne faut pas qu'on voit les coins carr�s du panel
-			setLayout(new GridBagLayout()); // Pour centrer les �lements � l'int�rieur
+			setOpaque(false); // Comme on va dessiner un rond, il ne faut pas qu'on voit les coins carres du panel
+			setLayout(new GridBagLayout()); // Pour centrer les elements a l'interieur
 			add(this.number); // On ajoute le JLabel au panel
 			
 		}
@@ -99,7 +99,7 @@ public abstract class ResourceCaseView extends CaseView {
 		
 		public Thief(int width, int height) {
 			setPreferredSize(new Dimension(width, height)); // On change la dimension du panel
-			setOpaque(false); // Comme on va dessiner un rond, il ne faut pas qu'on voit les coins carr�s du panel
+			setOpaque(false); // Comme on va dessiner un rond, il ne faut pas qu'on voit les coins carres du panel
 		}
 		
 		public void paintComponent(Graphics g) {
@@ -115,30 +115,31 @@ public abstract class ResourceCaseView extends CaseView {
 	}
 	
 	public int getNumber() {
-		return number;
+		return modelCase.getNumber();
 	}
 	
 	public Color getColor() {
-		return color;
+		return modelCase.getColor();
 	}
 	
 	public void setThief(boolean thief) {
 		if((thief && hasThief()) || (!thief && !hasThief()))
 			return;
-		this.thief = thief;
+		modelCase.setThief(thief);
+		
 		// TODO : ATTENTION : cas ou le voleur revient sur le desert peut causer une erreur
 		remove(getComponentCount()-1); // On retire le dernier element
 		if(thief) {
 			add(new Thief(10, 20), gbc);
 		}
 		else if(!(this instanceof DesertView)) { // Le desert n'a pas de chiffre.
-			add(new Circle(number, 80), gbc);
+			add(new Circle(getNumber(), 80), gbc);
 		}
 		repaint();
 	}
 	
 	public boolean hasThief() {
-		return thief;
+		return modelCase.hasThief();
 	}
 	
 }

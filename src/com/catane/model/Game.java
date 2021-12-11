@@ -36,7 +36,7 @@ public class Game {
 			startGame();
 		}
 		else if(jouer.equals("gui")){
-			new Window(600, 600);
+			new Window(this, 600, 600);
 		}
 		
 	}
@@ -139,7 +139,6 @@ public class Game {
 			
 		} while(!endRound && !actualPlayer.hasWon());
 		
-		nextRound();
 	}
 	
 	public void setPlayers(List<Player> players) { // Peut sûrement être supprimée
@@ -230,12 +229,16 @@ public class Game {
 		}
 
 		board.display();
-
-		while(!endGame()) {
+		boolean endGame = endGame();
+		
+		while(!endGame) {
 			playRound();
 			board.display();
+			endGame = endGame();
+			if(!endGame)
+				nextRound();
 		}
-
+		
 		System.out.println(actualPlayer+" a gagné !"); // J2 non !!! C est J1 !!
 		
 		closeScan();
@@ -281,6 +284,10 @@ public class Game {
 	
 	public void closeScan() {
 		sc.close();
+	}
+	
+	public Board getBoard() {
+		return board;
 	}
 	
 	public Player getActualPlayer() {

@@ -1,34 +1,30 @@
 package com.catane.view.cases;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
-import com.catane.model.Player;
+import com.catane.model.cases.Colony;
 import com.catane.view.BoardView;
 
 public class ColonyView extends MovableCaseView {
 	private static final long serialVersionUID = 1L;
 
-	protected int resourceGain = 1;
+	private Colony colony;
 	
-	public ColonyView(BoardView board) {
-		super(board, null); // Utilisé uniquement pour les cases vides.
-	}
-	
-	public ColonyView(BoardView board, Player player) {
-		super(board, player);
-		//setPreferredSize(new Dimension()); ?
+	public ColonyView(BoardView board, Colony colony) {
+		super(board, colony); // Utilisé uniquement pour les cases vides.
+		this.colony = colony;
 	}
 	
 	@Override
 	public void mouseReleased(MouseEvent e) { // Pas besoin de redefinir cette methode dans Town.
 		super.mouseReleased(e);
 		// if(isSelectable)
-		if(player == null) {
-			player = board.getActualPlayer();
+		if(isEmpty()) {
+			setPlayer(board.getActualPlayer());
 		}
-		else if(player != null) { // && player.canCreateTown....
+		else if(!isEmpty()) { // && player.canCreateTown....
+			
 			board.replaceColonyByTown(this);
 		}
 		repaint();
@@ -49,10 +45,9 @@ public class ColonyView extends MovableCaseView {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(player == null) // Si la case est vide, rien a afficher.
+		if(isEmpty()) // Si la case est vide, rien a afficher.
 			return;
-		Color color = player.getColor();
-		g.setColor(color);
+		g.setColor(getPlayer().getColor()); // player forcement non null ici.
 		double coeff = 0.1;
 		int space = (int)(coeff*getWidth()); // C'est un carré normalement, donc getWidth == getHeigt.
 		int[] valX = {space, getWidth()/2, getWidth() - space};

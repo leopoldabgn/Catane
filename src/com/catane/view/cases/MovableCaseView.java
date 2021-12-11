@@ -1,33 +1,34 @@
 package com.catane.view.cases;
 
 import com.catane.model.Player;
+import com.catane.model.cases.MovableCase;
 import com.catane.view.BoardView;
 
 public class MovableCaseView extends CaseView {
 	private static final long serialVersionUID = 1L;
 	
-	protected Player player;
+	private MovableCase modelCase;
 	
-	public MovableCaseView(BoardView board) {
-		this(board, null);
-	}
-	
-	public MovableCaseView(BoardView board, Player player) {
+	public MovableCaseView(BoardView board, MovableCase modelCase) {
 		super(board);
-		this.player = player;
+		this.modelCase = modelCase;
 		setOpaque(false);
 	}
 	
+	public MovableCase getModelCase() {
+		return modelCase;
+	}
+	
 	public Player getPlayer() {
-		return player;
+		return modelCase.getPlayer();
 	}
 	
 	public void setPlayer(Player player) {
-		this.player = player;
+		this.modelCase.setPlayer(player);
 	}
 	
 	public boolean isEmpty() {
-		return player == null;
+		return getPlayer() == null;
 	}
 	
 }

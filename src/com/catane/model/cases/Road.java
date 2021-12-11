@@ -23,4 +23,8 @@ public class Road extends MovableCase {
 		this.vertical = vertical;
 	}
 	
+	public boolean isVertical() {
+		return vertical;
+	}
+	
 }

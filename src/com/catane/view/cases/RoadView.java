@@ -1,40 +1,27 @@
 package com.catane.view.cases;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
-import com.catane.model.Player;
+import com.catane.model.cases.Road;
 import com.catane.view.BoardView;
 
 public class RoadView extends MovableCaseView {
 	private static final long serialVersionUID = 1L;
 	
-	private boolean sens = false; // false -> horizontal, true -> vertical.
+	private Road road;
 	
-	public RoadView(BoardView board) {
-		this(board, null);
-	}
-	
-	public RoadView(BoardView board, boolean sens) {
-		this(board, null, sens);
-	}
-	
-	public RoadView(BoardView board, Player player) {
-		this(board, player, false);
-	}
-	
-	public RoadView(BoardView board, Player player, boolean sens) {
-		super(board, player);
-		// setPreferredSize(new Dimension(100, 100)); // On le fait uniquement dans ce constructeur. Il est appele a coup sur.
-		this.sens = sens;
+	public RoadView(BoardView board, Road road) {
+		super(board, road);
+		this.road = road;
 	}
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
-		if(player == null)
-			this.player = board.getActualPlayer();
+		
+		if(isEmpty())
+			setPlayer(board.getActualPlayer());
 		revalidate();
 		repaint();
 	}
@@ -54,15 +41,14 @@ public class RoadView extends MovableCaseView {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(player == null)
+		if(isEmpty())
 			return;
 		// Verfier le sens de la route puis la dessiner.
-		Color color = player.getColor(); // Plus tard on mettra la couleur du joueur ici.
-		g.setColor(color);
+		g.setColor(getPlayer().getColor()); // player forcement non null ici.
 		double coeff = 0.4; // Entre 0 et 1.
 		double coeff2 = 1; // Entre 0 et 1. // Coeff2 inutile pour le moment. Mais on pourra changer la valeur si on veut decoller la route des bords.
 		int width, height, spaceX, spaceY;
-		if(sens) {
+		if(road.isVertical()) {
 			width = (int)(coeff * getWidth());
 			height = (int)(coeff2 * getHeight());
 		}

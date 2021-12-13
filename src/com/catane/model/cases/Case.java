@@ -31,4 +31,8 @@ public abstract class Case {
 		return (this instanceof Town);
 	}
 
+	public boolean isResourceCase() {
+		return (this instanceof ResourceCase);
+	}
+
 }

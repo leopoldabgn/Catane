@@ -232,6 +232,12 @@ public class Board {
 			return null;
 		return cases[x][y];
 	}
+
+	public void switchThief(int[] newThief) { // Change le vouleur de case
+		((ResourceCase) getCase(newThief[0], newThief[1])).setThief(true);
+		((ResourceCase) getCase(thief[0], thief[1])).setThief(false);
+		thief = newThief;
+	}
 	
 	// Les coordonnees sont forcement sur le plateau lorsqu'on
 	// appelle les fonctions suivantes :

@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import com.catane.model.cards.DevelopmentCard;
 import com.catane.model.cards.DevelopmentCardsDeck;
+import com.catane.model.cases.ResourceCase;
 import com.catane.view.Window;
 
 public class Game {
@@ -150,6 +151,26 @@ public class Game {
 	public int[] rollDices() {
 		Random rd = new Random();
 		return new int[] {rd.nextInt(6)+1, rd.nextInt(6)+1};
+	}
+
+	public void thiefAction() {
+		// plus des 7 cartes ressources : se défausser de la moitié inf (au choix)
+
+		// déplacer le voleur sur une case différente
+		System.out.println("Choisissez les nouvelles coordonnées du voleur");
+		int[] coord = askCoord();
+		while (!(board.getCase(coord[0], coord[1]) instanceof ResourceCase) && ((ResourceCase) board.getCase(coord[0], coord[1])).hasThief()) {
+			// Vérifications : la case n'est pas une case ressource ou contient déjà le voleur
+			if (!(board.getCase(coord[0], coord[1]) instanceof ResourceCase))
+				System.out.println("Ce n'est pas une case ressource");
+			else
+				System.out.println("Cette case a déjà le voleur");
+			coord = askCoord();
+		}
+		board.switchThief(coord);
+
+		// actualPlayer vole une ressource au hasard à un joueur possédant une colonie autour de la nouvelle case
+
 	}
 	
 	public int[] askCoord() {

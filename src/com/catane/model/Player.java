@@ -112,7 +112,7 @@ public class Player {
 	
 	public boolean canAffordColony(){ // Le joueur a les ressources nécessaires pour construire une colonie
 		return (getResource(Resource.CLAY) >= 1 && getResource(Resource.WOOD) >= 1 &&
-				getResource(Resource.SHEEP) >= 1 && getResource(Resource.WHEAT) >= 1);
+				getResource(Resource.WOOL) >= 1 && getResource(Resource.WHEAT) >= 1);
 	}
 
 	public boolean canAffordTown(){ // Le joueur a les ressources nécessaires pour construire une ville
@@ -124,7 +124,7 @@ public class Player {
 	}
 	
 	public boolean canAffordDevCard() {
-		return getResource(Resource.STONE) >= 1 && getResource(Resource.SHEEP) >= 1 &&
+		return getResource(Resource.STONE) >= 1 && getResource(Resource.WOOL) >= 1 &&
 			   getResource(Resource.WHEAT) >= 1;
 	}
 	
@@ -250,7 +250,7 @@ public class Player {
 	public void payColony() { // Payer une colonie
 		pay(Resource.CLAY);
 		pay(Resource.WOOD);
-		pay(Resource.SHEEP);
+		pay(Resource.WOOL);
 		pay(Resource.WHEAT);
 	}
 
@@ -284,7 +284,7 @@ public class Player {
 	
 	public void payDevCard() {
 		pay(Resource.STONE);
-		pay(Resource.SHEEP);
+		pay(Resource.WOOL);
 		pay(Resource.WHEAT);
 	}
 	

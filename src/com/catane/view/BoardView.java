@@ -1,5 +1,6 @@
 package com.catane.view;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
@@ -39,6 +40,7 @@ public class BoardView extends JPanel {
 		this.game = game;
 		this.board = game.getBoard();
 		setLayout(new GridLayout(board.getSize(), board.getSize()));
+		setBackground(new Color(161, 109, 74));
 		casesView = generateAndAddCases();
 	}	
 		

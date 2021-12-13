@@ -26,7 +26,7 @@ public class Game {
 
 	public Game() {
 		
-		String jouer = "command";
+		String jouer = "gui";
 
 		// Demander taille plateau.
 		
@@ -36,7 +36,13 @@ public class Game {
 		if(jouer.equals("command")) {
 			startGame();
 		}
-		else if(jouer.equals("gui")){
+		else if(jouer.equals("gui")) {
+			setupPlayers(4);
+			for(int i=0;i<20;i++) {
+				actualPlayer.gainResource(Resource.WHEAT);
+				actualPlayer.gainResource(Resource.STONE);
+				actualPlayer.gainResource(Resource.WOOL);
+			}
 			new Window(this, 600, 600);
 		}
 		
@@ -246,7 +252,7 @@ public class Game {
 		for(int i=0;i<20;i++) {
 			actualPlayer.gainResource(Resource.WHEAT);
 			actualPlayer.gainResource(Resource.STONE);
-			actualPlayer.gainResource(Resource.SHEEP);
+			actualPlayer.gainResource(Resource.WOOL);
 		}
 
 		board.display();

@@ -1,11 +1,13 @@
 package com.catane.view;
 
+import java.util.List;
 import java.util.Scanner;
 
 import com.catane.model.Board;
 import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.Resource;
+import com.catane.model.cases.Colony;
 import com.catane.model.cases.ResourceCase;
 
 public class CLI {
@@ -180,9 +182,67 @@ public class CLI {
 		
 		return coord;
 	}
+
+	public Player askPlayer() {
+		String s = sc.nextLine();
+		for (Player p : game.getPlayers())
+			if (s.equals(p.getName()))
+				return p;
+		return null;
+	}
 	
 	public void thiefAction() {
 		// plus des 7 cartes ressources : se défausser de la moitié inf (au choix)
+		for (Player p : game.getPlayers())
+			if (p.getResources() > 7) {
+				int nb = p.getResources()/2;
+				System.out.println(p.getName() + "doit se défausser de " + nb + " ressources");
+				for (Resource r : p.getResourceList())
+					System.out.println(r);
+				while (nb != 0) {
+					System.out.println("De quelle ressource voulez-vous vous défausser ?");
+					System.out.println("(argile / bois / pierre / blé / laine)");
+					switch (sc.nextLine()) {
+						case "argile":	if (p.getResourceList().contains(Resource.CLAY)) {
+											p.pay(Resource.CLAY);
+											nb--;
+										}else {
+											System.out.println("Ressource insuffisante");
+										}
+										break;
+						case "bois":	if (p.getResourceList().contains(Resource.WOOD)) {
+											p.pay(Resource.WOOD);
+											nb--;
+										}else {
+											System.out.println("Ressource insuffisante");
+										}
+						break;
+						case "pierre":	if (p.getResourceList().contains(Resource.STONE)) {
+											p.pay(Resource.STONE);
+											nb--;
+										}else {
+											System.out.println("Ressource insuffisante");
+										}
+						break;
+						case "blé":		if (p.getResourceList().contains(Resource.WHEAT)) {
+											p.pay(Resource.WHEAT);
+											nb--;
+										}else {
+											System.out.println("Ressource insuffisante");
+										}
+						break;
+						case "laine":	if (p.getResourceList().contains(Resource.WOOL)) {
+											p.pay(Resource.WOOL);
+											nb--;
+										}else {
+											System.out.println("Ressource insuffisante");
+										}
+						break;
+						default:		System.out.println("Ressource non reconnue");
+										break;
+					}
+				}
+			}
 
 		// déplacer le voleur sur une case différente
 		System.out.println("Choisissez les nouvelles coordonnées du voleur");
@@ -198,7 +258,19 @@ public class CLI {
 		board.switchThief(coord);
 
 		// actualPlayer vole une ressource au hasard à un joueur possédant une colonie autour de la nouvelle case
-
+		List<Colony> col = board.getColonies(coord[0], coord[1]);
+		if (col.isEmpty())
+			return;
+		System.out.println("Vous allez voler une carte ressource");
+		Player p = null;
+		do {
+			System.out.println("Choisissez un des joueurs suivants :");
+			for (Colony c : col) {				
+				System.out.println(c.getPlayer());
+			}
+			p = askPlayer();
+		} while (!p.isIn(col));
+		game.getActualPlayer().stealResource(p);
 	}
 	
 	public void openScan() {

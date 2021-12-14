@@ -15,6 +15,11 @@ public class CLILauncher {
 		else if(jouer.equals("gui")) {
 			new GUI(game, 600, 600);
 		}
+
+		// idées pour gui (si possible) :
+		// - mettre le jeu en plein écran directement
+		// - afficher les ressources de tous les joueurs (deux de chaque côté)
+
 	}
 
 }

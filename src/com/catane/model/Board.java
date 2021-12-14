@@ -1,5 +1,7 @@
 package com.catane.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.catane.model.cases.*;
@@ -237,6 +239,17 @@ public class Board {
 		((ResourceCase) getCase(newThief[0], newThief[1])).setThief(true);
 		((ResourceCase) getCase(thief[0], thief[1])).setThief(false);
 		thief = newThief;
+	}
+
+	public List<Colony> getColonies(int x, int y) {
+		List<Colony> col = new ArrayList<Colony>();
+		int[] coord = {x-1, y-1, x+1, y-1, x+1, y+1, x-1, y+1};
+		for (int i = 0; i < coord.length; i += 2) {
+			Colony c = (Colony) getCase(coord[i], coord[i+1]);
+			if (!c.isEmpty())
+				col.add(c);
+		}
+		return col;
 	}
 	
 	// Les coordonnees sont forcement sur le plateau lorsqu'on

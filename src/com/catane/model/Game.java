@@ -112,4 +112,8 @@ public class Game {
 		return actualPlayer;
 	}
 
+	public List<Player> getPlayers() {
+		return players;
+	}
+
 }

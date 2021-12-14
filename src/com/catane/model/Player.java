@@ -3,6 +3,7 @@ package com.catane.model;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 import com.catane.model.cards.DevelopmentCard;
@@ -50,6 +51,14 @@ public class Player {
 			if (r2.equals(r1))
 				x++;
 		return x;
+	}
+
+	public int getResources() {
+		return resources.size();
+	}
+
+	public List<Resource> getResourceList() {
+		return resources;
 	}
 
 	public int getNbDevCard(DevelopmentCard card) {
@@ -222,6 +231,21 @@ public class Player {
 		pay(aPayer);
 		pay(aPayer);
 		gainResource(aGagner);
+	}
+
+	public void stealResource(Player p) { // vole une ressource au joueur p
+		Random r = new Random();
+		int x = r.nextInt(p.getResources());
+		Resource res = p.resources.get(x);
+		p.pay(res);
+		gainResource(res);
+	}
+
+	public boolean isIn(List<Colony> col) {
+		boolean b = false;
+		for (Colony c : col)
+			b = (this == c.getPlayer()) ? true : b;
+		return b;
 	}
 
 	public int canBuyDevCard(Game game) {

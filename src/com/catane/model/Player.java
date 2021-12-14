@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.catane.model.cards.DevelopmentCard;
-import com.catane.model.cards.Knight;
-import com.catane.model.cards.Progress;
 import com.catane.model.cards.VictoryPoints;
-import com.catane.model.cases.*;
+import com.catane.model.cases.Colony;
+import com.catane.model.cases.Road;
+import com.catane.model.cases.Town;
 
 public class Player {
 	public static int nextPlayerNb = 1; // Le premier joueur est J1, le deuxieme J2...
@@ -58,56 +58,6 @@ public class Player {
 			if(c.equals(card))
 				sum++;
 		return sum;
-	}
-	
-	public void printResources() {
-		System.out.print("Ressources : ");
-		Resource[] resources = Resource.values();
-		int count = 0;
-		for(Resource r : resources) {
-			System.out.print(r+" = "+getResource(r));
-			if(++count < resources.length)
-				System.out.print(", ");
-		}
-		
-		System.out.println();
-	}
-
-	public void printDevelopmentCards() {
-		System.out.print("Cartes de developpement : ");
-		DevelopmentCard[] tab;
-		boolean nothing = true, comma = false;
-		int nb = getNbDevCard(new Knight());
-		if(nb != 0) {
-			System.out.print(nb+" "+(new Knight()));
-			comma = true;
-			nothing = false;
-		}
-		for(int i=0;i<2;i++) {
-			if(i == 0)
-				tab = VictoryPoints.values();
-			else
-				tab = Progress.values();
-			for(DevelopmentCard card : tab) {
-				nb = getNbDevCard(card);
-				if(nb != 0) {
-					if(nothing)
-						nothing = false;
-					if(comma)
-						System.out.print(", ");
-					System.out.print(nb+" "+card);
-					if(!comma)
-						comma = true;
-				}
-			}
-		}
-		
-		if(nothing)
-			System.out.print(" Aucune carte.");
-	}
-	
-	public void printScore() {
-		System.out.println("Score : "+getScore());
 	}
 	
 	public boolean canAffordColony(){ // Le joueur a les ressources nécessaires pour construire une colonie

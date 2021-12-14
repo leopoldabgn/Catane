@@ -55,6 +55,7 @@ public abstract class ResourceCaseView extends CaseView {
 		super.mouseReleased(e);
 		if(!isSelectable)
 			return;
+		
 	}
 	
 	@Override

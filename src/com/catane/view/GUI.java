@@ -15,10 +15,10 @@ import javax.swing.border.EmptyBorder;
 import com.catane.model.Game;
 import com.catane.model.Resource;
 
-public class Window extends JFrame {
+public class GUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
-	public Window(Game game, int w, int h) {
+	public GUI(Game game, int w, int h) {
 		super();
 		this.setTitle("Catane");
 		this.setSize(w, h);
@@ -28,6 +28,13 @@ public class Window extends JFrame {
 		
 		setDefaultLookAndFeelDecorated(true);
 		//this.setExtendedState(Frame.MAXIMIZED_BOTH);
+		
+		game.setupPlayers(4);
+		for(int i=0;i<20;i++) {
+			game.getActualPlayer().gainResource(Resource.WHEAT);
+			game.getActualPlayer().gainResource(Resource.STONE);
+			game.getActualPlayer().gainResource(Resource.WOOL);
+		}
 		
 		this.setLayout(new BorderLayout());
 		

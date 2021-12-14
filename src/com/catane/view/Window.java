@@ -3,11 +3,13 @@ package com.catane.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.catane.model.Game;
@@ -32,17 +34,21 @@ public class Window extends JFrame {
 		TextManager textManager = new TextManager("Welcome to Catane");
 		BoardView board = new BoardView(game);
 		ResourcePanel resourcePan = new ResourcePanel(game.getActualPlayer());
-		board.addComponentListener(new ComponentAdapter(){
+		JPanel boardContainer = new JPanel();
+		boardContainer.setOpaque(false);
+		boardContainer.setLayout(new GridBagLayout());
+		board.setPreferredSize(new Dimension(boardContainer.getWidth(), boardContainer.getHeight()));
+		boardContainer.add(board);
+		boardContainer.addComponentListener(new ComponentAdapter(){
 
             @Override
             public void componentResized(ComponentEvent e) {
-            	int width = board.getWidth();
-            	int height = board.getHeight();
-            	if(width == height)
-            		return;
+            	int width = boardContainer.getWidth();
+            	int height = boardContainer.getHeight();
             	System.out.println(board.getPreferredSize().getWidth()+" "+board.getPreferredSize().getHeight());
             	if(width > height) {
             		board.setPreferredSize(new Dimension(height, height));
+            		System.out.println("ohaa");
             	}
             	else {
             		board.setPreferredSize(new Dimension(width, width));
@@ -60,7 +66,7 @@ public class Window extends JFrame {
 		((JComponent) this.getContentPane()).setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.getContentPane().setBackground(new Color(66, 212, 245)); // Couleur de la mer
 		this.getContentPane().add(textManager, BorderLayout.NORTH);
-		this.getContentPane().add(board, BorderLayout.CENTER);
+		this.getContentPane().add(boardContainer, BorderLayout.CENTER);
 		this.getContentPane().add(resourcePan, BorderLayout.SOUTH);
 		
 		this.setVisible(true);

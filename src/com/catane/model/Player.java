@@ -86,8 +86,7 @@ public class Player {
 		return getResource(Resource.STONE) >= 1 && getResource(Resource.WOOL) >= 1 &&
 			   getResource(Resource.WHEAT) >= 1;
 	}
-	
-	// Pour l'interface graphique on appelle celle-la directement.
+
 	public int canBuildColonyOn(Board board, int[] coord) { // Le joueur peut construire une colonie sur la case donnée
 		if(!canAffordColony())// Si il n'a pas assez d'argent. Ou il n'a pas de colonie dans son inventaire.
 			return 1;
@@ -126,14 +125,6 @@ public class Player {
 		}
 		
 		return 0;
-	}
-	
-	public boolean canBuildTownOn(Colony colony){ // Le joueur peut construire une ville sur la case donnée
-		return canAffordTown() && colony.getPlayer() == this;
-	}
-
-	public boolean canBuildRoadOn(Road road){ // Le joueur peut construire une route sur la case donnée
-		return canAffordRoad() && road.isEmpty();
 	}
 
 	// Méthodes interactions avec plateau :

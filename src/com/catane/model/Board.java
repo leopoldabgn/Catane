@@ -4,7 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.catane.model.cases.*;
+import com.catane.model.cases.Case;
+import com.catane.model.cases.Colony;
+import com.catane.model.cases.Desert;
+import com.catane.model.cases.Field;
+import com.catane.model.cases.Forest;
+import com.catane.model.cases.Hill;
+import com.catane.model.cases.Mountain;
+import com.catane.model.cases.Pre;
+import com.catane.model.cases.ResourceCase;
+import com.catane.model.cases.Road;
+import com.catane.model.cases.Town;
 
 public class Board {
 		
@@ -17,50 +27,6 @@ public class Board {
 		cases = generateAndAddCases();
 		cases = mixCases(cases);
 	}	
-	
-	public void display() {
-		int space = 4, maxSize = 13;
-		char letter = 'A';
-		System.out.print(" ".repeat(space));
-		for(int i=0;i<size;i++)
-			System.out.print((letter++)+" ".repeat(9));
-		System.out.println();
-		int line = 1;
-		if(size%2 == 0)
-			line += (size/2)*5;
-		else
-			line += (size/2+1)*5;
-		line += (size/2)*(maxSize+1);
-		System.out.println("  "+"-".repeat(line));
-		for(int j=0;j<size;j++) {
-			
-			System.out.print((j+1));
-			if(j+1 < 10)
-				System.out.print(" ");
-			System.out.print("|");
-			
-			for(int i=0;i<size;i++) {
-				Case c = cases[i][j];
-		 		if(c instanceof ResourceCase) {
-		 			System.out.print(c);
-		 		}
-		 		else {
-		 			space = maxSize-2;
-		 			if(i%2 == 0)
-		 				System.out.print(" "+c+" ");
-		 			else {
-		 				System.out.print(" ".repeat(space/2+1)+c+" ".repeat(space/2));
-		 			}
-		 		}
-		 		System.out.print("|");
-			 }
-			
-			System.out.println(" "+(j+1));
-			System.out.print("  "+"-".repeat(line));
-			System.out.println();
-		 }
-		
-	}
 
 	private Case[][] generateAndAddCases() {
 		Case[][] cases = new Case[size][size];
@@ -202,15 +168,32 @@ public class Board {
 		c.setPlayer(player);
 	}
 	
-	public void putTown(Player player, int x, int y) {
+	public void putColony(Player player, Colony colony) { // colonie vide
+		int[] coord = getIndexesOf(colony);
+		putColony(player, coord[0], coord[1]);
+	}
+	
+	// Retourne la ville. Important uniquement pour la GUI.
+	public Town putTown(Player player, int x, int y) {
 		Colony c = (Colony)cases[x][y];
 		Town t = new Town(c);
 		cases[x][y] = t;
+		return t;
+	}
+	
+	public Town putTown(Player player, Colony colony) { // colonie d'un joueur
+		int[] coord = getIndexesOf(colony);
+		return putTown(player, coord[0], coord[1]);
 	}
 	
 	public void putRoad(Player player, int x, int y) {
 		Road r = (Road)cases[x][y];
 		r.setPlayer(player);
+	}
+	
+	public void putRoad(Player player, Road road) { // Route vide
+		int[] coord = getIndexesOf(road);
+		putRoad(player, coord[0], coord[1]);
 	}
 	
 	public boolean checkColoniesAround(int x, int y) { // Colonie ou Ville autour de ces coordonnees.

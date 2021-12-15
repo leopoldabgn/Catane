@@ -16,6 +16,7 @@ import com.catane.model.cases.Forest;
 import com.catane.model.cases.Hill;
 import com.catane.model.cases.Mountain;
 import com.catane.model.cases.Pre;
+import com.catane.model.cases.ResourceCase;
 import com.catane.model.cases.Road;
 import com.catane.model.cases.Town;
 import com.catane.view.cases.CaseView;
@@ -43,15 +44,64 @@ public class BoardView extends JPanel {
 		setBackground(new Color(161, 109, 74));
 		casesView = generateAndAddCases();
 	}	
+	
+	// Unique methode pour la CLI.
+	public static void display(Board board) {
+		int size = board.getSize(), space = 4, maxSize = 13;
+		char letter = 'A';
+		System.out.print(" ".repeat(space));
+		for(int i=0;i<size;i++)
+			System.out.print((letter++)+" ".repeat(9));
+		System.out.println();
+		int line = 1;
+		if(size%2 == 0)
+			line += (size/2)*5;
+		else
+			line += (size/2+1)*5;
+		line += (size/2)*(maxSize+1);
+		System.out.println("  "+"-".repeat(line));
+		for(int j=0;j<size;j++) {
+			
+			System.out.print((j+1));
+			if(j+1 < 10)
+				System.out.print(" ");
+			System.out.print("|");
+			
+			for(int i=0;i<size;i++) {
+				Case c = board.getCase(i, j);
+		 		if(c instanceof ResourceCase) {
+		 			System.out.print(c);
+		 		}
+		 		else {
+		 			space = maxSize-2;
+		 			if(i%2 == 0)
+		 				System.out.print(" "+c+" ");
+		 			else {
+		 				System.out.print(" ".repeat(space/2+1)+c+" ".repeat(space/2));
+		 			}
+		 		}
+		 		System.out.print("|");
+			 }
+			
+			System.out.println(" "+(j+1));
+			System.out.print("  "+"-".repeat(line));
+			System.out.println();
+		 }
 		
+	}
+	
 	private CaseView[][] generateAndAddCases() {
 		CaseView[][] cases = new CaseView[board.getSize()][board.getSize()];
 			
 		// Ajout des cases
-		for (int i = 0; i < cases.length; i++) {
-			for (int j = 0; j < cases[i].length; j++) {
-				cases[i][j] = createViewCase(board.getCase(i, j));
-				add(cases[i][j]);
+		for (int i = 0; i < cases[0].length; i++) {
+			for (int j = 0; j < cases.length; j++) {
+				cases[j][i] = createViewCase(board.getCase(j, i));
+				add(cases[j][i]);
+				// Attention, on va de gauche a droite. Puis on va a la ligne suivante etc..
+				// j -> x et i -> y. On a decider que la premiere coordonnees est x et la seconde y.
+				// Au moment du add() on a doit d'abord augmenter x de 0 a size puis y++ etc..
+				// Et pas l'inverse !
 			}
 		}
 
@@ -99,10 +149,10 @@ public class BoardView extends JPanel {
 		if(c == null)
 			return null;
 		
-		for(int j=0;j<casesView.length;j++)
-			for(int i=0;i<casesView[0].length;i++)
-				if(casesView[j][i] == c)
-					return new int[] {j, i};
+		for(int j=0;j<casesView[0].length;j++)
+			for(int i=0;i<casesView.length;i++)
+				if(casesView[i][j] == c)
+					return new int[] {i, j};
 		
 		return null;
 	}
@@ -114,23 +164,34 @@ public class BoardView extends JPanel {
 		casesView[coord[0]][coord[1]] = newCase;
 		//newCase.mouseEntered(null); // Sinon le contour s'enleve meme si on a la souris dessus.
 		this.remove(c);
-		this.add(newCase, coord[0]*casesView.length+coord[1]);
+		this.add(newCase, coord[1]*casesView.length+coord[0]); // coord[1] -> line, coord[0] -> column.
 		this.revalidate();
 		this.repaint();
 	}
 	
-	// Faire d'abord en sorte qu'on puisse acheter des villes dans le model.
-	// Ensuite on corrigera cette fonction.
-	public void replaceColonyByTown(ColonyView colony) {
-		if(colony == null || colony.isEmpty()) // Si colonie null ou vide on quitte.
-			return;
-		TownView town = new TownView(this, new Town((Colony)colony.getModelCase())); // TEMPORAIRE !!
-		replaceCaseBy(colony, town);
-		town.repaint();
+	public void putColony(Player player, ColonyView colonyView) { // colonyView -> vide au depart
+		board.putColony(player, colonyView.getModelCase()); // On indique au model le changement
+		// La colonie est desormais reliee a un joueur.
+		// La view sera donc affichee differement.
+	}
+	
+	public void putTown(Player player, ColonyView colonyView) {// colonyView -> correspond a une vrai colonie au depart
+		Town town = board.putTown(player, colonyView.getModelCase()); // On indique au model le changement
+		TownView townView = new TownView(this, town); // On cree une case TownView pour la nouvelle ville.
+		replaceCaseBy(colonyView, townView); // On remplace : colonyView -> townView.
+	}
+	
+	public void putRoad(Player player, RoadView roadView) { // roadView -> vide au depart
+		board.putRoad(player, roadView.getModelCase()); // On indique au model le changement
+		// La view va interroger le modele et changera son apparence.
 	}
 	
 	public Game getGame() {
 		return game;
+	}
+	
+	public Board getBoard() {
+		return board;
 	}
 	
 	public Player getActualPlayer() {

@@ -50,12 +50,12 @@ public class CLI {
 			game.getActualPlayer().gainResource(Resource.WOOL);
 		}
 		
-		board.display();
+		BoardView.display(board);
 		boolean endGame = game.endGame();
 		
 		while(!endGame) {
 			playRound();
-			board.display();
+			BoardView.display(board);
 			endGame = game.endGame();
 			if(!endGame)
 				game.nextRound();
@@ -168,7 +168,6 @@ public class CLI {
 		
 	}
 	
-
 	public int[] askCoord() {
 		int[] coord = null;
 		String coordStr;

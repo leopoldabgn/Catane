@@ -21,8 +21,6 @@ public class Game {
 		developmentCardsDeck = new DevelopmentCardsDeck();
 	}
 	
-	
-	
 	public void setPlayers(List<Player> players) { // Peut sûrement être supprimée
 		this.players = players;
 		if(players != null && players.size() > 1)

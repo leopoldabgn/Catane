@@ -17,6 +17,11 @@ public class TownView extends ColonyView {
 	}
 	
 	@Override
+	public Town getModelCase() {
+		return town;
+	}
+	
+	@Override
 	public void mouseEntered(MouseEvent e) {
 		super.mouseEntered(e);
 		// On dessine un cercle de la couleur du joueur actuel (recuperer via board.getActualPlayer() Par exemple)

@@ -52,10 +52,9 @@ public class GUI extends JFrame {
             public void componentResized(ComponentEvent e) {
             	int width = boardContainer.getWidth();
             	int height = boardContainer.getHeight();
-            	System.out.println(board.getPreferredSize().getWidth()+" "+board.getPreferredSize().getHeight());
+
             	if(width > height) {
             		board.setPreferredSize(new Dimension(height, height));
-            		System.out.println("ohaa");
             	}
             	else {
             		board.setPreferredSize(new Dimension(width, width));

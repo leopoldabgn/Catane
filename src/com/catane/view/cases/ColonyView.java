@@ -3,6 +3,7 @@ package com.catane.view.cases;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
+import com.catane.model.Player;
 import com.catane.model.cases.Colony;
 import com.catane.view.BoardView;
 
@@ -17,16 +18,23 @@ public class ColonyView extends MovableCaseView {
 	}
 	
 	@Override
+	public Colony getModelCase() {
+		return colony;
+	}
+	
+	@Override
 	public void mouseReleased(MouseEvent e) { // Pas besoin de redefinir cette methode dans Town.
 		super.mouseReleased(e);
-		// if(isSelectable)
+		Player actualPlayer = board.getActualPlayer();
+		if(actualPlayer == null)
+			return;
 		if(isEmpty()) {
-			setPlayer(board.getActualPlayer());
+			board.putColony(actualPlayer, this);
 		}
 		else if(!isEmpty()) { // && player.canCreateTown....
-			
-			board.replaceColonyByTown(this);
+			board.putTown(actualPlayer, this);
 		}
+		BoardView.display(board.getBoard());
 		repaint();
 	}
 	

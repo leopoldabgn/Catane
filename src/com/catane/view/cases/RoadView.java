@@ -17,11 +17,16 @@ public class RoadView extends MovableCaseView {
 	}
 	
 	@Override
+	public Road getModelCase() {
+		return road;
+	}
+	
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
 		
-		if(isEmpty())
-			setPlayer(board.getActualPlayer());
+		/*if(isEmpty())
+			setPlayer(board.getActualPlayer());*/
 		revalidate();
 		repaint();
 	}

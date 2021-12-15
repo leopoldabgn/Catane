@@ -3,8 +3,6 @@ package com.catane.model.cases;
 import com.catane.model.Player;
 
 public class Colony extends MovableCase {
-
-	protected int resourceGain = 1;
 	
 	public Colony() {
 		super(null); // Utilisé uniquement pour les cases vides.
@@ -14,4 +12,7 @@ public class Colony extends MovableCase {
 		super(player);
 	}
 	
+	public int resourceGain() {
+		return 1;
+	}
 }

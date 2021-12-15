@@ -29,6 +29,18 @@ public abstract class ResourceCase extends Case {
 		return str;
 	} 
 	
+	public static class Mountain extends ResourceCase {
+
+		public Mountain(int number) {
+			super(number, Color.GRAY);
+		}
+
+		public void giveResources() {
+
+		}
+		
+	}
+	
 	public int getNumber() {
 		return number;
 	}

@@ -8,7 +8,6 @@ public class Mountain extends ResourceCase {
 		super(number, Color.GRAY);
 	}
 
-	@Override
 	public void giveResources() {
 		
 	}

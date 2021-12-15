@@ -23,10 +23,6 @@ public class MovableCaseView extends CaseView {
 		return modelCase.getPlayer();
 	}
 	
-	public void setPlayer(Player player) {
-		this.modelCase.setPlayer(player);
-	}
-	
 	public boolean isEmpty() {
 		return getPlayer() == null;
 	}

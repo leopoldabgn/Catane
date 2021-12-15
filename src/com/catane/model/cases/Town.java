@@ -6,11 +6,14 @@ public class Town extends Colony {
 
 	public Town(Player player) {
 		super(player);
-		this.resourceGain = 2;
 	}
 
 	public Town(Colony colony) {
 		this(colony.player);
 	}
 	
+	@Override
+	public int resourceGain() {
+		return 2;
+	}
 }

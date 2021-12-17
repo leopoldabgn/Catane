@@ -29,6 +29,54 @@ public abstract class ResourceCase extends Case {
 		return str;
 	} 
 	
+	public static class Desert extends ResourceCase {
+
+		public Desert() {
+			super(-1, Color.WHITE);
+		}
+		
+		@Override
+		public void giveResources() {
+			
+		}
+	}
+	
+	public static class Field extends ResourceCase {
+
+		public Field(int number) {
+			super(number, Color.YELLOW);
+		}
+
+		@Override
+		public void giveResources() {
+			
+		}
+	}
+	
+	public static class Forest extends ResourceCase {
+
+		public Forest(int number) {
+			super(number, new Color(0, 125, 33)); // Dark green*
+		}
+
+		@Override
+		public void giveResources() {
+			
+		}
+	}
+	
+	public static class Hill extends ResourceCase {
+	
+		public Hill(int number) {
+			super(number, new Color(8, 255, 0));
+		}
+	
+		@Override
+		public void giveResources() {
+			
+		}
+	}
+	
 	public static class Mountain extends ResourceCase {
 
 		public Mountain(int number) {
@@ -38,7 +86,18 @@ public abstract class ResourceCase extends Case {
 		public void giveResources() {
 
 		}
+	}
+	
+	public static class Pre extends ResourceCase {
 		
+		public Pre(int number) {
+			super(number, new Color(166, 255, 163)); // Light green
+		}
+
+		@Override
+		public void giveResources() {
+			
+		}
 	}
 	
 	public int getNumber() {

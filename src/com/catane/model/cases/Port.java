@@ -11,7 +11,7 @@ public class Port extends Case {
 		this.resourcesToGive = resourcesToGive;
 		this.resource = resource;
 	}
-	
+
 	public String toString() {
 		String str = resourcesToGive+":1";
 		if(resource != null)

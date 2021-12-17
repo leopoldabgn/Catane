@@ -6,13 +6,13 @@ import java.util.Random;
 
 import com.catane.model.cases.Case;
 import com.catane.model.cases.Colony;
-import com.catane.model.cases.Desert;
-import com.catane.model.cases.Field;
-import com.catane.model.cases.Forest;
-import com.catane.model.cases.Hill;
-import com.catane.model.cases.Mountain;
-import com.catane.model.cases.Pre;
 import com.catane.model.cases.ResourceCase;
+import com.catane.model.cases.ResourceCase.Desert;
+import com.catane.model.cases.ResourceCase.Field;
+import com.catane.model.cases.ResourceCase.Forest;
+import com.catane.model.cases.ResourceCase.Hill;
+import com.catane.model.cases.ResourceCase.Mountain;
+import com.catane.model.cases.ResourceCase.Pre;
 import com.catane.model.cases.Road;
 import com.catane.model.cases.Town;
 

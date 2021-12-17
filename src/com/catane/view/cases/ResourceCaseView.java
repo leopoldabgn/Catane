@@ -14,6 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
 import com.catane.model.cases.ResourceCase;
+import com.catane.model.cases.ResourceCase.Desert;
+import com.catane.model.cases.ResourceCase.Field;
+import com.catane.model.cases.ResourceCase.Forest;
+import com.catane.model.cases.ResourceCase.Hill;
+import com.catane.model.cases.ResourceCase.Mountain;
+import com.catane.model.cases.ResourceCase.Pre;
 import com.catane.view.BoardView;
 
 public abstract class ResourceCaseView extends CaseView {
@@ -141,6 +147,60 @@ public abstract class ResourceCaseView extends CaseView {
 	
 	public boolean hasThief() {
 		return modelCase.hasThief();
+	}
+	
+	public static class DesertView extends ResourceCaseView {
+		private static final long serialVersionUID = 1L;
+
+		public DesertView(BoardView board, Desert d) {
+			super(board, d);
+		}
+
+	}
+	
+	public static class FieldView extends ResourceCaseView {
+		private static final long serialVersionUID = 1L;
+
+		public FieldView(BoardView board, Field field) {
+			super(board, field);
+		}
+
+	}
+	
+	public static class ForestView extends ResourceCaseView {
+		private static final long serialVersionUID = 1L;
+
+		public ForestView(BoardView board, Forest forest) {
+			super(board, forest); // Dark green*
+		}
+
+		
+	}
+	
+	public static class HillView extends ResourceCaseView {
+		private static final long serialVersionUID = 1L;
+
+		public HillView(BoardView board, Hill hill) {
+			super(board, hill);
+		}
+
+	}
+	
+	public static class MountainView extends ResourceCaseView {
+		private static final long serialVersionUID = 1L;
+
+		public MountainView(BoardView board, Mountain mountain) {
+			super(board, mountain);
+		}
+
+	}
+	
+	public static class PreView extends ResourceCaseView {
+		private static final long serialVersionUID = 1L;
+
+		public PreView(BoardView board, Pre pre) {
+			super(board, pre); // Light green
+		}
 	}
 	
 }

@@ -5,7 +5,7 @@ import com.catane.model.Game;
 public class CLILauncher {
 
 	public static void main(String[] args) {
-		String jouer = "gui";
+		String jouer = "command";
 		
 		Game game = new Game();
 		

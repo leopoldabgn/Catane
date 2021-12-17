@@ -48,6 +48,9 @@ public class CLI {
 			game.getActualPlayer().gainResource(Resource.WHEAT);
 			game.getActualPlayer().gainResource(Resource.STONE);
 			game.getActualPlayer().gainResource(Resource.WOOL);
+			game.getActualPlayer().gainResource(Resource.STONE);
+			game.getActualPlayer().gainResource(Resource.CLAY);
+			game.getActualPlayer().gainResource(Resource.WOOD);
 		}
 		
 		BoardView.display(board);

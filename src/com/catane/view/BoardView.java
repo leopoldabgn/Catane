@@ -10,6 +10,7 @@ import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.cases.Case;
 import com.catane.model.cases.Colony;
+import com.catane.model.cases.Port;
 import com.catane.model.cases.ResourceCase;
 import com.catane.model.cases.ResourceCase.Desert;
 import com.catane.model.cases.ResourceCase.Field;
@@ -18,9 +19,11 @@ import com.catane.model.cases.ResourceCase.Hill;
 import com.catane.model.cases.ResourceCase.Mountain;
 import com.catane.model.cases.ResourceCase.Pre;
 import com.catane.model.cases.Road;
+import com.catane.model.cases.Sea;
 import com.catane.model.cases.Town;
 import com.catane.view.cases.CaseView;
 import com.catane.view.cases.ColonyView;
+import com.catane.view.cases.PortView;
 import com.catane.view.cases.ResourceCaseView.DesertView;
 import com.catane.view.cases.ResourceCaseView.FieldView;
 import com.catane.view.cases.ResourceCaseView.ForestView;
@@ -28,6 +31,7 @@ import com.catane.view.cases.ResourceCaseView.HillView;
 import com.catane.view.cases.ResourceCaseView.MountainView;
 import com.catane.view.cases.ResourceCaseView.PreView;
 import com.catane.view.cases.RoadView;
+import com.catane.view.cases.SeaView;
 import com.catane.view.cases.TownView;
 
 public class BoardView extends JPanel {
@@ -41,7 +45,7 @@ public class BoardView extends JPanel {
 		this.game = game;
 		this.board = game.getBoard();
 		setLayout(new GridLayout(board.getSize(), board.getSize()));
-		setBackground(new Color(161, 109, 74));
+		setBackground(new Color(255, 158, 0));
 		casesView = generateAndAddCases();
 	}	
 	
@@ -109,8 +113,8 @@ public class BoardView extends JPanel {
 		CaseView[][] cases = new CaseView[board.getSize()][board.getSize()];
 			
 		// Ajout des cases
-		for (int i = 0; i < cases[0].length; i++) {
-			for (int j = 0; j < cases.length; j++) {
+		for (int i = 0; i < board.getSize(); i++) {
+			for (int j = 0; j < board.getSize(); j++) {
 				cases[j][i] = createViewCase(board.getCase(j, i));
 				add(cases[j][i]);
 				// Attention, on va de gauche a droite. Puis on va a la ligne suivante etc..
@@ -153,6 +157,12 @@ public class BoardView extends JPanel {
 		case "Road":
 			cV = new RoadView(this, (Road)c);
 			break;
+		case "Port":
+			cV = new PortView(this, (Port)c);
+			break;
+		case "Sea":
+			cV = new SeaView(this, (Sea)c);
+			break;
 		default:
 			break;
 		}
@@ -164,8 +174,8 @@ public class BoardView extends JPanel {
 		if(c == null)
 			return null;
 		
-		for(int j=0;j<casesView[0].length;j++)
-			for(int i=0;i<casesView.length;i++)
+		for(int j=0;j<board.getSize();j++)
+			for(int i=0;i<board.getSize();i++)
 				if(casesView[i][j] == c)
 					return new int[] {i, j};
 		
@@ -179,7 +189,7 @@ public class BoardView extends JPanel {
 		casesView[coord[0]][coord[1]] = newCase;
 		//newCase.mouseEntered(null); // Sinon le contour s'enleve meme si on a la souris dessus.
 		this.remove(c);
-		this.add(newCase, coord[1]*casesView.length+coord[0]); // coord[1] -> line, coord[0] -> column.
+		this.add(newCase, coord[1]*board.getSize()+coord[0]); // coord[1] -> line, coord[0] -> column.
 		this.revalidate();
 		this.repaint();
 	}

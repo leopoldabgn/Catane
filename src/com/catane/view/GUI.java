@@ -21,7 +21,9 @@ public class GUI extends JFrame {
 	public GUI(Game game, int w, int h) {
 		super();
 		this.setTitle("Catane");
-		this.setSize(w, h);
+		this.setMinimumSize(new Dimension(w, h));
+		this.setSize(new Dimension(w, h));
+		
 		this.setResizable(true);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -42,40 +44,23 @@ public class GUI extends JFrame {
 		BoardView board = new BoardView(game);
 		ResourcePanel resourcePan = new ResourcePanel(game.getActualPlayer());
 		JPanel boardContainer = new JPanel();
-		boardContainer.setOpaque(false);
 		boardContainer.setLayout(new GridBagLayout());
-		board.setPreferredSize(new Dimension(boardContainer.getWidth(), boardContainer.getHeight()));
 		boardContainer.add(board);
-		boardContainer.addComponentListener(new ComponentAdapter(){
-
-            @Override
-            public void componentResized(ComponentEvent e) {
-            	int width = boardContainer.getWidth();
-            	int height = boardContainer.getHeight();
-
-            	if(width > height) {
-            		board.setPreferredSize(new Dimension(height, height));
-            	}
-            	else {
-            		board.setPreferredSize(new Dimension(width, width));
-            	}
-
-            	board.revalidate();
-            	board.repaint();
-            	
-            	game.getActualPlayer().pay(Resource.WHEAT);
-            	resourcePan.refresh();
-            }
-        });
+		
 		//board.setPreferredSize(new Dimension(w, h));
 		
 		((JComponent) this.getContentPane()).setBorder(new EmptyBorder(10, 10, 10, 10));
-		this.getContentPane().setBackground(new Color(66, 212, 245)); // Couleur de la mer
+		boardContainer.setBackground(new Color(0, 180, 216)); // Couleur de la mer
 		this.getContentPane().add(textManager, BorderLayout.NORTH);
-		this.getContentPane().add(boardContainer, BorderLayout.CENTER);
+		this.getContentPane().add(board, BorderLayout.CENTER);
 		this.getContentPane().add(resourcePan, BorderLayout.SOUTH);
 		
 		this.setVisible(true);
+	}
+
+	private void setMinimumSize(int w, int h) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -5,7 +5,7 @@ import com.catane.model.Game;
 public class CLILauncher {
 
 	public static void main(String[] args) {
-		String jouer = "command";
+		String jouer = "gui";
 		
 		Game game = new Game();
 		
@@ -13,7 +13,7 @@ public class CLILauncher {
 			new CLI(game);
 		}
 		else if(jouer.equals("gui")) {
-			new GUI(game, 600, 600);
+			new GUI(game, 800, 800);
 		}
 
 		// idées pour gui (si possible) :

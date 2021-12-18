@@ -1,5 +1,5 @@
 package com.catane.model.cases;
 
-public class Mer {
+public class Sea extends Case {
 
 }

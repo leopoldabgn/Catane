@@ -47,47 +47,62 @@ public class BoardView extends JPanel {
 	
 	// Unique methode pour la CLI.
 	public static void display(Board board) {
-		int size = board.getSize(), space = 4, maxSize = 13;
+		int size = board.getSize(), space = 4, maxSize = 15;
+		int size2 = size-2; // size sans les ports.
+		
 		char letter = 'A';
 		System.out.print(" ".repeat(space));
-		for(int i=0;i<size;i++)
+		for(int i=0;i<size2;i++)
 			System.out.print((letter++)+" ".repeat(9));
 		System.out.println();
+		
 		int line = 1;
-		if(size%2 == 0)
-			line += (size/2)*5;
+		if(size2%2 == 0)
+			line += (size2/2)*5;
 		else
-			line += (size/2+1)*5;
-		line += (size/2)*(maxSize+1);
+			line += (size2/2+1)*5;
+		line += (size2/2)*(maxSize+1);
 		System.out.println("  "+"-".repeat(line));
-		for(int j=0;j<size;j++) {
+		
+		for(int j=1;j<size-1;j++) {
 			
-			System.out.print((j+1));
-			if(j+1 < 10)
+			System.out.print(j);
+			if(j < 10)
 				System.out.print(" ");
 			System.out.print("|");
 			
-			for(int i=0;i<size;i++) {
+			for(int i=1;i<size-1;i++) {
 				Case c = board.getCase(i, j);
 		 		if(c instanceof ResourceCase) {
-		 			System.out.print(c);
+		 			System.out.print(addSpaces(c.toString(), maxSize));
 		 		}
 		 		else {
-		 			space = maxSize-2;
-		 			if(i%2 == 0)
+		 			if(i%2 == 1)
 		 				System.out.print(" "+c+" ");
-		 			else {
-		 				System.out.print(" ".repeat(space/2+1)+c+" ".repeat(space/2));
-		 			}
+		 			else
+		 				System.out.print(addSpaces(c.toString(), maxSize));
 		 		}
 		 		System.out.print("|");
 			 }
 			
-			System.out.println(" "+(j+1));
+			System.out.println(" "+j);
 			System.out.print("  "+"-".repeat(line));
 			System.out.println();
 		 }
 		
+	}
+	
+	// Si besoin, on rajoute des espaces avant et apres pour que
+	// la taille de la string soit egale a newSize
+	private static String addSpaces(String str, int newSize) {
+		if(str.length() >= newSize)
+			return str;
+		int reste = newSize-str.length();
+		int before = reste/2, after = reste/2;
+		if(reste%2 == 1)
+			before += 1;
+		str = " ".repeat(before)+str+" ".repeat(after);
+		return str;
 	}
 	
 	private CaseView[][] generateAndAddCases() {

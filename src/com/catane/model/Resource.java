@@ -15,6 +15,10 @@ public enum Resource {
 		return super.toString();
 	}
 	
+	public String getFrenchName() {
+		return toString();
+	}
+	
 	@Override
 	public String toString() {
 		return name;

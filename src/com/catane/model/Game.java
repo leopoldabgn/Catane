@@ -32,14 +32,14 @@ public class Game {
 		return new int[] {rd.nextInt(6)+1, rd.nextInt(6)+1};
 	}
 	
-	public int[] convertCoord(String coord) // A modifier quand on rajoutera les ports.
+	public int[] convertCoord(String coord)
 	{
 		if(coord == null || coord.length() < 2 || coord.length() > 3)
 			return null;
 		int[] tab = new int[2];
 		try {
-			tab[0] = coord.charAt(0)-'A';
-			tab[1] = Integer.parseInt(coord.substring(1))-1;
+			tab[0] = coord.charAt(0)-'A'+1; // +1 car on saute la ligne avec les ports
+			tab[1] = Integer.parseInt(coord.substring(1)); // Pas de -1 car on saute la colonne avec les ports.
 		} catch(Exception e) {
 			return null;
 		}
@@ -66,8 +66,6 @@ public class Game {
 		
 		actualPlayer = players.get(0);
 	}
-
-
 	
 	public void nextRound() { // On passe au joueur suivant dans la liste.
 		if(actualPlayer == null || players == null || players.size() < 3)

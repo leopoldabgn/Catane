@@ -20,14 +20,26 @@ public abstract class ResourceCase extends Case {
 		String str = getClass().getSimpleName();
 		if(!(this instanceof Desert))
 			str += " "+number;
-		int max = 13;
-		if(str.length() >= max)
-			return str;
-		int reste = max-str.length();
-		str = (reste % 2 == 1 ? " " : "")+" ".repeat(reste/2)+str+" ".repeat(reste/2);
-
+		if(hasThief())
+			str += " V";
 		return str;
 	} 
+	
+	public int getNumber() {
+		return number;
+	}
+	
+	public Color getColor() {
+		return color;
+	}
+	
+	public void setThief(boolean thief) {
+		this.thief = thief;
+	}
+	
+	public boolean hasThief() {
+		return thief;
+	}
 	
 	public static class Desert extends ResourceCase {
 
@@ -98,22 +110,6 @@ public abstract class ResourceCase extends Case {
 		public void giveResources() {
 			
 		}
-	}
-	
-	public int getNumber() {
-		return number;
-	}
-	
-	public Color getColor() {
-		return color;
-	}
-	
-	public void setThief(boolean thief) {
-		this.thief = thief;
-	}
-	
-	public boolean hasThief() {
-		return thief;
 	}
 	
 }

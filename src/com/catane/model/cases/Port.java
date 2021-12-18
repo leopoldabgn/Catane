@@ -7,6 +7,10 @@ public class Port extends Case {
 	private Resource resource;
 	private int resourcesToGive;
 	
+	public Port(int resourcesToGive) {
+		this(resourcesToGive, null);
+	}
+	
 	public Port(int resourcesToGive, Resource resource) {
 		this.resourcesToGive = resourcesToGive;
 		this.resource = resource;
@@ -15,7 +19,7 @@ public class Port extends Case {
 	public String toString() {
 		String str = resourcesToGive+":1";
 		if(resource != null)
-			str += " ("+resource.getClass().getSimpleName()+")";
+			str += " "+resource;
 		return str;
 	}
 	

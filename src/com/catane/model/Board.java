@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.catane.model.cases.Case;
 import com.catane.model.cases.Colony;
+import com.catane.model.cases.Port;
 import com.catane.model.cases.ResourceCase;
 import com.catane.model.cases.ResourceCase.Desert;
 import com.catane.model.cases.ResourceCase.Field;
@@ -14,6 +15,7 @@ import com.catane.model.cases.ResourceCase.Hill;
 import com.catane.model.cases.ResourceCase.Mountain;
 import com.catane.model.cases.ResourceCase.Pre;
 import com.catane.model.cases.Road;
+import com.catane.model.cases.Sea;
 import com.catane.model.cases.Town;
 
 public class Board {
@@ -23,41 +25,77 @@ public class Board {
 	private int[] thief;
 	
 	public Board(int size) {
-		this.size = size * 2 + 1;
+		this.size = size * 2 + 3;
 		cases = generateAndAddCases();
 		cases = mixCases(cases);
 	}	
 
 	private Case[][] generateAndAddCases() {
 		Case[][] cases = new Case[size][size];
-		int x = 0;
-			
-		// Ajout des cases de ressources
-		for (int i = 1; i < size; i += 2){
-			for (int j = 1; j < size; j += 2) {
-				cases[i][j] = createCase(x);
+		Port[] ports = getPorts(getRealSize()); // On recupere la vrai taille du plateau (4x4, 5x5, 6x6(max))
+		int index = 0;
+		
+		// On ajoute les ports.
+		for(int j=4;j<size;j+=4)
+			cases[j][0] = ports[index++];
+		
+		boolean port = true;
+		for(int j=2;j<size-2;j+=2, port = !port)
+			for(int i=0;i<size;i+=size-1, port = !port)
+				if(port)
+					cases[i][j] = ports[index++];
+		
+		for(int j=size-5;j>=0;j-=4)
+			cases[j][size-1] = ports[index++];
+		
+		index = 0;
+		// Ajout des cases de ressource
+		for (int i = 2; i < size-2; i += 2){
+			for (int j = 2; j < size-2; j += 2) {
+				cases[i][j] = createCase(index++);
 				if(cases[i][j] instanceof Desert) {
 					((ResourceCase)cases[i][j]).setThief(true);
 					thief = new int[] {i, j}; // on retient les coordonnées du voleur.
 				}
-				x++;
 			}
 		}
 			
 		// Ajout des routes et villes
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				if (i % 2 == 0 && j % 2 == 0)
+		for (int i = 1; i < size-1; i++) {
+			for (int j = 1; j < size-1; j++) {
+				if (i % 2 == 1 && j % 2 == 1)
 					cases[i][j] = createColony();
-				if (i % 2 == 0 && j % 2 == 1)
-					cases[i][j] = createRoad(false);
 				if (i % 2 == 1 && j % 2 == 0)
+					cases[i][j] = createRoad(false);
+				if (i % 2 == 0 && j % 2 == 1)
 					cases[i][j] = createRoad(true);
 			}
 		}
+		
+		// Ajout des cases Sea (toutes les cases null restantes)
+		for(int j=0;j<size;j++)
+			for(int i=0;i<size;i++)
+				if(cases[j][i] == null)
+					cases[j][i] = createSea();
+		
 		return cases;
 	}
-		
+	
+	private static Port[] getPorts(int boardSize) {
+		if(boardSize == 4) { // Alors c'est un plateau 4x4
+			return new Port[] {new Port(2, Resource.WOOL), new Port(3), new Port(3),
+				new Port(2, Resource.WOOD), new Port(2, Resource.WHEAT),
+				new Port(3), new Port(2, Resource.STONE), new Port(2, Resource.CLAY)};
+		}
+		else { // Pour 5x5 ou 6x6 (max)
+			return new Port[] {new Port(2, Resource.WOOL), new Port(3), new Port(3),
+				   new Port(2, Resource.WOOD), new Port(2, Resource.WHEAT),
+				   new Port(3), new Port(2, Resource.STONE), new Port(2, Resource.CLAY),
+				   new Port(3), new Port(2, Resource.WOOL), new Port(3),
+				   new Port(2, Resource.WOOD)};
+		}
+	}
+	
 	private Case createCase(int x) {
 		switch (x) {
 		case 0: return new Forest(6);
@@ -100,6 +138,10 @@ public class Board {
 		return null;
 	}
 	
+	private Case createSea() {
+		return new Sea();
+	}
+	
 	private Case createRoad(boolean up) {
 		return new Road(null, up);
 	}
@@ -110,10 +152,7 @@ public class Board {
 	
 	private Case[][] mixCases(Case[][] cases){
 		Random r = new Random();
-		int i1 = 0;
-		int i2 = 0;
-		int j1 = 0;
-		int j2 = 0;
+		int i1, i2, j1, j2;
 		Case tmp = null;
 		for (int i = 0; i < size * size; i++) {
 			i1 = r.nextInt(size - 1);
@@ -136,20 +175,21 @@ public class Board {
 		if(c == null)
 			return null;
 		
-		for(int j=0;j<cases.length;j++)
-			for(int i=0;i<cases[0].length;i++)
+		for(int j=0;j<size;j++)
+			for(int i=0;i<size;i++)
 				if(cases[j][i] == c)
 					return new int[] {j, i};
 		
 		return null;
 	}
 	
-	public void replaceCaseBy(Case c, Case newCase) { // newCase peut etre null, c'est autorisé.
+	public void replaceCaseBy(Case c, Case newCase) {
+		if(newCase == null)
+			return;
 		int[] coord = getIndexesOf(c);
 		if(coord == null)
 			return;
 		cases[coord[0]][coord[1]] = newCase;
-		//newCase.mouseEntered(null); // Sinon le contour s'enleve meme si on a la souris dessus.
 	}
 	
 	public void replaceColonyByTown(Colony colony) {
@@ -160,7 +200,9 @@ public class Board {
 	}
 	
 	public boolean outOfBorders(int x, int y) {
-		return !((x >= 0 && x < size) && (y >= 0 && y < size));
+		// On met x,y >= 1, car on saute la ligne et la colonne avec les ports.
+		// On met x,y < size-1 car (meme raison).
+		return !((x >= 1 && x < size-1) && (y >= 1 && y < size-1));
 	}
 	
 	public void putColony(Player player, int x, int y) {
@@ -213,12 +255,10 @@ public class Board {
 	}
 	
 	public Case getCase(int x, int y) {
-		if(outOfBorders(x, y))
-			return null;
 		return cases[x][y];
 	}
 
-	public void switchThief(int[] newThief) { // Change le vouleur de case
+	public void switchThief(int[] newThief) { // Change le voleur de case
 		((ResourceCase) getCase(newThief[0], newThief[1])).setThief(true);
 		((ResourceCase) getCase(thief[0], thief[1])).setThief(false);
 		thief = newThief;
@@ -255,6 +295,10 @@ public class Board {
 	
 	public int getSize() {
 		return size;
+	}
+	
+	public int getRealSize() {
+		return (size-3)/2;
 	}
 	
 }

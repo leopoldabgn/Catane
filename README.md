@@ -1,7 +1,10 @@
 Bienvenue dans Catane !
 
-Pour lancer le jeu dans le terminal :
-	./run.sh
+Tout d'abord, vous devez donner des permissions au fichier run.sh pour
+que le programme puisse s'executer:
+	chmod u+x ./run.sh
 
-Pour lancer le jeu avec une interface graphique :
-	./run.sh gui
+Ensuite, pour lancer le jeu :
+- Terminal : ./run.sh
+
+- GUI : ./run.sh gui

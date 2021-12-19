@@ -55,8 +55,7 @@ public class ResourcePanel extends JPanel {
 			this.res = res;
 			this.number = new JLabel(player.getResource(res)+"");
 			this.setOpaque(false);
-			String path = res.getEnglishName();
-			path = path.charAt(0)+path.substring(1).toLowerCase();
+			String path = res.getEnglishName().toLowerCase();
 			path = "res/icons/"+path+".png";
 			Image icon = null;
 			try {

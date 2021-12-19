@@ -1,9 +1,9 @@
 package com.catane.view;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -17,7 +17,9 @@ public class IconPanel extends JPanel {
 	private Image icon;
 	
 	public IconPanel(String path, int size) {
-		this.setPreferredSize(new Dimension(size, size));
+		//this.setPreferredSize(new Dimension(size, size));
+		setOpaque(false);
+		this.setLayout(new GridBagLayout());
 		icon = (new ImageIcon(path)).getImage();
 		path = path.charAt(0)+path.substring(1).toLowerCase();
 		path = "res/icons/"+path+".png";
@@ -38,15 +40,16 @@ public class IconPanel extends JPanel {
 		
 		public ImagePanel(Image image, int size) {
 			this.image = image;
-			this.setOpaque(false);
 			this.setPreferredSize(new Dimension(size, size));
+			setOpaque(false);
 		}
 		
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
+			int size = getWidth();
 			if(image != null)
-				g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+				g.drawImage(image, 0, 0, size, size, null);
 		}
 		
 	}

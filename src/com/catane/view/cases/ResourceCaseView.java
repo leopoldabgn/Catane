@@ -39,7 +39,7 @@ public abstract class ResourceCaseView extends CaseView {
 		setLayout(new GridBagLayout());
 		
 		JLabel label = new JLabel(toString());
-		label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 12));
+		label.setFont(new Font("Verdana", Font.BOLD, 14));
 		label.setForeground(Color.BLACK);
 		
 	    gbc.gridx = 0;

@@ -57,9 +57,10 @@ public class ColonyView extends MovableCaseView {
 			return;
 		g.setColor(getPlayer().getColor()); // player forcement non null ici.
 		double coeff = 0.1;
-		int space = (int)(coeff*getWidth()); // C'est un carré normalement, donc getWidth == getHeigt.
-		int[] valX = {space, getWidth()/2, getWidth() - space};
-		int[] valY = {getHeight() - space, space, getHeight() - space};
+		int size = Math.min(getWidth(), getHeight());
+		int space = (int)(coeff*size); // C'est un carré normalement, donc getWidth == getHeigt.
+		int[] valX = {space, size/2, size - space};
+		int[] valY = {size - space, space, size - space};
 		g.fillPolygon(valX, valY, 3);
 	}
 	

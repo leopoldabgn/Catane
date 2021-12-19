@@ -5,7 +5,7 @@ import com.catane.model.Game;
 public class CLILauncher {
 
 	public static void main(String[] args) {
-		String jouer = "gui";
+		String jouer = "command";
 		if(args != null)
 			if(args.length > 0)
 				if(args[0].toUpperCase().equals("GUI"))

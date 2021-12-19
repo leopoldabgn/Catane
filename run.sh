@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 export ARGS=`echo "$@"`
 mvn package
-mvn exec:java -Dexec.args="$ARGS"
+clear
+java -cp ./target/Catane-0.0.1-SNAPSHOT.jar com.catane.view.CLILauncher "$ARGS"

@@ -192,10 +192,10 @@ public class Player {
 	}
 
 	public boolean isIn(List<Colony> col) {
-		boolean b = false;
 		for (Colony c : col)
-			b = (this == c.getPlayer()) ? true : b;
-		return b;
+			if (this == c.getPlayer())
+				return true;
+		return false;
 	}
 
 	public int canBuyDevCard(Game game) {

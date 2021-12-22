@@ -1,7 +1,7 @@
-package com.catane.view.cases;
+package com.catane.view.gui.cases;
 
 import com.catane.model.cases.Sea;
-import com.catane.view.BoardView;
+import com.catane.view.gui.BoardView;
 
 public class SeaView extends CaseView {
 	private static final long serialVersionUID = 1L;

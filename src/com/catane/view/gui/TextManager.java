@@ -1,4 +1,4 @@
-package com.catane.view;
+package com.catane.view.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

@@ -29,7 +29,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.0.0</version>
         <configuration>
-          <mainClass>com.catane.view.CLILauncher</mainClass>
+          <mainClass>com.catane.launcher.Launcher</mainClass>
 		  <encoding>${project.build.sourceEncoding}</encoding>
           <release>14</release>
         </configuration>

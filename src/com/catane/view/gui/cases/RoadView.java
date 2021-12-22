@@ -1,10 +1,10 @@
-package com.catane.view.cases;
+package com.catane.view.gui.cases;
 
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 import com.catane.model.cases.Road;
-import com.catane.view.BoardView;
+import com.catane.view.gui.BoardView;
 
 public class RoadView extends MovableCaseView {
 	private static final long serialVersionUID = 1L;

@@ -1,8 +1,10 @@
-package com.catane.view;
+package com.catane.launcher;
 
 import com.catane.model.Game;
+import com.catane.view.cli.CLI;
+import com.catane.view.gui.GUI;
 
-public class CLILauncher {
+public class Launcher {
 
 	public static void main(String[] args) {
 		String jouer = "command";

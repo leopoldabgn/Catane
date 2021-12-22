@@ -1,4 +1,4 @@
-package com.catane.view.cases;
+package com.catane.view.gui.cases;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,7 +20,7 @@ import com.catane.model.cases.ResourceCase.Forest;
 import com.catane.model.cases.ResourceCase.Hill;
 import com.catane.model.cases.ResourceCase.Mountain;
 import com.catane.model.cases.ResourceCase.Pre;
-import com.catane.view.BoardView;
+import com.catane.view.gui.BoardView;
 
 public abstract class ResourceCaseView extends CaseView {
 	private static final long serialVersionUID = 1L;

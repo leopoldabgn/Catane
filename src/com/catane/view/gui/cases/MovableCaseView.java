@@ -1,8 +1,8 @@
-package com.catane.view.cases;
+package com.catane.view.gui.cases;
 
 import com.catane.model.Player;
 import com.catane.model.cases.MovableCase;
-import com.catane.view.BoardView;
+import com.catane.view.gui.BoardView;
 
 public class MovableCaseView extends CaseView {
 	private static final long serialVersionUID = 1L;

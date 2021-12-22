@@ -1,4 +1,4 @@
-package com.catane.view;
+package com.catane.view.cli;
 
 import com.catane.model.Player;
 import com.catane.model.Resource;

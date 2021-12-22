@@ -1,4 +1,4 @@
-package com.catane.view.cases;
+package com.catane.view.gui.cases;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import com.catane.view.BoardView;
+import com.catane.view.gui.BoardView;
 
 public abstract class CaseView extends JPanel implements MouseListener {
 	private static final long serialVersionUID = 1L;

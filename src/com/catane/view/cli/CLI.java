@@ -1,4 +1,4 @@
-package com.catane.view;
+package com.catane.view.cli;
 
 import java.util.List;
 import java.util.Scanner;
@@ -9,6 +9,7 @@ import com.catane.model.Player;
 import com.catane.model.Resource;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.ResourceCase;
+import com.catane.view.gui.BoardView;
 
 public class CLI {
 

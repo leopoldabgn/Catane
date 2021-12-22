@@ -1,4 +1,4 @@
-package com.catane.view;
+package com.catane.view.gui;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -18,21 +18,21 @@ import com.catane.model.cases.ResourceCase.Forest;
 import com.catane.model.cases.ResourceCase.Hill;
 import com.catane.model.cases.ResourceCase.Mountain;
 import com.catane.model.cases.ResourceCase.Pre;
+import com.catane.view.gui.cases.CaseView;
+import com.catane.view.gui.cases.ColonyView;
+import com.catane.view.gui.cases.PortView;
+import com.catane.view.gui.cases.RoadView;
+import com.catane.view.gui.cases.SeaView;
+import com.catane.view.gui.cases.TownView;
+import com.catane.view.gui.cases.ResourceCaseView.DesertView;
+import com.catane.view.gui.cases.ResourceCaseView.FieldView;
+import com.catane.view.gui.cases.ResourceCaseView.ForestView;
+import com.catane.view.gui.cases.ResourceCaseView.HillView;
+import com.catane.view.gui.cases.ResourceCaseView.MountainView;
+import com.catane.view.gui.cases.ResourceCaseView.PreView;
 import com.catane.model.cases.Road;
 import com.catane.model.cases.Sea;
 import com.catane.model.cases.Town;
-import com.catane.view.cases.CaseView;
-import com.catane.view.cases.ColonyView;
-import com.catane.view.cases.PortView;
-import com.catane.view.cases.ResourceCaseView.DesertView;
-import com.catane.view.cases.ResourceCaseView.FieldView;
-import com.catane.view.cases.ResourceCaseView.ForestView;
-import com.catane.view.cases.ResourceCaseView.HillView;
-import com.catane.view.cases.ResourceCaseView.MountainView;
-import com.catane.view.cases.ResourceCaseView.PreView;
-import com.catane.view.cases.RoadView;
-import com.catane.view.cases.SeaView;
-import com.catane.view.cases.TownView;
 
 public class BoardView extends JPanel {
 	private static final long serialVersionUID = 1L;

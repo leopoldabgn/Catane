@@ -1,4 +1,4 @@
-package com.catane.view.cases;
+package com.catane.view.gui.cases;
 
 import java.awt.*;
 
@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 
 import com.catane.model.Resource;
 import com.catane.model.cases.Port;
-import com.catane.view.BoardView;
-import com.catane.view.IconPanel;
+import com.catane.view.gui.BoardView;
+import com.catane.view.gui.IconPanel;
 
 public class PortView extends CaseView {
 	private static final long serialVersionUID = 1L;

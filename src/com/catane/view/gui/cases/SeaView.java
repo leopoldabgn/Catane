@@ -1,5 +1,7 @@
 package com.catane.view.gui.cases;
 
+import java.awt.Color;
+
 import com.catane.model.cases.Sea;
 import com.catane.view.gui.BoardView;
 
@@ -11,8 +13,8 @@ public class SeaView extends CaseView {
 	public SeaView(BoardView board, Sea sea) {
 		super(board);
 		this.sea = sea;
-		setOpaque(false);
 		isSelectable = false;
+		setBackground(Color.BLUE);
 	}
 	
 }

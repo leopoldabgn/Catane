@@ -107,6 +107,7 @@ public class CLI {
 									System.out.println("Il y a deja une colonie ou une ville aux alentours !");
 							else {
 								error = false;
+								player.payColony();
 								board.putColony(player, coord[0], coord[1]);
 							}
 						}
@@ -126,6 +127,7 @@ public class CLI {
 									System.out.println("Cette colonie n'est pas a vous !");
 							else {
 								error = false;
+								player.payTown();
 								board.putTown(player, coord[0], coord[1]);
 							}
 						}
@@ -143,6 +145,7 @@ public class CLI {
 									System.out.println("Vous ne pouvez pas poser de route ici !");
 							else {
 								error = false;
+								player.payRoad();
 								board.putRoad(player, coord[0], coord[1]);
 							}
 						}

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 import com.catane.model.cards.DevelopmentCard;
 import com.catane.model.cards.VictoryPoints;
@@ -131,46 +130,6 @@ public class Player {
 	
 	public void gainResource(Resource r) {
 		resources.add(r);
-	}
-
-	public char askAction(Scanner sc) {
-		System.out.println("Choisissez une action à effectuer :");
-		System.out.println("- Construire une colonie -> tapez 'c'");
-		System.out.println("- Construire une ville -> tapez 'v'");
-		System.out.println("- Construire une route -> tapez 'r'");
-		System.out.println("- Acheter une carte de developpement -> tapez 'd'");
-		System.out.println("- Echanger des ressources -> tapez 'e'");
-		char c = sc.nextLine().charAt(0);
-		while (!charAction(c)) {
-			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r, d ou e)");
-			c = sc.nextLine().charAt(0);
-		}
-		return c;
-	}
-
-	private boolean charAction(char c) {
-		if (c != 'c' && c != 'v' && c != 'r' && c != 'd' && c != 'e')
-			return false;
-		return true;
-	}
-
-	public String askCoord(Scanner sc) {
-		String s = sc.nextLine();
-		while (!coord(s)) {
-			System.out.println("Coordonnées incorrectes\nDonnez les coordonnées (ex: A8) : ");
-			s = sc.nextLine();
-		}
-		return s.substring(0, (s.length() == 2 ? 2 : 3)).toUpperCase(); // Le string a forcement une taille >= 2
-	}
-
-	private boolean coord(String s) {
-		if(s == null || s.length() < 2)
-			return false;
-		if (!Character.isLetter(s.charAt(0)) || !Character.isDigit(s.charAt(1)))
-			return false;
-		if (s.length() > 2 && !Character.isDigit(s.charAt(2)))
-			return false;
-		return true;
 	}
 	
 	public void buildColony(Colony colony) {

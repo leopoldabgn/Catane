@@ -85,7 +85,7 @@ public class CLI {
 			PlayerView.printDevelopmentCards(player);
 			System.out.println();
 			endRound = true;
-			c = player.askAction(sc);
+			c = askAction();
 			coord = null;
 			error = true;
 			
@@ -178,19 +178,59 @@ public class CLI {
 			if(coord != null) // Si != null, forcement les coordonnees sont outOfBorders.
 				System.out.println("Ces coordonnées ne sont pas sur le plateau !");
 			System.out.print("Donnez les coordonnées (ex: A8) : ");
-			coordStr = game.getActualPlayer().askCoord(sc);
+			coordStr = checkCoord();
 			coord = game.convertCoord(coordStr);
 		} while(board.outOfBorders(coord[0], coord[1]));
 		
 		return coord;
 	}
 
+	public String checkCoord() {
+		String s = sc.nextLine();
+		while (!coord(s)) {
+			System.out.println("Coordonnées incorrectes\nDonnez les coordonnées (ex: A8) : ");
+			s = sc.nextLine();
+		}
+		return s.substring(0, (s.length() == 2 ? 2 : 3)).toUpperCase(); // Le string a forcement une taille >= 2
+	}
+
+	private boolean coord(String s) {
+		if(s == null || s.length() < 2)
+			return false;
+		if (!Character.isLetter(s.charAt(0)) || !Character.isDigit(s.charAt(1)))
+			return false;
+		if (s.length() > 2 && !Character.isDigit(s.charAt(2)))
+			return false;
+		return true;
+	}
+	
 	public Player askPlayer() {
 		String s = sc.nextLine();
 		for (Player p : game.getPlayers())
 			if (s.equals(p.getName()))
 				return p;
 		return null;
+	}
+	
+	public char askAction() {
+		System.out.println("Choisissez une action à effectuer :");
+		System.out.println("- Construire une colonie -> tapez 'c'");
+		System.out.println("- Construire une ville -> tapez 'v'");
+		System.out.println("- Construire une route -> tapez 'r'");
+		System.out.println("- Acheter une carte de developpement -> tapez 'd'");
+		System.out.println("- Echanger des ressources -> tapez 'e'");
+		char c = sc.nextLine().charAt(0);
+		while (!charAction(c)) {
+			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r, d ou e)");
+			c = sc.nextLine().charAt(0);
+		}
+		return c;
+	}
+
+	private boolean charAction(char c) {
+		if (c != 'c' && c != 'v' && c != 'r' && c != 'd' && c != 'e')
+			return false;
+		return true;
 	}
 	
 	public void thiefAction() {

@@ -8,6 +8,7 @@ import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.Resource;
 import com.catane.model.cases.Colony;
+import com.catane.model.cases.Port;
 import com.catane.model.cases.ResourceCase;
 import com.catane.view.gui.BoardView;
 
@@ -108,7 +109,7 @@ public class CLI {
 							else {
 								error = false;
 								player.payColony();
-								board.putColony(player, coord[0], coord[1]);
+								player.buildColony(board.putColony(player, coord[0], coord[1]));
 							}
 						}
 						break;
@@ -128,7 +129,7 @@ public class CLI {
 							else {
 								error = false;
 								player.payTown();
-								board.putTown(player, coord[0], coord[1]);
+								player.buildTown(board.putTown(player, coord[0], coord[1]));
 							}
 						}
 						break;
@@ -146,7 +147,7 @@ public class CLI {
 							else {
 								error = false;
 								player.payRoad();
-								board.putRoad(player, coord[0], coord[1]);
+								player.buildRoad(board.putRoad(player, coord[0], coord[1]));
 							}
 						}
 						break;
@@ -165,7 +166,12 @@ public class CLI {
 						endRound = false; // Le tour continu meme quand on achete une carte de dev ?
 						break;
 					case 'e':
+						error = !portAction();
+						endRound = false;
+						break;
+					case 't':
 						error = false;
+						endRound = true;
 						break;
 				}
 				
@@ -173,6 +179,18 @@ public class CLI {
 			
 		} while(!endRound && !player.hasWon());
 		
+	}
+	
+	public int askNumber() {
+		int nb;
+		String str = sc.nextLine();
+		try {
+			nb = Integer.parseInt(str);
+		} catch(Exception e) {
+			System.out.println("Merci d'écrire un nombre valide !");
+			return askNumber();
+		}
+		return nb;
 	}
 	
 	public int[] askCoord() {
@@ -223,16 +241,17 @@ public class CLI {
 		System.out.println("- Construire une route -> tapez 'r'");
 		System.out.println("- Acheter une carte de developpement -> tapez 'd'");
 		System.out.println("- Echanger des ressources -> tapez 'e'");
+		System.out.println("- Passer au tour suivant -> tapez 't'");
 		char c = sc.nextLine().charAt(0);
 		while (!charAction(c)) {
-			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r, d ou e)");
+			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r, d, e ou t)");
 			c = sc.nextLine().charAt(0);
 		}
 		return c;
 	}
 
 	private boolean charAction(char c) {
-		if (c != 'c' && c != 'v' && c != 'r' && c != 'd' && c != 'e')
+		if (c != 'c' && c != 'v' && c != 'r' && c != 'd' && c != 'e' && c != 't')
 			return false;
 		return true;
 	}
@@ -317,6 +336,98 @@ public class CLI {
 			p = askPlayer();
 		} while (!p.isIn(col));
 		game.getActualPlayer().stealResource(p);
+	}
+	
+	public Resource askResource() {
+		String rep;
+		System.out.print("(");
+		Resource[] resources = Resource.values();
+		for(int i=0;i<resources.length;i++) {
+			System.out.print(resources[i].getFrenchName().toLowerCase());
+			if(i != resources.length-1)
+				System.out.print(" / ");
+		}
+		System.out.println(") :");
+		while(true) {
+			rep = sc.nextLine();
+			for(Resource r : Resource.values()) {
+				if(rep.equals(r.toString().toLowerCase())) {
+					return r;
+				}
+			}
+			System.out.println("Ressource non reconnue");
+		}
+	}
+	
+	public boolean makeTrade(Port port) {
+		if(port == null)
+			return false;
+		if(port.getResourcesToGive() < 4)
+			System.out.println("Vous avez choisi le port suivant : ("+port+")");
+		else
+			System.out.println("Vous allez faire l'echange suivant : ("+port+")");
+		if(port.getResourceType() == null)
+			System.out.println("Vous devez préciser une resource que vous avez en "+
+						   		port.getResourcesToGive()+" exemplaires.");
+		else
+			System.out.println("Vous devez donner "+port.getResourcesToGive()+" "
+						       +port.getResourceType());
+		System.out.println("Vous obtiendrez la ressource de votre choix en échange.");
+		Resource resStock, resGain;
+		if(port.getResourceType() == null) {
+			if(game.getActualPlayer().getResourceByNb(port.getResourcesToGive()) == null) {
+				System.out.println("Vous n'avez aucune ressource en "+
+							       port.getResourcesToGive()+" exemplaires.");
+				return false;
+			}
+			resStock = askResource();
+		}
+		else
+			resStock = port.getResourceType();
+		int nbRes = game.getActualPlayer().getResource(resStock);
+		int nbResToGive = port.getResourcesToGive();
+		if(nbRes >= nbResToGive) {
+			if(port.getResourceType() == null)
+				System.out.println("Vous voulez donner "+nbResToGive+" "+resStock+".");
+			System.out.println("Quelle ressource voulez-vous en échange ?");
+			resGain = askResource();
+			game.getActualPlayer().echange(resStock, nbResToGive, resGain);
+			System.out.println("Vous avez échangé "+nbResToGive+" "+resStock+" contre 1 "+resGain);
+			return true;
+		}
+		else {
+			System.out.println("Vous n'avez pas assez de "+resStock+".");
+			return false;
+		}
+	}
+	
+	public boolean portAction() {
+		List<Port> ports = board.getPorts(game.getActualPlayer());
+		System.out.println("0 : annuler");
+		System.out.println("1 : Faire un echange (4:1)");
+		if(ports.isEmpty()) {
+			System.out.println("Il n'y a pas de port à proximité.");
+		}
+		else {
+			System.out.println("Voici la liste des ports disponibles :");
+			for(int i=0;i<ports.size();i++)
+				System.out.println((i+2)+" : ("+ports.get(i)+")");
+		}
+		int nb = askNumber();
+		while(nb < 0 || nb > ports.size()+1) {
+			System.out.println("Le nombre doit être entre 0 et "+(ports.size()+1)+" !");
+			nb = askNumber();
+		}
+		if(nb == 0)
+			return true;
+		if(nb == 1)
+			makeTrade(new Port(4));
+		else
+			makeTrade(ports.get(nb-2));
+		
+		System.out.println();
+		
+		return nb > 0;
 	}
 	
 	public void openScan() {

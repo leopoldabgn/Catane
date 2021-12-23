@@ -205,14 +205,15 @@ public class Board {
 		return !((x >= 1 && x < size-1) && (y >= 1 && y < size-1));
 	}
 	
-	public void putColony(Player player, int x, int y) {
+	public Colony putColony(Player player, int x, int y) {
 		Colony c = (Colony)cases[x][y];
 		c.setPlayer(player);
+		return c;
 	}
 	
-	public void putColony(Player player, Colony colony) { // colonie vide
+	public Colony putColony(Player player, Colony colony) { // colonie vide
 		int[] coord = getIndexesOf(colony);
-		putColony(player, coord[0], coord[1]);
+		return putColony(player, coord[0], coord[1]);
 	}
 	
 	// Retourne la ville. Important uniquement pour la GUI.
@@ -228,14 +229,15 @@ public class Board {
 		return putTown(player, coord[0], coord[1]);
 	}
 	
-	public void putRoad(Player player, int x, int y) {
+	public Road putRoad(Player player, int x, int y) {
 		Road r = (Road)cases[x][y];
 		r.setPlayer(player);
+		return r;
 	}
 	
-	public void putRoad(Player player, Road road) { // Route vide
+	public Road putRoad(Player player, Road road) { // Route vide
 		int[] coord = getIndexesOf(road);
-		putRoad(player, coord[0], coord[1]);
+		return putRoad(player, coord[0], coord[1]);
 	}
 	
 	public boolean checkColoniesAround(int x, int y) { // Colonie ou Ville autour de ces coordonnees.
@@ -273,6 +275,36 @@ public class Board {
 				col.add(c);
 		}
 		return col;
+	}
+	
+	// On fait la liste de tous les ports du joueur
+	public List<Port> getPorts(Player player) {
+		List<Port> list = new ArrayList<Port>();
+		if(player == null)
+			return list;
+		Port p;
+		for(Colony c : player.getColonies()) {
+			p = getPortAround(c);
+			
+			if(p != null && !list.contains(p))
+				list.add(p);
+		}
+		return list;
+	}
+	
+	private Port getPortAround(Colony colony) {
+		if(!colony.isColony() && !colony.isTown()) // On verifie si c'est bien une instance de Colony
+			return null;
+		int[] coord = getIndexesOf(colony);
+		int x = coord[0], y = coord[1];
+		coord = new int[] {x-1, y-1, x+1, y-1, x+1, y+1, x-1, y+1}; // Les 4 diagonales
+		
+		for(int i=0;i<coord.length;i+=2) {
+			Case c = cases[coord[i]][coord[i+1]];
+			if(c instanceof Port)
+				return (Port)c;
+		}
+		return null;
 	}
 	
 	// Les coordonnees sont forcement sur le plateau lorsqu'on

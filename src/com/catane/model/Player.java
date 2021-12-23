@@ -35,8 +35,19 @@ public class Player {
 		return color;
 	}
 
-	// Méthodes pour vérification des actions
-
+	// On verifie si il y a une ressource qu'il a
+	// en nb ou plus quantité.
+	public Resource getResourceByNb(int nb) {
+		int temp = 0;
+		for(Resource r : resources) {
+			temp = getResource(r);
+			if(temp >= nb)
+				return r;
+		}
+		
+		return null;
+	}
+	
 	public int getResource(Resource r1) {
 
 		/***************************************
@@ -176,10 +187,9 @@ public class Player {
 		pay(Resource.CLAY);
 	}
 
-	public void echange(Resource aPayer, Resource aGagner){
-		pay(aPayer);
-		pay(aPayer);
-		pay(aPayer);
+	public void echange(Resource aPayer, int nbAPayer, Resource aGagner){
+		for(int i=0;i<nbAPayer;i++)
+			pay(aPayer);
 		gainResource(aGagner);
 	}
 
@@ -263,6 +273,10 @@ public class Player {
 	
 	public String getName() {
 		return "J"+number;
+	}
+	
+	public List<Colony> getColonies() {
+		return colonies;
 	}
 	
 	@Override

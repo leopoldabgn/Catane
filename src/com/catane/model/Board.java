@@ -65,9 +65,9 @@ public class Board {
 			for (int j = 1; j < size-1; j++) {
 				if (i % 2 == 1 && j % 2 == 1)
 					cases[i][j] = createColony();
-				if (i % 2 == 1 && j % 2 == 0)
-					cases[i][j] = createRoad(false);
 				if (i % 2 == 0 && j % 2 == 1)
+					cases[i][j] = createRoad(false);
+				if (i % 2 == 1 && j % 2 == 0)
 					cases[i][j] = createRoad(true);
 			}
 		}
@@ -174,7 +174,6 @@ public class Board {
 	public int[] getIndexesOf(Case c) {
 		if(c == null)
 			return null;
-		
 		for(int j=0;j<size;j++)
 			for(int i=0;i<size;i++)
 				if(cases[j][i] == c)
@@ -208,6 +207,7 @@ public class Board {
 	public Colony putColony(Player player, int x, int y) {
 		Colony c = (Colony)cases[x][y];
 		c.setPlayer(player);
+		player.buildColony(c);
 		return c;
 	}
 	
@@ -221,6 +221,8 @@ public class Board {
 		Colony c = (Colony)cases[x][y];
 		Town t = new Town(c);
 		cases[x][y] = t;
+		player.removeColony(c); // Important ! On retire la colonie de la liste du joueur.
+		player.buildTown(t);
 		return t;
 	}
 	
@@ -232,6 +234,7 @@ public class Board {
 	public Road putRoad(Player player, int x, int y) {
 		Road r = (Road)cases[x][y];
 		r.setPlayer(player);
+		player.buildRoad(r);
 		return r;
 	}
 	
@@ -296,9 +299,9 @@ public class Board {
 		if(!colony.isColony() && !colony.isTown()) // On verifie si c'est bien une instance de Colony
 			return null;
 		int[] coord = getIndexesOf(colony);
+		
 		int x = coord[0], y = coord[1];
 		coord = new int[] {x-1, y-1, x+1, y-1, x+1, y+1, x-1, y+1}; // Les 4 diagonales
-		
 		for(int i=0;i<coord.length;i+=2) {
 			Case c = cases[coord[i]][coord[i+1]];
 			if(c instanceof Port)
@@ -306,6 +309,158 @@ public class Board {
 		}
 		return null;
 	}
+	
+	/////////////////////////////////////////////////////
+	// Fonctions pour calculer la route la plus longue
+	// On utilise le backtracking pour y arriver
+	
+	private boolean isValidRoad(Player player, boolean[][] visited, int x, int y) {
+		return !outOfBorders(x, y) && !visited[x][y] &&
+			    cases[x][y].isRoad() && ((Road)cases[x][y]).getPlayer() == player;
+	}
+	
+	private boolean isValidColony(Player player, boolean[][] visited, int x, int y) {
+		return !outOfBorders(x, y) && !visited[x][y] && (cases[x][y].isColony() || cases[x][y].isTown()) &&
+				((Colony)cases[x][y]).getPlayer() == player;
+	}
+	
+	public int getLongestRoad(Player player) {
+		if(player == null)
+			return 0;
+		boolean[][] visited = new boolean[size][size];
+		int max = 0;
+		for(Road r : player.getRoads()) {
+			int[] coord = getIndexesOf(r);
+			max = Math.max(max, getLongestRoadAux(player, visited, coord[0], coord[1]));
+		}
+		return max;
+	}
+	
+	private int getLongestRoadAux(Player player, boolean[][] visited, int j, int i) {
+		
+		int max = 0;
+		Road r = (Road)cases[j][i];
+		boolean vertical = r.isVertical();
+		int[] colonies, roads;
+		
+		if(vertical) {
+			colonies = new int[] {0, 1};
+			roads = new int[] {0, 2, -1, 1, 1, 1};
+		}
+		else {
+			colonies = new int[] {1, 0};
+			roads = new int[] {2, 0, 1, -1, 1, 1};
+		}
+		
+		int m = 1, f = 1; // Varie entre 1 et -1
+		
+		for(int l=0;l<2;l++) {
+			if(isValidColony(player, visited, j+m*colonies[0], i+f*colonies[1])) {
+				visited[j+m*colonies[0]][i+f*colonies[1]] = true;
+				for(int k=0;k<roads.length;k+=2)
+					if(isValidRoad(player, visited, j+m*roads[k], i+f*roads[k+1]))
+						max = Math.max(max, getLongestRoadAux(player, visited, j+m*roads[k], i+f*roads[k+1]));
+				visited[j+m*colonies[0]][i+f*colonies[1]] = false;
+			}
+			if(vertical)
+				f *= -1;
+			else
+				m *= -1;
+		}
+		
+		/*
+		if(vertical) {
+			if(isValidColony(player, visited, j, i+1)) {
+				visited[j][i+1] = true;
+				if(isValidRoad(player, visited, j, i+2)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j, i+2));
+				}
+				if(isValidRoad(player, visited, j-1, i+1)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j-1, i+1));
+				}
+				if(isValidRoad(player, visited, j+1, i+1)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j+1, i+1));
+				}
+				visited[j][i+1] = false;
+			}
+			if(isValidColony(player, visited, j, i-1)) {
+				visited[j][i-1] = true;
+				if(isValidRoad(player, visited, j, i-2)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j, i-2));
+				}
+				if(isValidRoad(player, visited, j-1, i-1)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j-1, i-1));
+				}
+				if(isValidRoad(player, visited, j+1, i-1)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j+1, i-1));
+				}
+				visited[j][i-1] = false;
+			}
+		}
+		else {
+			if(isValidColony(player, visited, j+1, i)) {
+				visited[j+1][i] = true;
+				if(isValidRoad(player, visited, j+2, i)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j+2, i));
+				}
+				if(isValidRoad(player, visited, j+1, i-1)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j+1, i-1));
+				}
+				if(isValidRoad(player, visited, j+1, i+1)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j+1, i+1));
+				}
+				visited[j+1][i] = false;
+			}
+			if(isValidColony(player, visited, j-1, i)) {
+				visited[j-1][i] = true;
+				if(isValidRoad(player, visited, j-2, i)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j-2, i));
+				}
+				if(isValidRoad(player, visited, j-1, i-1)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j-1, i-1));
+				}
+				if(isValidRoad(player, visited, j-1, i+1)) {
+					max = Math.max(max, getLongestRoadAux(player, visited, j-1, i+1));
+				}
+				visited[j-1][i] = false;
+			}
+		}
+		*/
+		
+		/*
+		 	int max = 0;
+			boolean vertical = false;
+			int[] colonies, roads;
+			if(vertical) {
+				colonies = new int[] {0, 1};
+				roads = new int[] {0, 2, -1, 1, 1, 1};
+			}
+			else {
+				colonies = new int[] {1, 0};
+				roads = new int[] {2, 0, 1, -1, 1, 1};
+			}
+			
+			int m = 1, f = 1; // Varie entre 1 et -1
+			
+			for(int l=0;l<2;l++) {
+				System.out.println(m*colonies[0]+" "+f*colonies[1]);
+				for(int k=0;k<roads.length;k+=2) {
+					System.out.println(m*roads[k]+" "+f*roads[k+1]);
+				}
+				if(vertical)
+					f *= -1;
+				else
+					m *= -1;
+			}
+		 */
+		
+		visited[j][i] = false;
+		
+		return max+1;
+	}
+	
+	/////////////////////////////////////////////////////
+	
 	
 	// Les coordonnees sont forcement sur le plateau lorsqu'on
 	// appelle les fonctions suivantes :

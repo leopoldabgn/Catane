@@ -25,8 +25,10 @@ public class RoadView extends MovableCaseView {
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
 		
-		/*if(isEmpty())
-			setPlayer(board.getActualPlayer());*/
+		if(isEmpty())
+			road.setPlayer(board.getActualPlayer());
+		board.getBoard().putRoad(board.getActualPlayer(), road);
+		System.out.println("Longest Road : "+board.getBoard().getLongestRoad(board.getActualPlayer()));
 		revalidate();
 		repaint();
 	}

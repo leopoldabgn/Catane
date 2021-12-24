@@ -143,6 +143,10 @@ public class Player {
 		resources.add(r);
 	}
 	
+	public void removeColony(Colony colony) {
+		colonies.remove(colony);
+	}
+	
 	public void buildColony(Colony colony) {
 		payColony();
 		colonies.add(colony);
@@ -153,9 +157,9 @@ public class Player {
 		roads.add(road);
 	}
 
-	public void buildTown(Colony colony) { // Comment transformer une colonie en ville ?
-		payTown();						// Problème puisqu'une ville est de type Town et Colony
-		colony = new Town(colony);
+	public void buildTown(Town town) {
+		payTown();
+		colonies.add(town); // La liste colonies contient egalement les villes.
 	}
 
 	public void pay(Resource r) { // Supprime une ressource
@@ -277,6 +281,10 @@ public class Player {
 	
 	public List<Colony> getColonies() {
 		return colonies;
+	}
+	
+	public List<Road> getRoads() {
+		return roads;
 	}
 	
 	@Override

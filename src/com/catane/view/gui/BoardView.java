@@ -215,7 +215,7 @@ public class BoardView extends JPanel {
 		return game;
 	}
 	
-	public Board getBoard() {
+	public Board getBoardModel() {
 		return board;
 	}
 	

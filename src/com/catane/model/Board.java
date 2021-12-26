@@ -337,7 +337,7 @@ public class Board {
 	
 	private boolean isValidColony(Player player, boolean[][] visited, int x, int y) {
 		return !outOfBorders(x, y) && !visited[x][y] && (cases[x][y].isColony() || cases[x][y].isTown()) &&
-				((Colony)cases[x][y]).getPlayer() == player;
+				( ((Colony)cases[x][y]).getPlayer() == player || ((Colony)cases[x][y]).isEmpty() );
 	}
 	
 	public int getLongestRoad(Player player) {

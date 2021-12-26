@@ -19,7 +19,7 @@ public class Launcher {
 			new CLI(game);
 		}
 		else if(jouer.equals("gui")) {
-			new GUI(game, 800, 800);
+			new GUI(game, 1000, 800);
 		}
 
 		// idées pour gui (si possible) :

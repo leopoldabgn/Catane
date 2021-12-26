@@ -3,6 +3,7 @@ package com.catane.view.gui.cases;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -76,6 +77,9 @@ public class PortView extends CaseView {
 			lastFrame = new TradeFrame();
 			lastFrame.setVisible(true);
 		}
+		else {
+			// VOus ne poouvez pas echanger avec ce port !
+		}
 	}
 	
 	private class TradeFrame extends JFrame {
@@ -85,6 +89,19 @@ public class PortView extends CaseView {
 			setTitle("Trade : ("+port+")");
 			setSize(450, 370);
 			setLocationRelativeTo(null);
+			
+			JButton cancel = new JButton("Annuler"),
+					trade =  new JButton("Echanger");
+			
+			cancel.addActionListener(e -> {
+				this.dispose();
+			});
+			
+			trade.addActionListener(e -> {
+				this.dispose();
+				// SOMETHING ELSE...
+			});
+			
 			String sentence1 = "Vous allez echanger "+port.getResourcesToGive();
 			Resource type = port.getResourceType();
 
@@ -101,24 +118,22 @@ public class PortView extends CaseView {
 				container.add(new TradePanel());
 			}
 			else {
-				//setSize(450, 200);
-				sentence1 += " "+port.getResourceType()
-				.toString().toLowerCase()+" en echange de :";
-				container.add(new JLabel(sentence1));
-				container.add(new TradePanel());
+				if(board.getActualPlayer().getResource(port.getResourceType()) < port.getResourcesToGive()) {
+					setSize(270, 150);
+					setLayout(new GridLayout(2, 1));
+					sentence1 = "Vous n'avez pas assez de "+port.getResourceType()+" !";
+					container.add(new JLabel(sentence1));
+					trade.setVisible(false);
+					cancel.setText("Ok");
+				}
+				else {
+					setSize(450, 200);
+					sentence1 += " "+port.getResourceType()
+					.toString().toLowerCase()+" en echange de :";
+					container.add(new JLabel(sentence1));
+					container.add(new TradePanel());
+				}
 			}
-			
-			JButton cancel = new JButton("Annuler"),
-					trade =  new JButton("Echanger");
-			
-			cancel.addActionListener(e -> {
-				this.dispose();
-			});
-			
-			trade.addActionListener(e -> {
-				this.dispose();
-				// SOMETHING ELSE...
-			});
 			
 			JPanel buttons = new JPanel();
 			buttons.add(cancel);

@@ -20,10 +20,12 @@ public class Player {
 	private List<Colony> colonies; // Comprend egalement les villes...
 	private List<Road> roads;
 	private List<DevelopmentCard> developmentCards;
+	private String name;
 
 	private Color color;
 	
-	public Player(Color color) {
+	public Player(Color color, String name) {
+		this.name = name;
 		this.number = nextPlayerNb++;
 		this.resources = new ArrayList<Resource>();
 		this.colonies = new ArrayList<Colony>();
@@ -198,17 +200,18 @@ public class Player {
 		gainResource(aGagner);
 	}
 
-	public void stealResource(Player p) { // vole une ressource au joueur p
+	public Resource stealResource(Player p) { // vole une ressource au joueur p
 		Random r = new Random();
 		int x = r.nextInt(p.getResources());
 		Resource res = p.resources.get(x);
 		p.pay(res);
 		gainResource(res);
+		return res;
 	}
 
-	public boolean isIn(List<Colony> col) {
-		for (Colony c : col)
-			if (this == c.getPlayer())
+	public boolean isIn(List<Player> players) {
+		for (Player p : players)
+			if (this == p)
 				return true;
 		return false;
 	}
@@ -307,7 +310,7 @@ public class Player {
 	
 	@Override
 	public String toString() {
-		return getName();
+		return name + " (" +getName() + ")";
 	}
 	
 }

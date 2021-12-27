@@ -1,5 +1,6 @@
 package com.catane.view.cli;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -78,28 +79,29 @@ public class CLI {
 	public void playRound() {
 		Player player = game.getActualPlayer();
 		
-		System.out.println("Au tour de "+player.getName());
+		System.out.println("Au tour de "+player);
 		boolean endRound;
 		char c;
 		int[] coord;
 		boolean error;
 		boolean devBought = false;
 		
+		devBought = dices();
+		
 		do {
 			PlayerView.printScore(player);
 			PlayerView.printResources(player);
 			PlayerView.printDevelopmentCards(player);
 			System.out.println();
-			endRound = true;
+			endRound = false;
 
 			// A enlever
 			// System.out.println("éteindre ? (o/n)");
 			// if (sc.nextLine().charAt(0) == 'o')
 			// 	System.exit(0);
-			// thiefAction();
+			//thiefAction();
 			//
 
-			devBought = dices();
 			c = askAction(devBought);
 			coord = null;
 			error = true;
@@ -108,8 +110,7 @@ public class CLI {
 				switch(c) {
 					case 'c': // Construire une colonie
 						if(!player.canAffordColony()) {// Si il n'a pas assez d'argent. Ou il n'a pas de colony dans son inventaire.
-							System.out.println("Vous n'avez pas les ressources pour construire une colonie !");
-							endRound = false;
+							System.out.println("Vous n'avez pas les ressources pour construire une colonie !");openScan();
 							error = false;
 						}
 						else {
@@ -128,7 +129,6 @@ public class CLI {
 					case 'v': // Construire une ville
 						if(!player.canAffordTown()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
 							System.out.println("Vous n'avez pas les ressources pour construire une ville !");
-							endRound = false;
 							error = false;
 						}
 						else {
@@ -147,7 +147,6 @@ public class CLI {
 					case 'r': // Construire une route
 						if(!player.canAffordRoad()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
 							System.out.println("Vous n'avez pas les ressources pour construire une route !");
-							endRound = false;
 							error = false;
 						}
 						else {
@@ -155,9 +154,10 @@ public class CLI {
 							int ans = player.canBuildRoadOn(board, coord, false); // ans ne peut pas etre egale a 1 ici.
 							if(ans == 2)
 									System.out.println("Vous ne pouvez pas poser de route ici !");
-							else { // il se passe quoi ?
+							else {
 								error = false;
 								board.putRoad(player, coord[0], coord[1]);
+								game.refreshLongestRoadOwner();
 							}
 						}
 						break;
@@ -169,16 +169,16 @@ public class CLI {
 							int ans = player.canBuyDevCard(game);
 							if(ans == 2) 
 								System.out.println("Il n'y a plus de carte développement dans le paquet !");
-							else
+							else {
 								player.getDevCard(game);
+								devBought = true;
+							}
 						}
 						error = false;
-						endRound = false; // Le tour continu meme quand on achete une carte de dev ?
 						break;
 					case 'u': // Utiliser une carte de développement
 						if (player.getNbDevCard(new Knight()) == 0 && player.getNbDevCard(Progress.ROAD_CONSTRUCTION) == 0 && player.getNbDevCard(Progress.INVENTION) == 0 && player.getNbDevCard(Progress.MONOPOLY) == 0) {
 							System.out.println("Vous n'avez pas de carte de développement !");
-							endRound = false;
 						}else {
 							boolean used = false;
 							while (!used)
@@ -187,7 +187,6 @@ public class CLI {
 						break;
 					case 'e': // Echanger des ressources
 						error = !portAction();
-						endRound = false;
 						break;
 					case 't': // Passer au tour suivant
 						error = false;
@@ -226,8 +225,7 @@ public class CLI {
 				}
 				// Demander quelle ressource
 				System.out.println("De quelle ressource voulez-vous avoir le monopole ?");
-				System.out.println("(argile / bois / pierre / blé / laine)");
-				Resource r = askResource(); // Vérifier askResource() !!
+				Resource r = askResource();
 				// Prendre les ressources
 				List<Player> players = game.getPlayers();
 				players.remove(player);
@@ -255,10 +253,10 @@ public class CLI {
 						ans = player.canBuildRoadOn(board, coord, true);
 						if(ans == 2)
 							System.out.println("Vous ne pouvez pas poser de route ici !");
-						else
-							board.putRoad(player, coord[0], coord[1]);
 					}
+					board.putRoad(player, coord[0], coord[1]);
 				}
+				game.refreshLongestRoadOwner();
 				player.devCardUsed(Progress.ROAD_CONSTRUCTION);
 				break;
 			case 'i': // Invention
@@ -301,8 +299,10 @@ public class CLI {
 		int[] d = game.rollDices();
 		int gain = d[0] + d[1];
 		System.out.println("Les dés ont été lancés\nLe résultat est : "+gain);
-		if (gain == 7)
+		if (gain == 7) {
+			discard();
 			thiefAction();
+		}
 		else
 			board.gainResource(gain);
 
@@ -391,17 +391,16 @@ public class CLI {
 		}
 		return true;
 	}
-	
-	public void thiefAction() {
+
+	public void discard() {
 		System.out.println("Le voleur est déclenché");
 		// plus des 7 cartes ressources : se défausser de la moitié inf (au choix)
 		for (Player p : game.getPlayers())
 			if (p.getResources() > 7) {
 				int nb = p.getResources()/2;
 				System.out.println(p.getName() + "doit se défausser de " + nb + " ressources");
-				for (Resource r : p.getResourceList())
-					System.out.println(r);
 				while (nb != 0) {
+					PlayerView.printResources(p);
 					System.out.println("De quelle ressource voulez-vous vous défausser ? (encore " + nb + ")");
 					Resource res = askResource();
 					if (p.getResourceList().contains(res)) {
@@ -412,6 +411,9 @@ public class CLI {
 					}
 				}
 			}
+	}
+	
+	public void thiefAction() {
 
 		// déplacer le voleur sur une case différente
 		System.out.println("Choisissez les nouvelles coordonnées du voleur");
@@ -428,18 +430,22 @@ public class CLI {
 
 		// actualPlayer vole une ressource au hasard à un joueur possédant une colonie autour de la nouvelle case
 		List<Colony> col = board.getColonies(coord[0], coord[1]);
-		if (col.isEmpty())
+		List<Player> players = new ArrayList<Player>();
+		for (Colony c : col)
+			if (game.getActualPlayer() != c.getPlayer() && !players.contains(c.getPlayer()))
+				players.add(c.getPlayer());
+		if (players.isEmpty())
 			return;
 		System.out.println("Vous allez voler une carte ressource");
 		Player p = null;
 		do {
 			System.out.println("Choisissez un des joueurs suivants :");
-			for (Colony c : col) {				
-				System.out.println(c.getPlayer());
+			for (Player p2 : players) {				
+				System.out.println(p2.getName());
 			}
 			p = askPlayer();
-		} while (!p.isIn(col));
-		game.getActualPlayer().stealResource(p);
+		} while (!p.isIn(players));
+		System.out.println(game.getActualPlayer() + " vient de voler 1 " + game.getActualPlayer().stealResource(p) + " à " + p);
 	}
 	
 	public Resource askResource() {

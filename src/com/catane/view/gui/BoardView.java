@@ -51,7 +51,7 @@ public class BoardView extends JPanel {
 	
 	// Unique methode pour la CLI.
 	public static void display(Board board) {
-		int size = board.getSize(), space = 4, maxSize = 15, sizeP = size / 4;
+		int size = board.getSize(), space = 4, maxSize = 15;
 		int size2 = size-2; // size sans les ports.
 		
 		char letter = 'A';

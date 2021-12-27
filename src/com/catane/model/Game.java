@@ -48,15 +48,16 @@ public class Game {
 	public void setupPlayers(int p) {
 		players = new ArrayList<Player>();
 		Player player = null;
+		String name = "test";
 		for (int i = 0; i < p; i++) {
 			switch (i) {
-				case 0:	player = new Player(Color.ORANGE);
+				case 0:	player = new Player(Color.ORANGE, name);
 						break;
-				case 1:	player = new Player(Color.BLUE);
+				case 1:	player = new Player(Color.BLUE, name);
 						break;
-				case 2:	player = new Player(Color.YELLOW);
+				case 2:	player = new Player(Color.YELLOW, name);
 						break;
-				default:player = new Player(Color.RED);
+				default:player = new Player(Color.RED, name);
 						break;
 			}
 			player.setScore(new Score(this, player));

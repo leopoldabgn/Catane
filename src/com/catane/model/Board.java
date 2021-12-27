@@ -295,11 +295,6 @@ public class Board {
 		}
 		return col;
 	}
-
-	public List<Colony> getColonies(Case c) {
-		int[] coord = getIndexesOf(c);
-		return getColonies(coord[0], coord[1]);
-	}
 	
 	// On fait la liste de tous les ports du joueur
 	public List<Port> getPorts(Player player) {

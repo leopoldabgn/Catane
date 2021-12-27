@@ -51,7 +51,7 @@ public class BoardView extends JPanel {
 	
 	// Unique methode pour la CLI.
 	public static void display(Board board) {
-		int size = board.getSize(), space = 4, maxSize = 15;
+		int size = board.getSize(), space = 4, maxSize = 15, sizeP = size / 4;
 		int size2 = size-2; // size sans les ports.
 		
 		char letter = 'A';
@@ -66,33 +66,71 @@ public class BoardView extends JPanel {
 		else
 			line += (size2/2+1)*5;
 		line += (size2/2)*(maxSize+1);
-		System.out.println("  "+"-".repeat(line));
+
+		boolean b = false;
 		
-		for(int j=1;j<size-1;j++) {
-			
-			System.out.print(j);
-			if(j < 10)
+		for(int j=0;j<size;j++) {
+
+			if (j == 0 || j == size - 1) {
 				System.out.print(" ");
-			System.out.print("|");
-			
-			for(int i=1;i<size-1;i++) {
-				Case c = board.getCase(i, j);
-		 		if(c instanceof ResourceCase) {
-		 			System.out.print(addSpaces(c.toString(), maxSize));
-		 		}
-		 		else {
-		 			if(i%2 == 1)
-		 				System.out.print(" "+c+" ");
-		 			else
-		 				System.out.print(addSpaces(c.toString(), maxSize));
-		 		}
-		 		System.out.print("|");
-			 }
-			
-			System.out.println(" "+j);
-			System.out.print("  "+"-".repeat(line));
+				for (int i = 0; i < size; i++) {
+					Case p = board.getCase(i, j);
+					if (p instanceof Port) {
+						System.out.print("|" + addSpaces(((Port) p).toString(), maxSize) + "|");
+					}else {
+						if (i % 2 == 0)
+							System.out.print(" ".repeat(17));
+						else
+							System.out.print(" ".repeat(4));
+					}
+				}
+				System.out.println();
+			}else {
+				System.out.print(j);
+				if(j < 10)
+					System.out.print(" ");
+				Case p = board.getCase(0, j);
+				if (p instanceof Port) {
+					System.out.print(addSpaces(((Port) p).toString(), maxSize));
+				}else {
+					System.out.print(" ".repeat(maxSize));
+				}
+				System.out.print("|");
+				
+				for(int i=1;i<size-1;i++) {
+					Case c = board.getCase(i, j);
+					if(c instanceof ResourceCase) {
+						System.out.print(addSpaces(c.toString(), maxSize));
+					}
+					else {
+						if(i%2 == 1)
+							System.out.print(" "+c+" ");
+						else
+							System.out.print(addSpaces(c.toString(), maxSize));
+					}
+					System.out.print("|");
+				}
+				
+				p = board.getCase(size - 1, j);
+				if (p instanceof Port)
+					System.out.println(addSpaces(((Port) p).toString(), maxSize) + " " + j);
+				else
+					System.out.println(" ".repeat(16)+j);
+			}
+			if (j != size - 1) {
+				if (j == size - 2 || j == 0)
+					System.out.print("  " + " ".repeat(maxSize) +"-".repeat(line));
+				else {
+					if (b)
+						System.out.print("  " + "-".repeat(maxSize) +"-".repeat(line));
+					else
+						System.out.print("  " + " ".repeat(maxSize) +"-".repeat(line) + "-".repeat(maxSize));
+				}
+				if (j % 2 == 0)
+					b = !b;
+			}
 			System.out.println();
-		 }
+		}
 		
 	}
 	

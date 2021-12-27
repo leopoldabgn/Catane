@@ -32,8 +32,7 @@ public class Game {
 		return new int[] {rd.nextInt(6)+1, rd.nextInt(6)+1};
 	}
 	
-	public int[] convertCoord(String coord)
-	{
+	public int[] convertCoord(String coord) {
 		if(coord == null || coord.length() < 2 || coord.length() > 3)
 			return null;
 		int[] tab = new int[2];
@@ -83,6 +82,10 @@ public class Game {
 				return true;
 		return false;
 	}
+
+	public void setMostPowerfulArmy(Player p) {
+		this.mostPowerfulArmyOwner = p;
+	}
 	
 	// On verifie qui a la plus grande route, et on lui donne la carte.
 	public void refreshLongestRoadOwner() {
@@ -108,6 +111,7 @@ public class Game {
 		if(newOwner != null)
 			longestRoadOwner = newOwner;
 	}
+	// Si deux joueurs ont la même longueur de route la carte n'est pas donnée (longestRoadOwner = null)
 	
 	public Player longestRoadOwner() {
 		return longestRoadOwner;

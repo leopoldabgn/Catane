@@ -14,6 +14,7 @@ import com.catane.model.cases.Town;
 public class Player {
 	public static int nextPlayerNb = 1; // Le premier joueur est J1, le deuxieme J2...
 	private int number;
+	private int army;
 	private Score score;
 	private List<Resource> resources;
 	private List<Colony> colonies; // Comprend egalement les villes...
@@ -126,8 +127,8 @@ public class Player {
 	}
 	
 	// Pour l'interface graphique on appelle celle-la directement.
-	public int canBuildRoadOn(Board board, int[] coord) { // Le joueur peut construire une route sur la case donnée
-		if(!canAffordRoad())// Si il n'a pas assez d'argent. Ou il n'a pas de route dans son inventaire.
+	public int canBuildRoadOn(Board board, int[] coord, boolean dev) { // Le joueur peut construire une route sur la case donnée
+		if(!canAffordRoad() && !dev)// Si il n'a pas assez d'argent. Ou il n'a pas de route dans son inventaire.
 			return 1;
 		else {
 			if(!board.isEmptyRoad(coord[0], coord[1]))
@@ -232,6 +233,15 @@ public class Player {
 		if(card != null) // Normalement il est impossible que card soit null !
 			developmentCards.add(card);
 	}
+
+	public void devCardUsed(DevelopmentCard card) {
+		DevelopmentCard toRemove = null;
+		for (DevelopmentCard c : developmentCards)
+			if (c.equals(card))
+				toRemove = c;
+		if (toRemove != null)
+			developmentCards.remove(toRemove);
+	}
 	
 	public int getNbVictoryCards() {
 		if(developmentCards.size() == 0)
@@ -241,6 +251,14 @@ public class Player {
 			if(card instanceof VictoryPoints)
 				sum++;
 		return sum;
+	}
+
+	public void armyIncreased() {
+		army++;
+	}
+
+	public int getArmy() {
+		return army;
 	}
 	
 	public int getNbColonies() {

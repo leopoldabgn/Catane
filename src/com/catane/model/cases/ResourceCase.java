@@ -1,6 +1,9 @@
 package com.catane.model.cases;
 
 import java.awt.Color;
+import java.util.List;
+
+import com.catane.model.Resource;
 
 public abstract class ResourceCase extends Case {
 
@@ -13,7 +16,7 @@ public abstract class ResourceCase extends Case {
 		this.color = color;
 	}
 	
-	public abstract void giveResources();
+	public abstract void giveResources(List<Colony> col);
 	
 	@Override
 	public String toString() {
@@ -48,7 +51,7 @@ public abstract class ResourceCase extends Case {
 		}
 		
 		@Override
-		public void giveResources() {
+		public void giveResources(List<Colony> col) {
 			
 		}
 	}
@@ -60,8 +63,10 @@ public abstract class ResourceCase extends Case {
 		}
 
 		@Override
-		public void giveResources() {
-			
+		public void giveResources(List<Colony> col) {
+			for (Colony colony : col)
+				for (int i = 0; i < colony.resourceGain(); i++)
+					colony.getPlayer().gainResource(Resource.WHEAT);
 		}
 	}
 	
@@ -72,8 +77,10 @@ public abstract class ResourceCase extends Case {
 		}
 
 		@Override
-		public void giveResources() {
-			
+		public void giveResources(List<Colony> col) {
+			for (Colony colony : col)
+				for (int i = 0; i < colony.resourceGain(); i++)
+					colony.getPlayer().gainResource(Resource.WOOD);
 		}
 	}
 	
@@ -84,8 +91,10 @@ public abstract class ResourceCase extends Case {
 		}
 	
 		@Override
-		public void giveResources() {
-			
+		public void giveResources(List<Colony> col) {
+			for (Colony colony : col)
+				for (int i = 0; i < colony.resourceGain(); i++)
+					colony.getPlayer().gainResource(Resource.CLAY);
 		}
 	}
 	
@@ -95,8 +104,11 @@ public abstract class ResourceCase extends Case {
 			super(number, Color.GRAY);
 		}
 
-		public void giveResources() {
-
+		@Override
+		public void giveResources(List<Colony> col) {
+			for (Colony colony : col)
+				for (int i = 0; i < colony.resourceGain(); i++)
+					colony.getPlayer().gainResource(Resource.STONE);
 		}
 	}
 	
@@ -107,8 +119,10 @@ public abstract class ResourceCase extends Case {
 		}
 
 		@Override
-		public void giveResources() {
-			
+		public void giveResources(List<Colony> col) {
+			for (Colony colony : col)
+				for (int i = 0; i < colony.resourceGain(); i++)
+					colony.getPlayer().gainResource(Resource.WOOL);
 		}
 	}
 	

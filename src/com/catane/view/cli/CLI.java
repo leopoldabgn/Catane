@@ -7,6 +7,9 @@ import com.catane.model.Board;
 import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.Resource;
+import com.catane.model.cards.DevelopmentCard;
+import com.catane.model.cards.Knight;
+import com.catane.model.cards.Progress;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.Port;
 import com.catane.model.cases.ResourceCase;
@@ -46,7 +49,7 @@ public class CLI {
 		actualPlayer.gainResource(Resource.SHEEP);
 		*/
 
-		for(int i=0;i<20;i++) {
+		for(int i=0;i<2;i++) {
 			game.getActualPlayer().gainResource(Resource.WHEAT);
 			game.getActualPlayer().gainResource(Resource.STONE);
 			game.getActualPlayer().gainResource(Resource.WOOL);
@@ -80,6 +83,7 @@ public class CLI {
 		char c;
 		int[] coord;
 		boolean error;
+		boolean devBought = false;
 		
 		do {
 			PlayerView.printScore(player);
@@ -87,13 +91,22 @@ public class CLI {
 			PlayerView.printDevelopmentCards(player);
 			System.out.println();
 			endRound = true;
-			c = askAction();
+
+			// A enlever
+			// System.out.println("éteindre ? (o/n)");
+			// if (sc.nextLine().charAt(0) == 'o')
+			// 	System.exit(0);
+			// thiefAction();
+			//
+
+			devBought = dices();
+			c = askAction(devBought);
 			coord = null;
 			error = true;
 			
 			do {
 				switch(c) {
-					case 'c':
+					case 'c': // Construire une colonie
 						if(!player.canAffordColony()) {// Si il n'a pas assez d'argent. Ou il n'a pas de colony dans son inventaire.
 							System.out.println("Vous n'avez pas les ressources pour construire une colonie !");
 							endRound = false;
@@ -112,7 +125,7 @@ public class CLI {
 							}
 						}
 						break;
-					case 'v':
+					case 'v': // Construire une ville
 						if(!player.canAffordTown()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
 							System.out.println("Vous n'avez pas les ressources pour construire une ville !");
 							endRound = false;
@@ -131,7 +144,7 @@ public class CLI {
 							}
 						}
 						break;
-					case 'r':
+					case 'r': // Construire une route
 						if(!player.canAffordRoad()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
 							System.out.println("Vous n'avez pas les ressources pour construire une route !");
 							endRound = false;
@@ -139,34 +152,44 @@ public class CLI {
 						}
 						else {
 							coord = askCoord(); // Coordonnees forcement dans le plateau.
-							int ans = player.canBuildRoadOn(board, coord); // ans ne peut pas etre egale a 1 ici.
+							int ans = player.canBuildRoadOn(board, coord, false); // ans ne peut pas etre egale a 1 ici.
 							if(ans == 2)
 									System.out.println("Vous ne pouvez pas poser de route ici !");
-							else {
+							else { // il se passe quoi ?
 								error = false;
 								board.putRoad(player, coord[0], coord[1]);
 							}
 						}
 						break;
-					case 'd':
+					case 'd': // Acheter une carte de développement
 						if(!player.canAffordDevCard()) {
-							System.out.println("Vous n'avez pas les ressources pour acheter une carte de developpement !");
+							System.out.println("Vous n'avez pas les ressources pour acheter une carte de développement !");
 						}
 						else {
 							int ans = player.canBuyDevCard(game);
 							if(ans == 2) 
-								System.out.println("Il n'y a plus de carte developpement dans le paquet !");
+								System.out.println("Il n'y a plus de carte développement dans le paquet !");
 							else
 								player.getDevCard(game);
 						}
 						error = false;
 						endRound = false; // Le tour continu meme quand on achete une carte de dev ?
 						break;
-					case 'e':
+					case 'u': // Utiliser une carte de développement
+						if (player.getNbDevCard(new Knight()) == 0 && player.getNbDevCard(Progress.ROAD_CONSTRUCTION) == 0 && player.getNbDevCard(Progress.INVENTION) == 0 && player.getNbDevCard(Progress.MONOPOLY) == 0) {
+							System.out.println("Vous n'avez pas de carte de développement !");
+							endRound = false;
+						}else {
+							boolean used = false;
+							while (!used)
+								used = useDev(player);
+						}
+						break;
+					case 'e': // Echanger des ressources
 						error = !portAction();
 						endRound = false;
 						break;
-					case 't':
+					case 't': // Passer au tour suivant
 						error = false;
 						endRound = true;
 						break;
@@ -176,6 +199,115 @@ public class CLI {
 			
 		} while(!endRound && !player.hasWon());
 		
+	}
+
+	public boolean useDev(Player player) {
+		char c = ' ';
+		do {
+			System.out.println("Choisissez une carte développement à utiliser (c -> Chevalier / m -> Monopole / r -> Construction de route / i -> Invention)");
+			c = sc.nextLine().charAt(0);
+		}while (c != 'c' && c != 'm' && c != 'r' && c != 'i');
+		switch (c) {
+			case 'c': // Chevalier
+				if (player.getNbDevCard(new Knight()) == 0) {
+					System.out.println("Vous n'avez pas de carte de développement 'Chevalier'");
+					return false;
+				}
+				player.armyIncreased();
+				if (player.getArmy() == 3 && game.mostPowerfulArmyOwner() == null)
+					game.setMostPowerfulArmy(player);
+				thiefAction();
+				player.devCardUsed(new Knight());
+				break;
+			case 'm': // Monopole
+				if (player.getNbDevCard(Progress.MONOPOLY) == 0) {
+					System.out.println("Vous n'avez pas de carte de développement 'Monopole'");
+					return false;
+				}
+				// Demander quelle ressource
+				System.out.println("De quelle ressource voulez-vous avoir le monopole ?");
+				System.out.println("(argile / bois / pierre / blé / laine)");
+				Resource r = askResource(); // Vérifier askResource() !!
+				// Prendre les ressources
+				List<Player> players = game.getPlayers();
+				players.remove(player);
+				for (Player p : players) {
+					int n = p.getResource(r);
+					for (int i = 0; i < n; i++) {
+						p.pay(r);
+						player.gainResource(r);
+					}
+				}
+				player.devCardUsed(Progress.MONOPOLY);
+				break;
+			case 'r': // Construction de route
+				if (player.getNbDevCard(Progress.ROAD_CONSTRUCTION) == 0) {
+					System.out.println("Vous n'avez pas de carte de développement 'Construction de route'");
+					return false;
+				}
+				int[] coord = new int[2];
+				for (int i = 0; i < 2; i++) {
+					int n = i + 1;
+					System.out.println("Où voulez-vous poser la route " + n);
+					int ans = 2;
+					while (ans == 2) {
+						coord = askCoord(); // Coordonnees forcement dans le plateau.
+						ans = player.canBuildRoadOn(board, coord, true);
+						if(ans == 2)
+							System.out.println("Vous ne pouvez pas poser de route ici !");
+						else
+							board.putRoad(player, coord[0], coord[1]);
+					}
+				}
+				player.devCardUsed(Progress.ROAD_CONSTRUCTION);
+				break;
+			case 'i': // Invention
+				if (player.getNbDevCard(Progress.INVENTION) == 0) {
+					System.out.println("Vous n'avez pas de carte de développement 'Invention'");
+					return false;
+				} // A faire !!
+				player.devCardUsed(Progress.INVENTION);
+				break;
+		}
+		return true;
+	}
+
+	public boolean dices() {
+
+		// Achat facultatif d'une carte de développement avant le lancement des dés
+		char c;
+		boolean devBought = false;
+		do {
+			System.out.println("Voulez-vous acheter une carte développement ? (o/n)");
+			c = sc.nextLine().charAt(0);
+		}
+		while (c != 'o' && c != 'n');
+		if (c == 'o') {
+			if(!game.getActualPlayer().canAffordDevCard()) {
+				System.out.println("Vous n'avez pas les ressources pour acheter une carte de developpement !");
+			}
+			else {
+				int ans = game.getActualPlayer().canBuyDevCard(game);
+				if(ans == 2) 
+					System.out.println("Il n'y a plus de carte developpement dans le paquet !");
+				else {
+					game.getActualPlayer().getDevCard(game);
+					devBought = true;
+				}
+			}
+		}
+
+		// Lance les dés
+		int[] d = game.rollDices();
+		int gain = d[0] + d[1];
+		System.out.println("Les dés ont été lancés\nLe résultat est : "+gain);
+		if (gain == 7)
+			thiefAction();
+		else
+			board.gainResource(gain);
+
+		// retourne si oui ou non le joueur a acheté une carte développement
+		return devBought;
 	}
 	
 	public int askNumber() {
@@ -231,29 +363,37 @@ public class CLI {
 		return null;
 	}
 	
-	public char askAction() {
+	public char askAction(boolean devBought) {
 		System.out.println("Choisissez une action à effectuer :");
 		System.out.println("- Construire une colonie -> tapez 'c'");
 		System.out.println("- Construire une ville -> tapez 'v'");
 		System.out.println("- Construire une route -> tapez 'r'");
-		System.out.println("- Acheter une carte de developpement -> tapez 'd'");
+		if (!devBought)
+			System.out.println("- Acheter une carte de développement -> tapez 'd'");
+		System.out.println("- Utiliser une carte de développement -> tapez 'u'");
 		System.out.println("- Echanger des ressources -> tapez 'e'");
 		System.out.println("- Passer au tour suivant -> tapez 't'");
 		char c = sc.nextLine().charAt(0);
-		while (!charAction(c)) {
-			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r, d, e ou t)");
+		while (!charAction(c, devBought)) {
+			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r, d, u, e ou t)");
 			c = sc.nextLine().charAt(0);
 		}
 		return c;
 	}
 
-	private boolean charAction(char c) {
-		if (c != 'c' && c != 'v' && c != 'r' && c != 'd' && c != 'e' && c != 't')
-			return false;
+	private boolean charAction(char c, boolean devBought) {
+		if (devBought) {
+			if (c != 'c' && c != 'v' && c != 'r' && c != 'e' && c != 't' && c != 'u')
+				return false;
+		}else {
+			if (c != 'c' && c != 'v' && c != 'r' && c != 'd' && c != 'e' && c != 't' && c != 'u')
+				return false;
+		}
 		return true;
 	}
 	
 	public void thiefAction() {
+		System.out.println("Le voleur est déclenché");
 		// plus des 7 cartes ressources : se défausser de la moitié inf (au choix)
 		for (Player p : game.getPlayers())
 			if (p.getResources() > 7) {
@@ -262,46 +402,13 @@ public class CLI {
 				for (Resource r : p.getResourceList())
 					System.out.println(r);
 				while (nb != 0) {
-					System.out.println("De quelle ressource voulez-vous vous défausser ?");
-					System.out.println("(argile / bois / pierre / blé / laine)");
-					switch (sc.nextLine()) {
-						case "argile":	if (p.getResourceList().contains(Resource.CLAY)) {
-											p.pay(Resource.CLAY);
-											nb--;
-										}else {
-											System.out.println("Ressource insuffisante");
-										}
-										break;
-						case "bois":	if (p.getResourceList().contains(Resource.WOOD)) {
-											p.pay(Resource.WOOD);
-											nb--;
-										}else {
-											System.out.println("Ressource insuffisante");
-										}
-						break;
-						case "pierre":	if (p.getResourceList().contains(Resource.STONE)) {
-											p.pay(Resource.STONE);
-											nb--;
-										}else {
-											System.out.println("Ressource insuffisante");
-										}
-						break;
-						case "blé":		if (p.getResourceList().contains(Resource.WHEAT)) {
-											p.pay(Resource.WHEAT);
-											nb--;
-										}else {
-											System.out.println("Ressource insuffisante");
-										}
-						break;
-						case "laine":	if (p.getResourceList().contains(Resource.WOOL)) {
-											p.pay(Resource.WOOL);
-											nb--;
-										}else {
-											System.out.println("Ressource insuffisante");
-										}
-						break;
-						default:		System.out.println("Ressource non reconnue");
-										break;
+					System.out.println("De quelle ressource voulez-vous vous défausser ? (encore " + nb + ")");
+					Resource res = askResource();
+					if (p.getResourceList().contains(res)) {
+						p.pay(res);
+						nb--;
+					}else {
+						System.out.println("Ressource insuffisante");
 					}
 				}
 			}
@@ -309,12 +416,12 @@ public class CLI {
 		// déplacer le voleur sur une case différente
 		System.out.println("Choisissez les nouvelles coordonnées du voleur");
 		int[] coord = askCoord();
-		while (!(board.getCase(coord[0], coord[1]) instanceof ResourceCase) && ((ResourceCase) board.getCase(coord[0], coord[1])).hasThief()) {
+		while (!(board.getCase(coord[0], coord[1]) instanceof ResourceCase) || ((ResourceCase) board.getCase(coord[0], coord[1])).hasThief()) {
 			// Vérifications : la case n'est pas une case ressource ou contient déjà le voleur
 			if (!(board.getCase(coord[0], coord[1]) instanceof ResourceCase))
 				System.out.println("Ce n'est pas une case ressource");
 			else
-				System.out.println("Cette case a déjà le voleur");
+				System.out.println("Le voleur est déjà sur cette case");
 			coord = askCoord();
 		}
 		board.switchThief(coord);

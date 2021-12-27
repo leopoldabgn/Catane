@@ -279,6 +279,11 @@ public class Board {
 		}
 		return col;
 	}
+
+	public List<Colony> getColonies(Case c) {
+		int[] coord = getIndexesOf(c);
+		return getColonies(coord[0], coord[1]);
+	}
 	
 	// On fait la liste de tous les ports du joueur
 	public List<Port> getPorts(Player player) {
@@ -487,6 +492,13 @@ public class Board {
 	public int getRealSize() {
 		return (size-3)/2;
 	}
+
+	public void gainResource(int n) {
+		for (Case[] i : cases)
+			for (Case c : i) {
+				if (c instanceof ResourceCase && ((ResourceCase) c).getNumber() == n)
+					((ResourceCase) c).giveResources(getColonies(c));
+		}
+	}
 	
 }
-

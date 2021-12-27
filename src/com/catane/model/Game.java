@@ -90,27 +90,27 @@ public class Game {
 	
 	// On verifie qui a la plus grande route, et on lui donne la carte.
 	public void refreshLongestRoadOwner() {
-		Player newOwner = null;
-		int roadSize = 0, maxSize = 0;
-		int actualLongestRoad = 0;
-		if(longestRoadOwner != null)
-			actualLongestRoad = board.getLongestRoad(longestRoadOwner);
-		for(Player p : players) {
-			if(p == longestRoadOwner) // On skip le joueur qui a la carte actuellement.
-				continue;
-			roadSize = board.getLongestRoad(p);
-			if(roadSize >= 5) {
-				if(roadSize > maxSize) {
-					maxSize = roadSize;
-					if(roadSize > actualLongestRoad)
-						newOwner = p;
-				}
+		Player p;
+		int maxSize = 0;
+		int[] roads = new int[players.size()];
+		longestRoadOwner = null;
+		for(int i=0;i<roads.length;i++) {
+			p = players.get(i);
+			roads[i] = board.getLongestRoad(p);
+			if(roads[i] >= 5 && roads[i] > maxSize) {
+					maxSize = roads[i];
+					longestRoadOwner = p;
 			}
 		}
-		if(actualLongestRoad < 5)
-			longestRoadOwner = null;
-		if(newOwner != null)
-			longestRoadOwner = newOwner;
+
+		if(longestRoadOwner == null)
+			return;
+		
+		for(int i=0;i<roads.length;i++) {
+			p = players.get(i);
+			if(p != longestRoadOwner && roads[i] == maxSize)
+				longestRoadOwner = null;
+		}
 	}
 	// Si deux joueurs ont la même longueur de route la carte n'est pas donnée (longestRoadOwner = null)
 	

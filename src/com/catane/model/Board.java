@@ -243,6 +243,13 @@ public class Board {
 		return putRoad(player, coord[0], coord[1]);
 	}
 	
+	public boolean checkColoniesAround(Case c) {
+		int[] coord = getIndexesOf(c);
+		if(coord == null)
+			return false;
+		return checkColoniesAround(coord[0], coord[1]);
+	}
+	
 	public boolean checkColoniesAround(int x, int y) { // Colonie ou Ville autour de ces coordonnees.
 		int[] coord = {x-2, y, x, y-2, x+2, y, x, y+2}; // gauche, haut, droite, bas.
 		
@@ -269,10 +276,19 @@ public class Board {
 		thief = newThief;
 	}
 
+	public List<Colony> getColonies(Case c) {
+		 int[] coord = getIndexesOf(c);
+		 if(coord == null)
+			 return new ArrayList<Colony>();
+		 return getColonies(coord[0], coord[1]);
+	}
+	
 	public List<Colony> getColonies(int x, int y) {
 		List<Colony> col = new ArrayList<Colony>();
 		int[] coord = {x-1, y-1, x+1, y-1, x+1, y+1, x-1, y+1};
 		for (int i = 0; i < coord.length; i += 2) {
+			if(outOfBorders(coord[i], coord[i+1]))
+				continue;
 			Colony c = (Colony) getCase(coord[i], coord[i+1]);
 			if (!c.isEmpty())
 				col.add(c);
@@ -326,7 +342,7 @@ public class Board {
 	
 	private boolean isValidColony(Player player, boolean[][] visited, int x, int y) {
 		return !outOfBorders(x, y) && !visited[x][y] && (cases[x][y].isColony() || cases[x][y].isTown()) &&
-				((Colony)cases[x][y]).getPlayer() == player;
+				( ((Colony)cases[x][y]).getPlayer() == player || ((Colony)cases[x][y]).isEmpty() );
 	}
 	
 	public int getLongestRoad(Player player) {

@@ -34,7 +34,7 @@ public class ColonyView extends MovableCaseView {
 		else if(!isEmpty()) { // && player.canCreateTown....
 			board.putTown(actualPlayer, this);
 		}
-		BoardView.display(board.getBoard());
+		BoardView.display(board.getBoardModel());
 		repaint();
 	}
 	

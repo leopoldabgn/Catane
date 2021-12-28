@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagLayout;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.border.EmptyBorder;
 
 import com.catane.model.Game;
@@ -21,6 +23,7 @@ public class GameView extends JPanel {
 	private ResourcePanel resourcePan;
 	private IconPanel dices;
 	private JButton nextTurnButton;
+	private ActionPanel actionPanel;
 	
 	public GameView(Game game) {
 		this.game = game;
@@ -44,7 +47,7 @@ public class GameView extends JPanel {
 		
 		BoardView board = new BoardView(this);
 		resourcePan = new ResourcePanel(game);
-		
+		actionPanel = new ActionPanel();
 		nextTurnButton = new JButton("Next Turn");
 		
 		nextTurnButton.addActionListener(e -> {
@@ -63,6 +66,7 @@ public class GameView extends JPanel {
 		JPanel southPan = new JPanel();
 		southPan.setOpaque(false);
 		southPan.add(resourcePan);
+		southPan.add(actionPanel);
 		southPan.add(buttonsPan);
 		
 		JPanel boardContainer = new JPanel();
@@ -82,12 +86,25 @@ public class GameView extends JPanel {
 	
 	private class ActionPanel extends JPanel {
 		
-		private JButton colony, town, road;
+		private ButtonGroup group;
+		private JRadioButton colony, town, road;
 		
 		public ActionPanel() {
-			colony = new JButton("Colony");
-			town = new JButton("Town");
-			road = new JButton("Road");
+			setBorder(new EmptyBorder(10, 10, 10, 10));
+			//setBackground(Color.CYAN);
+			
+			colony = new JRadioButton("Colony");
+			town = new JRadioButton("Town");
+			road = new JRadioButton("Road");
+			
+			group = new ButtonGroup();
+			group.add(colony);
+			group.add(town);
+			group.add(road);
+			
+			add(colony);
+			add(town);
+			add(road);
 		}
 		
 	}

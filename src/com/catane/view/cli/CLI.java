@@ -204,7 +204,11 @@ public class CLI {
 		char c = ' ';
 		do {
 			System.out.println("Choisissez une carte développement à utiliser (c -> Chevalier / m -> Monopole / r -> Construction de route / i -> Invention)");
-			c = sc.nextLine().charAt(0);
+			String s = sc.nextLine();
+			if (!s.isEmpty())
+				c = s.charAt(0);
+			else
+				c = ' ';
 		}while (c != 'c' && c != 'm' && c != 'r' && c != 'i');
 		switch (c) {
 			case 'c': // Chevalier
@@ -277,7 +281,11 @@ public class CLI {
 		boolean devBought = false;
 		do {
 			System.out.println("Voulez-vous acheter une carte développement ? (o/n)");
-			c = sc.nextLine().charAt(0);
+			String s = sc.nextLine();
+			if (!s.isEmpty())
+				c = s.charAt(0);
+			else
+				c = ' ';
 		}
 		while (c != 'o' && c != 'n');
 		if (c == 'o') {
@@ -373,10 +381,19 @@ public class CLI {
 		System.out.println("- Utiliser une carte de développement -> tapez 'u'");
 		System.out.println("- Echanger des ressources -> tapez 'e'");
 		System.out.println("- Passer au tour suivant -> tapez 't'");
-		char c = sc.nextLine().charAt(0);
+		String s = sc.nextLine();
+		char c;
+			if (!s.isEmpty())
+				c = s.charAt(0);
+			else
+				c = ' ';
 		while (!charAction(c, devBought)) {
 			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r, d, u, e ou t)");
-			c = sc.nextLine().charAt(0);
+			s = sc.nextLine();
+			if (!s.isEmpty())
+				c = s.charAt(0);
+			else
+				c = ' ';
 		}
 		return c;
 	}

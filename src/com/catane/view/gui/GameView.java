@@ -23,7 +23,6 @@ public class GameView extends JPanel {
 	
 	public GameView(Game game) {
 		this.game = game;
-		game.setupPlayers(4);
 		for(int i=0;i<20;i++) {
 			game.getActualPlayer().gainResource(Resource.WHEAT);
 			game.getActualPlayer().gainResource(Resource.STONE);

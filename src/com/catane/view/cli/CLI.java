@@ -33,7 +33,7 @@ public class CLI {
 		openScan();
 
 		System.out.println("Bonjour,");
-		System.out.println("Vous vous apprêtez à lancer une partie des Colons de Catane.");
+		System.out.println("Vous vous apprêtez à lancer une partie des Colons de Catane.\n");
 		int p;
 		do {
 			System.out.println("Voulez vous jouer à 3 ou 4 joueurs ? (3/4)");
@@ -41,6 +41,18 @@ public class CLI {
 		} while (p != 3 && p != 4);
 		game.setupPlayers(p);
 		sc.nextLine();
+		System.out.println();
+
+		for (Player player : game.getPlayers()) {
+			do {
+				System.out.println("Choisissez un nom pour " + player.getName());
+				String s = sc.nextLine();
+				if (!s.isBlank()) {
+					player.setName(s);
+					break;
+				}
+			}while (true);
+		}
 
 		//ajout des ressources pour test
 		/*
@@ -79,7 +91,7 @@ public class CLI {
 	public void playRound() {
 		Player player = game.getActualPlayer();
 		
-		System.out.println("Au tour de "+player);
+		System.out.println("Au tour de "+player+"\n");
 		boolean endRound;
 		char c;
 		int[] coord;
@@ -92,7 +104,7 @@ public class CLI {
 			PlayerView.printScore(player);
 			PlayerView.printResources(player);
 			PlayerView.printDevelopmentCards(player);
-			System.out.println();
+			System.out.println("\n");
 			endRound = false;
 
 			// A enlever
@@ -103,6 +115,7 @@ public class CLI {
 			//
 
 			c = askAction(devBought);
+			System.out.println();
 			coord = null;
 			error = true;
 			
@@ -110,7 +123,7 @@ public class CLI {
 				switch(c) {
 					case 'c': // Construire une colonie
 						if(!player.canAffordColony()) {// Si il n'a pas assez d'argent. Ou il n'a pas de colony dans son inventaire.
-							System.out.println("Vous n'avez pas les ressources pour construire une colonie !");openScan();
+							System.out.println("Vous n'avez pas les ressources pour construire une colonie !");
 							error = false;
 						}
 						else {
@@ -193,6 +206,7 @@ public class CLI {
 						endRound = true;
 						break;
 				}
+				System.out.println();
 				
 			} while(error && !player.hasWon());
 			
@@ -205,7 +219,7 @@ public class CLI {
 		do {
 			System.out.println("Choisissez une carte développement à utiliser (c -> Chevalier / m -> Monopole / r -> Construction de route / i -> Invention)");
 			String s = sc.nextLine();
-			if (!s.isEmpty())
+			if (!s.isBlank())
 				c = s.charAt(0);
 			else
 				c = ' ';
@@ -216,9 +230,7 @@ public class CLI {
 					System.out.println("Vous n'avez pas de carte de développement 'Chevalier'");
 					return false;
 				}
-				player.armyIncreased();
-				if (player.getArmy() == 3 && game.mostPowerfulArmyOwner() == null)
-					game.setMostPowerfulArmy(player);
+				game.refreshMostPowerfulArmyOwner(player);
 				thiefAction();
 				player.devCardUsed(new Knight());
 				break;
@@ -282,7 +294,7 @@ public class CLI {
 		do {
 			System.out.println("Voulez-vous acheter une carte développement ? (o/n)");
 			String s = sc.nextLine();
-			if (!s.isEmpty())
+			if (!s.isBlank())
 				c = s.charAt(0);
 			else
 				c = ' ';
@@ -306,7 +318,7 @@ public class CLI {
 		// Lance les dés
 		int[] d = game.rollDices();
 		int gain = d[0] + d[1];
-		System.out.println("Les dés ont été lancés\nLe résultat est : "+gain);
+		System.out.println("\nLes dés ont été lancés\nLe résultat est : "+gain+"\n");
 		if (gain == 7) {
 			discard();
 			thiefAction();
@@ -383,14 +395,14 @@ public class CLI {
 		System.out.println("- Passer au tour suivant -> tapez 't'");
 		String s = sc.nextLine();
 		char c;
-			if (!s.isEmpty())
+			if (!s.isBlank())
 				c = s.charAt(0);
 			else
 				c = ' ';
 		while (!charAction(c, devBought)) {
 			System.out.println("Caractère non reconnu\nRetapez un caractère (c, v, r, d, u, e ou t)");
 			s = sc.nextLine();
-			if (!s.isEmpty())
+			if (!s.isBlank())
 				c = s.charAt(0);
 			else
 				c = ' ';

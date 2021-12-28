@@ -48,16 +48,15 @@ public class Game {
 	public void setupPlayers(int p) {
 		players = new ArrayList<Player>();
 		Player player = null;
-		String name = "test";
 		for (int i = 0; i < p; i++) {
 			switch (i) {
-				case 0:	player = new Player(Color.ORANGE, name);
+				case 0:	player = new Player(Color.ORANGE);
 						break;
-				case 1:	player = new Player(Color.BLUE, name);
+				case 1:	player = new Player(Color.BLUE);
 						break;
-				case 2:	player = new Player(Color.YELLOW, name);
+				case 2:	player = new Player(Color.YELLOW);
 						break;
-				default:player = new Player(Color.RED, name);
+				default:player = new Player(Color.RED);
 						break;
 			}
 			player.setScore(new Score(this, player));
@@ -84,8 +83,15 @@ public class Game {
 		return false;
 	}
 
-	public void setMostPowerfulArmy(Player p) {
-		this.mostPowerfulArmyOwner = p;
+	public void refreshMostPowerfulArmyOwner(Player p) {
+		p.armyIncreased();
+		if (p.getArmy() >= 3) {
+			if (mostPowerfulArmyOwner == null)
+				mostPowerfulArmyOwner = p;
+			else
+				if (mostPowerfulArmyOwner.getArmy() < p.getArmy())
+					mostPowerfulArmyOwner = p;
+		}
 	}
 	
 	// On verifie qui a la plus grande route, et on lui donne la carte.

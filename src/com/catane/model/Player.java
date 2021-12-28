@@ -24,8 +24,7 @@ public class Player {
 
 	private Color color;
 	
-	public Player(Color color, String name) {
-		this.name = name;
+	public Player(Color color) {
 		this.number = nextPlayerNb++;
 		this.resources = new ArrayList<Resource>();
 		this.colonies = new ArrayList<Colony>();
@@ -36,6 +35,10 @@ public class Player {
 	
 	public Color getColor() {
 		return color;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	// On verifie si il y a une ressource qu'il a

@@ -9,8 +9,8 @@ public class MovableCaseView extends CaseView {
 	
 	private MovableCase modelCase;
 	
-	public MovableCaseView(BoardView board, MovableCase modelCase) {
-		super(board);
+	public MovableCaseView(BoardView boardView, MovableCase modelCase) {
+		super(boardView);
 		this.modelCase = modelCase;
 		setOpaque(false);
 	}

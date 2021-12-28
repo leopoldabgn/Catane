@@ -21,7 +21,7 @@ public class Score {
 		if(game.mostPowerfulArmyOwner() == player)
 			points += 2;
 		points += player.getNbColonies();
-		points += player.getNbTowns();
+		points += player.getNbTowns()*2;
 		points += player.getNbVictoryCards();
 		
 		return points;

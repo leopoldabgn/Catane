@@ -32,8 +32,8 @@ public class PortView extends CaseView {
 	
 	private Port port;
 	
-	public PortView(BoardView board, Port port) {
-		super(board);
+	public PortView(BoardView boardView, Port port) {
+		super(boardView);
 		this.port = port;
 		isSelectable = false;
 		setOpaque(false);
@@ -61,9 +61,9 @@ public class PortView extends CaseView {
 	public void mousePressed(MouseEvent e) {
 		super.mousePressed(e);
 		boolean canTrade = false;
-		Player actualPlayer = board.getGame().getActualPlayer();
+		Player actualPlayer = boardView.getGame().getActualPlayer();
 
-		List<Colony> colonies = board.getBoardModel().getColonies(port);
+		List<Colony> colonies = boardView.getBoardModel().getColonies(port);
 		for(Colony c : colonies) {
 			if(c.getPlayer() == actualPlayer) {
 				canTrade = true;
@@ -118,7 +118,7 @@ public class PortView extends CaseView {
 				container.add(new TradePanel());
 			}
 			else {
-				if(board.getActualPlayer().getResource(port.getResourceType()) < port.getResourcesToGive()) {
+				if(boardView.getActualPlayer().getResource(port.getResourceType()) < port.getResourcesToGive()) {
 					setSize(270, 150);
 					setLayout(new GridLayout(2, 1));
 					sentence1 = "Vous n'avez pas assez de "+port.getResourceType()+" !";

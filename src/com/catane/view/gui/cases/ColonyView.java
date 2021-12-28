@@ -12,8 +12,8 @@ public class ColonyView extends MovableCaseView {
 
 	private Colony colony;
 	
-	public ColonyView(BoardView board, Colony colony) {
-		super(board, colony); // Utilisé uniquement pour les cases vides.
+	public ColonyView(BoardView boardView, Colony colony) {
+		super(boardView, colony); // Utilisé uniquement pour les cases vides.
 		this.colony = colony;
 	}
 	
@@ -25,29 +25,29 @@ public class ColonyView extends MovableCaseView {
 	@Override
 	public void mouseReleased(MouseEvent e) { // Pas besoin de redefinir cette methode dans Town.
 		super.mouseReleased(e);
-		Player actualPlayer = board.getActualPlayer();
+		Player actualPlayer = boardView.getActualPlayer();
 		if(actualPlayer == null)
 			return;
 		if(isEmpty()) {
-			board.putColony(actualPlayer, this);
+			boardView.putColony(actualPlayer, this);
 		}
 		else if(!isEmpty()) { // && player.canCreateTown....
-			board.putTown(actualPlayer, this);
+			boardView.putTown(actualPlayer, this);
 		}
-		BoardView.display(board.getBoardModel());
+		BoardView.display(boardView.getBoardModel());
 		repaint();
 	}
 	
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		super.mouseEntered(e);
-		// On dessine un triangle avec la couleur du joueur actuel (recuperer via board.getActualPlayer() Par exemple)
+		// On dessine un triangle avec la couleur du joueur actuel (recuperer via boardView.getActualPlayer() Par exemple)
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		super.mouseExited(e);
-		// On efface le triangle avec la couleur du joueur actuel (recuperer via board.getActualPlayer() Par exemple)
+		// On efface le triangle avec la couleur du joueur actuel (recuperer via boardView.getActualPlayer() Par exemple)
 	}
 	
 	@Override

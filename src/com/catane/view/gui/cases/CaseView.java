@@ -19,10 +19,10 @@ public abstract class CaseView extends JPanel implements MouseListener {
 	// Et si le joueur clique sur une case avec isSelectable = false;
 	// Alors l'action est directement ignoree.
 	protected boolean isSelectable = true;
-	protected BoardView board;
+	protected BoardView boardView;
 	
-	public CaseView(BoardView board) {
-		this.board = board;
+	public CaseView(BoardView boardView) {
+		this.boardView = boardView;
 		this.addMouseListener(this);
 	}
 	

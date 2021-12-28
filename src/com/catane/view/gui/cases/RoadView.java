@@ -3,6 +3,8 @@ package com.catane.view.gui.cases;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
+import com.catane.model.Board;
+import com.catane.model.Player;
 import com.catane.model.cases.Road;
 import com.catane.view.gui.BoardView;
 
@@ -11,8 +13,8 @@ public class RoadView extends MovableCaseView {
 	
 	private Road road;
 	
-	public RoadView(BoardView board, Road road) {
-		super(board, road);
+	public RoadView(BoardView boardView, Road road) {
+		super(boardView, road);
 		this.road = road;
 	}
 	
@@ -24,11 +26,19 @@ public class RoadView extends MovableCaseView {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
-		
+		/*
 		if(isEmpty())
 			road.setPlayer(board.getActualPlayer());
-		board.putRoad(board.getActualPlayer(), this);
-		System.out.println("Longest Road : "+board.getBoardModel().getLongestRoad(board.getActualPlayer()));
+		*/
+		Board board = boardView.getBoardModel();
+		Player actualPlayer = boardView.getActualPlayer();
+		if(actualPlayer.canBuildRoadOn(board, boardView.getIndexesOf(this)) != 0) {
+			// On affiche un message d'erreur. Impossible de poser la route.
+			System.out.println("Impossible de construire la route : "+actualPlayer.canBuildRoadOn(board, boardView.getIndexesOf(this)));
+			return;
+		}
+		boardView.putRoad(actualPlayer, this);
+		System.out.println("Longest Road : "+boardView.getBoardModel().getLongestRoad(actualPlayer));
 		revalidate();
 		repaint();
 	}

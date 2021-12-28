@@ -101,7 +101,7 @@ public class Player {
 	}
 
 	public int canBuildColonyOn(Board board, int[] coord) { // Le joueur peut construire une colonie sur la case donnée
-		if(!canAffordColony())// Si il n'a pas assez d'argent. Ou il n'a pas de colonie dans son inventaire.
+		if(!canAffordColony())// Si il n'a pas assez d'argent.
 			return 1;
 		else {
 			if(!board.isEmptyColony(coord[0], coord[1]))
@@ -115,7 +115,7 @@ public class Player {
 
 	// Pour l'interface graphique on appelle celle-la directement.
 	public int canBuildTownOn(Board board, int[] coord) { // Le joueur peut construire une ville sur la case donnée
-		if(!canAffordTown())// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
+		if(!canAffordTown())// Si il n'a pas assez d'argent.
 			return 1;
 		else {
 			if(!board.isColony(coord[0], coord[1]))
@@ -128,9 +128,13 @@ public class Player {
 		return 0;
 	}
 	
+	public int canBuildRoadOn(Board board, int[] coord) {
+		return canBuildRoadOn(board, coord, false);
+	}
+	
 	// Pour l'interface graphique on appelle celle-la directement.
 	public int canBuildRoadOn(Board board, int[] coord, boolean dev) { // Le joueur peut construire une route sur la case donnée
-		if(!canAffordRoad() && !dev)// Si il n'a pas assez d'argent. Ou il n'a pas de route dans son inventaire.
+		if(!canAffordRoad() && !dev)// Si il n'a pas assez d'argent.
 			return 1;
 		else {
 			if(!board.isEmptyRoad(coord[0], coord[1]))

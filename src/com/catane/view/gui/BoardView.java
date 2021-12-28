@@ -18,31 +18,33 @@ import com.catane.model.cases.ResourceCase.Forest;
 import com.catane.model.cases.ResourceCase.Hill;
 import com.catane.model.cases.ResourceCase.Mountain;
 import com.catane.model.cases.ResourceCase.Pre;
+import com.catane.model.cases.Road;
+import com.catane.model.cases.Sea;
+import com.catane.model.cases.Town;
 import com.catane.view.gui.cases.CaseView;
 import com.catane.view.gui.cases.ColonyView;
 import com.catane.view.gui.cases.PortView;
-import com.catane.view.gui.cases.RoadView;
-import com.catane.view.gui.cases.SeaView;
-import com.catane.view.gui.cases.TownView;
 import com.catane.view.gui.cases.ResourceCaseView.DesertView;
 import com.catane.view.gui.cases.ResourceCaseView.FieldView;
 import com.catane.view.gui.cases.ResourceCaseView.ForestView;
 import com.catane.view.gui.cases.ResourceCaseView.HillView;
 import com.catane.view.gui.cases.ResourceCaseView.MountainView;
 import com.catane.view.gui.cases.ResourceCaseView.PreView;
-import com.catane.model.cases.Road;
-import com.catane.model.cases.Sea;
-import com.catane.model.cases.Town;
+import com.catane.view.gui.cases.RoadView;
+import com.catane.view.gui.cases.SeaView;
+import com.catane.view.gui.cases.TownView;
 
 public class BoardView extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
+	private GameView gameView;
 	private Game game;
 	private Board board;
 	private CaseView[][] casesView;
 	
-	public BoardView(Game game) {
-		this.game = game;
+	public BoardView(GameView gameView) {
+		this.gameView = gameView;
+		this.game = gameView.getGame();
 		this.board = game.getBoard();
 		setLayout(new GridLayout(board.getSize(), board.getSize()));
 		setBackground(new Color(255, 158, 0));
@@ -236,17 +238,20 @@ public class BoardView extends JPanel {
 		board.putColony(player, colonyView.getModelCase()); // On indique au model le changement
 		// La colonie est desormais reliee a un joueur.
 		// La view sera donc affichee differement.
+		gameView.refreshInfos();
 	}
 	
 	public void putTown(Player player, ColonyView colonyView) {// colonyView -> correspond a une vrai colonie au depart
 		Town town = board.putTown(player, colonyView.getModelCase()); // On indique au model le changement
 		TownView townView = new TownView(this, town); // On cree une case TownView pour la nouvelle ville.
 		replaceCaseBy(colonyView, townView); // On remplace : colonyView -> townView.
+		gameView.refreshInfos();
 	}
 	
 	public void putRoad(Player player, RoadView roadView) { // roadView -> vide au depart
 		board.putRoad(player, roadView.getModelCase()); // On indique au model le changement
 		// La view va interroger le modele et changera son apparence.
+		gameView.refreshInfos();
 	}
 	
 	public Game getGame() {

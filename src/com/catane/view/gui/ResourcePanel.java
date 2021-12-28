@@ -11,23 +11,24 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.Resource;
 
 public class ResourcePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
-	private Player player;
+	private Game game;
 	
-	public ResourcePanel(Player player) {
+	public ResourcePanel(Game game) {
+		this.game = game;
 		this.setOpaque(false);
-		refreshPlayer(player);
+		setupPlayer(game.getActualPlayer());
 	}
 	
-	public void refreshPlayer(Player player) {
+	public void setupPlayer(Player player) {
 		if(player == null)
 			return;
-		this.player = player;
 		this.removeAll();
 		Resource[] resources = Resource.values();
 		for(Resource res : resources) {
@@ -53,7 +54,7 @@ public class ResourcePanel extends JPanel {
 		
 		public IconPanel(Resource res) {
 			this.res = res;
-			this.number = new JLabel(player.getResource(res)+"");
+			this.number = new JLabel(game.getActualPlayer().getResource(res)+"");
 			this.setOpaque(false);
 			String path = res.getEnglishName().toLowerCase();
 			path = "res/icons/"+path+".png";
@@ -72,7 +73,7 @@ public class ResourcePanel extends JPanel {
 		}
 		
 		private void refreshPan() {
-			this.number.setText(player.getResource(res)+"");
+			this.number.setText(game.getActualPlayer().getResource(res)+"");
 		}
 		
 		private class ImagePanel extends JPanel {

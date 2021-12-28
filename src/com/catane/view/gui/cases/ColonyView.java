@@ -3,6 +3,7 @@ package com.catane.view.gui.cases;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
+import com.catane.model.Board;
 import com.catane.model.Player;
 import com.catane.model.cases.Colony;
 import com.catane.view.gui.BoardView;
@@ -25,16 +26,26 @@ public class ColonyView extends MovableCaseView {
 	@Override
 	public void mouseReleased(MouseEvent e) { // Pas besoin de redefinir cette methode dans Town.
 		super.mouseReleased(e);
+		Board board = boardView.getBoardModel();
 		Player actualPlayer = boardView.getActualPlayer();
-		if(actualPlayer == null)
-			return;
 		if(isEmpty()) {
+			if(actualPlayer.canBuildColonyOn(board, board.getIndexesOf(colony)) != 0) {
+				// On affiche un message d'erreur. Impossible de poser la colony.
+				System.out.println("Impossible de construire la colonie : "+actualPlayer.canBuildColonyOn(board, board.getIndexesOf(colony)));
+				return;
+			}
 			boardView.putColony(actualPlayer, this);
 		}
-		else if(!isEmpty()) { // && player.canCreateTown....
+		else {
+			if(actualPlayer.canBuildTownOn(board, board.getIndexesOf(colony)) != 0) {
+				// On affiche un message d'erreur. Impossible de poser la ville.
+				System.out.println("Impossible de construire la ville : "+actualPlayer.canBuildColonyOn(board, boardView.getIndexesOf(this)));
+				return;
+			}
 			boardView.putTown(actualPlayer, this);
 		}
 		BoardView.display(boardView.getBoardModel());
+		revalidate();
 		repaint();
 	}
 	

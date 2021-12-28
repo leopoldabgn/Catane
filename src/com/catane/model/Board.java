@@ -359,6 +359,8 @@ public class Board {
 		boolean vertical = r.isVertical();
 		int[] colonies, roads;
 		
+		visited[j][i] = true;
+		
 		if(vertical) {
 			colonies = new int[] {0, 1};
 			roads = new int[] {0, 2, -1, 1, 1, 1};
@@ -383,6 +385,10 @@ public class Board {
 			else
 				m *= -1;
 		}
+		
+		visited[j][i] = false;
+		
+		return max+1;
 		
 		/*
 		if(vertical) {
@@ -470,9 +476,6 @@ public class Board {
 			}
 		 */
 		
-		visited[j][i] = false;
-		
-		return max+1;
 	}
 	
 	/////////////////////////////////////////////////////

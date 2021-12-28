@@ -43,15 +43,20 @@ public class Player {
 
 	// On verifie si il y a une ressource qu'il a
 	// en nb ou plus quantité.
-	public Resource getResourceByNb(int nb) {
+	public List<Resource> getResourcesByNb(int nb) {
+		List<Resource> resList = new ArrayList<Resource>();
 		int temp = 0;
+		int maxSize = Resource.values().length;
 		for(Resource r : resources) {
 			temp = getResource(r);
-			if(temp >= nb)
-				return r;
+			if(temp >= nb && !resList.contains(r)) {
+				resList.add(r);
+			}
+			if(resList.size() == maxSize)
+				break;
 		}
-		
-		return null;
+
+		return resList;
 	}
 	
 	public int getResource(Resource r1) {
@@ -201,7 +206,7 @@ public class Player {
 		pay(Resource.CLAY);
 	}
 
-	public void echange(Resource aPayer, int nbAPayer, Resource aGagner){
+	public void trade(Resource aPayer, int nbAPayer, Resource aGagner){
 		for(int i=0;i<nbAPayer;i++)
 			pay(aPayer);
 		gainResource(aGagner);

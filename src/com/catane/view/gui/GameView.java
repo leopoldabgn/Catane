@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.catane.model.Game;
+import com.catane.model.Player;
 import com.catane.model.Resource;
 
 public class GameView extends JPanel {
@@ -23,10 +24,17 @@ public class GameView extends JPanel {
 	
 	public GameView(Game game) {
 		this.game = game;
-		for(int i=0;i<20;i++) {
-			game.getActualPlayer().gainResource(Resource.WHEAT);
-			game.getActualPlayer().gainResource(Resource.STONE);
-			game.getActualPlayer().gainResource(Resource.WOOL);
+		int count = 0;
+		for(Player p : game.getPlayers()) {
+			if(++count == 3)
+				continue;
+			for(int i=0;i<20;i++) {
+				p.gainResource(Resource.CLAY);
+				p.gainResource(Resource.WHEAT);
+				p.gainResource(Resource.STONE);
+				p.gainResource(Resource.WOOL);
+				p.gainResource(Resource.WOOD);
+			}
 		}
 		
 		//TextManager textManager = new TextManager("Welcome to Catane");

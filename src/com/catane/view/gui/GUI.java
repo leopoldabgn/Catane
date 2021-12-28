@@ -22,7 +22,7 @@ public class GUI extends JFrame {
 		
 		this.setResizable(true);
 		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setDefaultLookAndFeelDecorated(true);
 		

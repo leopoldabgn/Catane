@@ -8,7 +8,6 @@ import com.catane.model.Board;
 import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.Resource;
-import com.catane.model.cards.DevelopmentCard;
 import com.catane.model.cards.Knight;
 import com.catane.model.cards.Progress;
 import com.catane.model.cases.Colony;
@@ -514,7 +513,7 @@ public class CLI {
 		System.out.println("Vous obtiendrez la ressource de votre choix en échange.");
 		Resource resStock, resGain;
 		if(port.getResourceType() == null) {
-			if(game.getActualPlayer().getResourceByNb(port.getResourcesToGive()) == null) {
+			if(game.getActualPlayer().getResourcesByNb(port.getResourcesToGive()).isEmpty()) {
 				System.out.println("Vous n'avez aucune ressource en "+
 							       port.getResourcesToGive()+" exemplaires.");
 				return false;
@@ -530,7 +529,7 @@ public class CLI {
 				System.out.println("Vous voulez donner "+nbResToGive+" "+resStock+".");
 			System.out.println("Quelle ressource voulez-vous en échange ?");
 			resGain = askResource();
-			game.getActualPlayer().echange(resStock, nbResToGive, resGain);
+			game.getActualPlayer().trade(resStock, nbResToGive, resGain);
 			System.out.println("Vous avez échangé "+nbResToGive+" "+resStock+" contre 1 "+resGain);
 			return true;
 		}

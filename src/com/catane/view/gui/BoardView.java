@@ -254,6 +254,10 @@ public class BoardView extends JPanel {
 		gameView.refreshInfos();
 	}
 	
+	public GameView getGameView() {
+		return gameView;
+	}
+	
 	public Game getGame() {
 		return game;
 	}

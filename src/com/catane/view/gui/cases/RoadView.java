@@ -26,15 +26,10 @@ public class RoadView extends MovableCaseView {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
-		/*
-		if(isEmpty())
-			road.setPlayer(board.getActualPlayer());
-		*/
 		Board board = boardView.getBoardModel();
 		Player actualPlayer = boardView.getActualPlayer();
-		if(actualPlayer.canBuildRoadOn(board, boardView.getIndexesOf(this)) != 0) {
+		if(actualPlayer.canBuildRoadOn(board, board.getIndexesOf(road)) != 0) {
 			// On affiche un message d'erreur. Impossible de poser la route.
-			System.out.println("Impossible de construire la route : "+actualPlayer.canBuildRoadOn(board, boardView.getIndexesOf(this)));
 			return;
 		}
 		boardView.putRoad(actualPlayer, this);

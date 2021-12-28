@@ -53,6 +53,10 @@ public class CardView extends JPanel {
 			this.res = res;
 		}
 		
+		public Resource getResource() {
+			return res;
+		}
+		
 	}
 	
 }

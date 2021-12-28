@@ -48,14 +48,14 @@ public class GUI extends JFrame {
 
 	public void setHomePage(Game game) {
 		this.getContentPane().removeAll();
-		this.getContentPane().add(new Home(this, game));
+		this.getContentPane().add(new HomeView(this, game));
 		revalidate();
 		setResizable(false);
 	}
 
 	public void setSettingsPage(Game game) {
 		this.getContentPane().removeAll();
-		this.getContentPane().add(new Settings(this, game));
+		this.getContentPane().add(new SettingsView(this, game));
 		revalidate();
 	}
 	

@@ -16,12 +16,12 @@ import javax.swing.JPanel;
 
 import com.catane.model.Game;
 
-public class Home extends JPanel {
+public class HomeView extends JPanel {
 
     private BufferedImage bg;
 
-    public Home(GUI frame, Game game) {
-        setLayout(new BorderLayout());
+    public HomeView(GUI frame, Game game) {
+        setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(1000, 630));
 
         try {
@@ -48,21 +48,14 @@ public class Home extends JPanel {
         });
 
         // Placement des boutons
-        JPanel panel = new JPanel();
-        panel.add(quit);
-        panel.add(start);
-        panel.setPreferredSize(new Dimension(250, 50));
-        panel.setOpaque(false);
-        add(panel, BorderLayout.CENTER);
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        //add(quit, gbc);
-        
-        gbc.gridx = 0;
         gbc.gridy = 0;
-        //add(start, gbc);
+        add(quit, gbc);
+        
+        gbc.gridx = 1;
+        add(start, gbc);
     }
 
     public void paintComponent(Graphics g) {

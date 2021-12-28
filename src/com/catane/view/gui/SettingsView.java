@@ -14,9 +14,9 @@ import javax.swing.JPanel;
 import com.catane.model.Game;
 import com.catane.model.Player;
 
-public class Settings extends JPanel {
+public class SettingsView extends JPanel {
 
-    public Settings(GUI frame, Game game) {
+    public SettingsView(GUI frame, Game game) {
         setBackground(Color.ORANGE);
         FlowLayout layout = new FlowLayout();
         layout.setHgap(500);

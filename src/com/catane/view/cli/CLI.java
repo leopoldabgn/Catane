@@ -38,7 +38,7 @@ public class CLI {
 			System.out.println("Voulez vous jouer à 3 ou 4 joueurs ? (3/4)");
 			p = sc.nextInt();
 		} while (p != 3 && p != 4);
-		game.setupPlayers(p);
+		game.setupPlayers(p, 0);
 		sc.nextLine();
 		System.out.println();
 

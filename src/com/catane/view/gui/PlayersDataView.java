@@ -42,7 +42,7 @@ public class PlayersDataView extends JPanel {
 		
 		public PlayerDataPanel(Player player) {
 			this.player = player;
-			name = new JLabel(player.getName());
+			name = new JLabel(player.toString());
 			score = new JLabel("Score : "+player.getScore());
 			add(name);
 			add(score);

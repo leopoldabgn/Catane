@@ -11,5 +11,14 @@ public class AI extends Player {
 	public String getName() {
 		return "Ordi"+getNumber();
 	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
+
+	public void setName(String name) {
+
+	}
 	
 }

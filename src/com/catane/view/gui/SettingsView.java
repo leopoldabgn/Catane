@@ -158,7 +158,7 @@ public class SettingsView extends JPanel {
         add(buttons);
 
         start.addActionListener(event -> {
-            game.setupPlayers(nbJ.getValue());
+            game.setupPlayers(nbJ.getValue(), Math.min(nbIA.getValue(), nbJ.getValue()));
             for (Player p : game.getPlayers()) {
                 switch (p.getNumber()) {
                     case 1: p.setName(j1.getText());

@@ -45,10 +45,10 @@ public class Game {
 		return tab;
 	}
 
-	public void setupPlayers(int p) {
+	public void setupPlayers(int p, int ia) {
 		players = new ArrayList<Player>();
 		Player player = null;
-		for (int i = 0; i < p; i++) {
+		for (int i = 0; i < p - ia; i++) {
 			switch (i) {
 				case 0:	player = new Player(Color.ORANGE);
 						break;
@@ -57,6 +57,20 @@ public class Game {
 				case 2:	player = new Player(Color.YELLOW);
 						break;
 				default:player = new Player(Color.RED);
+						break;
+			}
+			player.setScore(new Score(this, player));
+			players.add(player);
+		}
+		for (int i = 0 + p; i < ia + p; i++) {
+			switch (i) {
+				case 0:	player = new AI(Color.ORANGE);
+						break;
+				case 1:	player = new AI(Color.BLUE);
+						break;
+				case 2:	player = new AI(Color.YELLOW);
+						break;
+				default:player = new AI(Color.RED);
 						break;
 			}
 			player.setScore(new Score(this, player));

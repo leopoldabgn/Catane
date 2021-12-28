@@ -80,6 +80,18 @@ public class GameView extends JPanel {
 		this.add(southPan, BorderLayout.SOUTH);
 	}
 	
+	private class ActionPanel extends JPanel {
+		
+		private JButton colony, town, road;
+		
+		public ActionPanel() {
+			colony = new JButton("Colony");
+			town = new JButton("Town");
+			road = new JButton("Road");
+		}
+		
+	}
+	
 	public void refreshInfos() {
 		playersDataView.refresh();
 		resourcePan.refresh();

@@ -1,16 +1,15 @@
 package com.catane.view.gui;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.awt.Graphics;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -21,7 +20,7 @@ public class HomeView extends JPanel {
     private BufferedImage bg;
 
     public HomeView(GUI frame, Game game) {
-        setLayout(new GridBagLayout());
+        setLayout(new GridLayout(2, 1));
         setPreferredSize(new Dimension(1000, 630));
 
         try {
@@ -47,15 +46,31 @@ public class HomeView extends JPanel {
             System.exit(0);
         });
 
-        // Placement des boutons
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(quit, gbc);
+        JPanel pan = new JPanel();
+        pan.setOpaque(false);
         
-        gbc.gridx = 1;
-        add(start, gbc);
+        add(pan);
+        
+        pan = new JPanel();
+        pan.setOpaque(false);
+        JPanel pan2 = new JPanel();
+        pan2.setOpaque(false);
+        pan.add(pan2);
+        pan2.setLayout(new BoxLayout(pan2, BoxLayout.PAGE_AXIS));
+        
+        JPanel pan3 = new JPanel();
+        pan3.setOpaque(false);
+        pan3.add(start);
+        pan2.add(pan3);
+        pan3 = new JPanel();
+        pan3.setOpaque(false);
+        pan3.add(quit);
+        pan2.add(pan3);
+        
+        add(pan);
+        
+        // Placement des boutons
+       
     }
 
     public void paintComponent(Graphics g) {

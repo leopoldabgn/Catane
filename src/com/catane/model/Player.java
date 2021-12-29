@@ -118,8 +118,8 @@ public class Player {
 			   getResource(Resource.WHEAT) >= 1;
 	}
 
-	public int canBuildColonyOn(Board board, int[] coord) { // Le joueur peut construire une colonie sur la case donnée
-		if(!canAffordColony())// Si il n'a pas assez d'argent.
+	public int canBuildColonyOn(Board board, int[] coord, boolean early) { // Le joueur peut construire une colonie sur la case donnée
+		if(!canAffordColony() && !early)// Si il n'a pas assez d'argent et que ce n'est ps le début de partie.
 			return 1;
 		else {
 			if(!board.isEmptyColony(coord[0], coord[1]))
@@ -137,10 +137,10 @@ public class Player {
 			return 1;
 		else {
 			if(!board.isColony(coord[0], coord[1]))
-				return 2;
+			return 2;
 			Colony c = (Colony)board.getCase(coord[0], coord[1]);
 			if(c.getPlayer() != this) // Si ce n'est pas ma colonie.
-				return 3;
+			return 3;
 		}
 		
 		return 0;
@@ -152,7 +152,7 @@ public class Player {
 	
 	// Pour l'interface graphique on appelle celle-la directement.
 	public int canBuildRoadOn(Board board, int[] coord, boolean dev) { // Le joueur peut construire une route sur la case donnée
-		if(!canAffordRoad() && !dev)// Si il n'a pas assez d'argent.
+		if(!canAffordRoad() && !dev)// Si il n'a pas assez d'argent et que ce n'est ps le début de partie ou une carte de développement.
 			return 1;
 		else {
 			if(!board.isEmptyRoad(coord[0], coord[1]))
@@ -172,13 +172,15 @@ public class Player {
 		colonies.remove(colony);
 	}
 	
-	public void buildColony(Colony colony) {
-		payColony();
+	public void buildColony(Colony colony, boolean early) {
+		if (!early)
+			payColony();
 		colonies.add(colony);
 	}
 
-	public void buildRoad(Road road) {
-		payRoad();
+	public void buildRoad(Road road, boolean early) {
+		if (!early)
+			payRoad();
 		roads.add(road);
 	}
 
@@ -292,6 +294,10 @@ public class Player {
 	public int getArmy() {
 		return army;
 	}
+
+	public int getNbRoads() {
+		return roads.size();
+	}
 	
 	public int getNbColonies() {
 		return colonies.size() - getNbTowns();
@@ -305,6 +311,10 @@ public class Player {
 			if(c instanceof Town)
 				nb++;
 		return nb;
+	}
+
+	public boolean isReady() {
+		return getNbColonies() == 2 && getNbRoads() == 2;
 	}
 	
 	public boolean hasWon() {

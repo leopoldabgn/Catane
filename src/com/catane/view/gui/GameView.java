@@ -30,6 +30,31 @@ public class GameView extends JPanel {
 	private IconPanel dices;
 	private JButton nextTurnButton, tradeButton;
 	private ActionPanel actionPanel;
+
+	private int nbReady;
+	private boolean early = true;
+	private boolean isColonyActive = true;
+	private boolean isTownActive = false;
+	private boolean isRoadActive = true;
+
+	public boolean isEarly() {
+		return early;
+	}
+	public boolean isColonyActive() {
+		return isColonyActive;
+	}
+	public void disableColony() {
+		isColonyActive = false;
+	}
+	public boolean isTownActive() {
+		return isTownActive;
+	}
+	public boolean isRoadActive() {
+		return isRoadActive;
+	}
+	public void disableRoad() {
+		isRoadActive = false;
+	}
 	
 	public GameView(Game game) {
 		this.game = game;
@@ -59,7 +84,6 @@ public class GameView extends JPanel {
 		actionPanel = new ActionPanel();
 		nextTurnButton = new JButton("Prochain tour");
 		tradeButton = new JButton("Echange (4:1)");
-		
 		nextTurnButton.addActionListener(e -> {
 			game.nextRound();
 			refreshInfos();
@@ -112,11 +136,48 @@ public class GameView extends JPanel {
 		//board.setPreferredSize(new Dimension(w, h));
 		
 		boardContainer.setBackground(new Color(0, 180, 216)); // Couleur de la mer
+
+		JButton nextTurnButtonEarly = new JButton("Prochain joueur");
+		nextTurnButtonEarly.addActionListener(event -> {
+			nbReady = refreshReady();
+			if (game.getPlayers().size() == nbReady) {
+				game.nextRound();
+				isColonyActive = true;
+				isTownActive = true;
+				isRoadActive = true;
+				early = false;
+				startGame(boardView, northPan, southPan);
+			}else {
+				if (game.getActualPlayer().isReady()) {
+					game.nextRound();
+					isColonyActive = true;
+					isRoadActive = true;
+				}
+			}
+			refreshInfos();
+			revalidate();
+		});
 		
 		this.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.setLayout(new BorderLayout());
 		this.add(northPan, BorderLayout.NORTH);
 		this.add(boardView, BorderLayout.CENTER);
+		this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
+
+	}
+
+	public int refreshReady() {
+		int r = 0;
+		for (Player p : game.getPlayers())
+			if (p.isReady())
+				r++;
+		return r;
+	}
+	
+	public void startGame(JPanel boardView, JPanel northPan, JPanel southPan) {
+		this.removeAll();
+		this.add(boardView, BorderLayout.CENTER);
+		this.add(northPan, BorderLayout.NORTH);
 		this.add(southPan, BorderLayout.SOUTH);
 	}
 	

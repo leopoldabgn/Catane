@@ -142,14 +142,14 @@ public class CLI {
 						}
 						else {
 							coord = askCoord(); // Coordonnees forcement dans le plateau.
-							int ans = player.canBuildColonyOn(board, coord); // ans ne peut pas etre egale a 1 ici.
+							int ans = player.canBuildColonyOn(board, coord, false); // ans ne peut pas etre egale a 1 ici.
 							if(ans == 2)
 									System.out.println("Vous ne pouvez pas poser de colonie ici !");
 							else if(ans == 3)
 									System.out.println("Il y a deja une colonie ou une ville aux alentours !");
 							else {
 								error = false;
-								board.putColony(player, coord[0], coord[1]);
+								board.putColony(player, coord[0], coord[1], false);
 							}
 						}
 						break;
@@ -183,7 +183,7 @@ public class CLI {
 									System.out.println("Vous ne pouvez pas poser de route ici !");
 							else {
 								error = false;
-								board.putRoad(player, coord[0], coord[1]);
+								board.putRoad(player, coord[0], coord[1], false);
 								game.refreshLongestRoadOwner();
 							}
 						}
@@ -285,7 +285,7 @@ public class CLI {
 						if(ans == 2)
 							System.out.println("Vous ne pouvez pas poser de route ici !");
 					}
-					board.putRoad(player, coord[0], coord[1]);
+					board.putRoad(player, coord[0], coord[1], true);
 				}
 				game.refreshLongestRoadOwner();
 				player.devCardUsed(Progress.ROAD_CONSTRUCTION);

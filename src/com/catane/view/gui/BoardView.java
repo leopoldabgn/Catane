@@ -234,8 +234,8 @@ public class BoardView extends JPanel {
 		this.repaint();
 	}
 	
-	public void putColony(Player player, ColonyView colonyView) { // colonyView -> vide au depart
-		board.putColony(player, colonyView.getModelCase()); // On indique au model le changement
+	public void putColony(Player player, ColonyView colonyView, boolean early) { // colonyView -> vide au depart
+		board.putColony(player, colonyView.getModelCase(), early); // On indique au model le changement
 		// La colonie est desormais reliee a un joueur.
 		// La view sera donc affichee differement.
 		gameView.refreshInfos();
@@ -248,8 +248,8 @@ public class BoardView extends JPanel {
 		gameView.refreshInfos();
 	}
 	
-	public void putRoad(Player player, RoadView roadView) { // roadView -> vide au depart
-		board.putRoad(player, roadView.getModelCase()); // On indique au model le changement
+	public void putRoad(Player player, RoadView roadView, boolean early) { // roadView -> vide au depart
+		board.putRoad(player, roadView.getModelCase(), early); // On indique au model le changement
 		// La view va interroger le modele et changera son apparence.
 		gameView.refreshInfos();
 	}

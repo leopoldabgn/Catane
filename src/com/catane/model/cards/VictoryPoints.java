@@ -16,10 +16,17 @@ public enum VictoryPoints implements DevelopmentCard {
 		return name;
 	}
 
+	@Override
+	public String getEnglishName() {
+		return super.toString().toLowerCase();
+	}
+	
+	@Override
 	public void canUse() {
 
 	}
-
+	
+	@Override
 	public boolean isUsable() {
 		return true;
 	}

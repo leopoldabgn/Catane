@@ -3,6 +3,8 @@ package com.catane.view.gui;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -11,9 +13,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import com.catane.model.Resource;
+import com.catane.model.cards.DevelopmentCard;
+import com.catane.model.cards.Knight;
+import com.catane.model.cards.Progress;
 
 public class CardView extends JPanel {
 	private static final long serialVersionUID = 1L;
+	
+	public static int WIDTH = 66, HEIGHT = 100;
 	
 	private boolean isSelected = false;
 	private Image image;
@@ -25,7 +32,8 @@ public class CardView extends JPanel {
 			e.printStackTrace();
 			System.out.println(name);
 		}
-		setPreferredSize(new Dimension(66, 100));
+		setSize(new Dimension(WIDTH, HEIGHT));
+		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setBorder(BorderFactory.createLoweredBevelBorder());
 	}
 	
@@ -41,6 +49,45 @@ public class CardView extends JPanel {
 	
 	public boolean isSelected() {
 		return isSelected;
+	}
+	
+	public static class DevCardView extends CardView {
+		private static final long serialVersionUID = 1L;
+		
+		private DevelopmentCard devCard;
+		
+		public DevCardView(DevelopmentCard devCard) {
+			super(devCard.getEnglishName());
+			this.devCard = devCard;
+			setBorder(null);
+			addMouseListener(new MouseAdapter() {
+				@Override
+				public void mousePressed(MouseEvent e) {
+					super.mousePressed(e);
+					
+					if(devCard instanceof Knight) {
+						// .....
+					}
+					else if(devCard instanceof Progress) {
+						// .....
+						// If monopoly...
+						// if ...
+					}
+				}
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					super.mouseEntered(e);
+					repaint();
+				}
+				
+			});
+		}
+		
+		public DevelopmentCard getDevCard() {
+			return devCard;
+		}
+		
 	}
 	
 	public static class ResourceCardView extends CardView {

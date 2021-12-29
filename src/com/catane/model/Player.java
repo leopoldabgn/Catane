@@ -329,6 +329,10 @@ public class Player {
 		return "J"+number;
 	}
 	
+	public List<DevelopmentCard> getDevCards() {
+		return developmentCards;
+	}
+	
 	public List<Colony> getColonies() {
 		return colonies;
 	}

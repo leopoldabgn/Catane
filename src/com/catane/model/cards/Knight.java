@@ -17,11 +17,13 @@ public class Knight implements DevelopmentCard {
 	public String toString() {
 		return "Chevalier";
 	}
-
+	
+	@Override
 	public void canUse() {
 		usable = true;
 	}
 
+	@Override
 	public boolean isUsable() {
 		return usable;
 	}

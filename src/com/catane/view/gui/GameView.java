@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -28,8 +29,9 @@ public class GameView extends JPanel {
 	private PlayersDataView playersDataView;
 	private ResourcePanel resourcePan;
 	private IconPanel dices;
-	private JButton nextTurnButton, tradeButton;
+	private JButton nextTurnButton, tradeButton, buyDevCardButton;
 	private ActionPanel actionPanel;
+	private DeckView progressDeck, victoryPointsDeck;
 	
 	public GameView(Game game) {
 		this.game = game;
@@ -46,35 +48,6 @@ public class GameView extends JPanel {
 			}
 		}
 		
-		//TextManager textManager = new TextManager("Welcome to Catane");
-		JPanel northPan = new JPanel();
-		northPan.setLayout(new BorderLayout());
-		dicesLbl = new JLabel();
-		playersDataView = new PlayersDataView(game);
-		northPan.add(dicesLbl, BorderLayout.WEST);
-		northPan.add(playersDataView, BorderLayout.CENTER);
-		
-		BoardView boardView = new BoardView(this);
-		resourcePan = new ResourcePanel(game);
-		actionPanel = new ActionPanel();
-		nextTurnButton = new JButton("Prochain tour");
-		tradeButton = new JButton("Echange (4:1)");
-		
-		nextTurnButton.addActionListener(e -> {
-			game.nextRound();
-			refreshInfos();
-			refreshTradeButton(true);
-			dices.setEnabled(true);
-		});
-		
-		tradeButton.addActionListener(e -> {
-			Port port = new Port(4);
-			PortView portView = new PortView(boardView, port);
-			// Ouvre une fenetre d'echange 4:1
-			PortView.TradeFrame tradeFrame = (portView.new TradeFrame(true));
-			tradeFrame.setVisible(true);
-		});
-		
 		dices = new IconPanel("dices_64", 32);
 
 		dices.addMouseListener(new MouseAdapter() {
@@ -86,24 +59,88 @@ public class GameView extends JPanel {
 				int[] vals = game.rollDices();
 				int value = vals[0]+vals[1];
 				dicesLbl.setText("Dés : "+value);
-				actionPanel.setButtonsEnabled(false);
+				actionPanel.setButtonsEnabled(true);
+				nextTurnButton.setEnabled(true);
 				dices.setEnabled(false);
 				revalidate();
 				repaint();
 			}
 		});
 		
+		//TextManager textManager = new TextManager("Welcome to Catane");
+		JPanel northPan = new JPanel();
+		northPan.setLayout(new BorderLayout());
+		dicesLbl = new JLabel();
+		JPanel tmp = new JPanel();
+		tmp.setOpaque(false);
+		playersDataView = new PlayersDataView(game);
+		tmp.add(playersDataView);
+		tmp.add(dices);
+		northPan.add(dicesLbl, BorderLayout.WEST);
+		northPan.add(tmp, BorderLayout.CENTER);
+		
+		BoardView boardView = new BoardView(this);
+		resourcePan = new ResourcePanel(game);
+		actionPanel = new ActionPanel();
+		progressDeck = new DeckView(game.getActualPlayer(), false);
+		victoryPointsDeck = new DeckView(game.getActualPlayer(), true);
+		buyDevCardButton = new JButton("Acheter carte dev.");
+		nextTurnButton = new JButton("Passer au prochain tour");
+		nextTurnButton.setEnabled(false);
+		tradeButton = new JButton("Echange (4:1)");
+		
+		buyDevCardButton.addActionListener(e -> {
+			Player actualPlayer = game.getActualPlayer();
+			if(actualPlayer.canBuyDevCard(game) == 0) {
+				actualPlayer.getDevCard(game);
+				refreshDecks();
+				buyDevCardButton.setEnabled(false);
+			}
+		});
+		
+		nextTurnButton.addActionListener(e -> {
+			game.nextRound();
+			dicesLbl.setText("");
+			refreshInfos();
+			actionPanel.setButtonsEnabled(false);
+			refreshTradeButton(true);
+			dices.setEnabled(true);
+			buyDevCardButton.setEnabled(game.getActualPlayer().canBuyDevCard(game) == 0);
+			nextTurnButton.setEnabled(false);
+		});
+		
+		tradeButton.addActionListener(e -> {
+			Port port = new Port(4);
+			PortView portView = new PortView(boardView, port);
+			// Ouvre une fenetre d'echange 4:1
+			PortView.TradeFrame tradeFrame = (portView.new TradeFrame(true));
+			tradeFrame.setVisible(true);
+		});
+		
 		JPanel buttonsPan = new JPanel();
 		buttonsPan.setOpaque(false);
-		buttonsPan.add(dices);
-		buttonsPan.add(nextTurnButton);
-		buttonsPan.add(tradeButton);
+		buttonsPan.setLayout(new BoxLayout(buttonsPan, BoxLayout.PAGE_AXIS));
+		buttonsPan.add(actionPanel);
+		tmp = new JPanel();
+		tmp.setOpaque(false);
+		tmp.add(tradeButton);
+		tmp.add(buyDevCardButton);
+		buttonsPan.add(tmp);
 		
 		JPanel southPan = new JPanel();
 		southPan.setOpaque(false);
 		southPan.add(resourcePan);
-		southPan.add(actionPanel);
-		southPan.add(buttonsPan);
+		southPan.add(progressDeck);
+		southPan.add(victoryPointsDeck);
+		
+		JPanel eastPan = new JPanel();
+		eastPan.setOpaque(false);
+		eastPan.setLayout(new BorderLayout());
+		tmp = new JPanel();
+		tmp.setOpaque(false);
+		tmp.add(buttonsPan);
+		eastPan.add(tmp, BorderLayout.CENTER);
+		eastPan.add(nextTurnButton, BorderLayout.SOUTH);
 		
 		JPanel boardContainer = new JPanel();
 		boardContainer.setLayout(new GridBagLayout());
@@ -117,6 +154,7 @@ public class GameView extends JPanel {
 		this.setLayout(new BorderLayout());
 		this.add(northPan, BorderLayout.NORTH);
 		this.add(boardView, BorderLayout.CENTER);
+		this.add(eastPan, BorderLayout.EAST);
 		this.add(southPan, BorderLayout.SOUTH);
 	}
 	
@@ -127,21 +165,37 @@ public class GameView extends JPanel {
 		private JRadioButton colony, town, road;
 		
 		public ActionPanel() {
+			setOpaque(false);
 			setBorder(new EmptyBorder(10, 10, 10, 10));
-			//setBackground(Color.CYAN);
+			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 			
 			colony = new JRadioButton("Colonie");
+			colony.setOpaque(false);
 			town = new JRadioButton("Ville");
+			town.setOpaque(false);
 			road = new JRadioButton("Route");
+			road.setOpaque(false);
 			
 			group = new ButtonGroup();
 			group.add(colony);
 			group.add(town);
 			group.add(road);
 			
-			add(colony);
-			add(town);
-			add(road);
+			JPanel buttons = new JPanel();
+			buttons.setOpaque(false);
+			
+			buttons.add(colony);
+			buttons.add(town);
+			buttons.add(road);
+			
+			JLabel title = new JLabel("Faire une action :");
+			
+			JPanel titlePan = new JPanel();
+			titlePan.setLayout(new BorderLayout());
+			titlePan.add(title, BorderLayout.WEST);
+			
+			add(titlePan);
+			add(buttons);
 			
 			setButtonsEnabled(false);
 		}
@@ -157,12 +211,18 @@ public class GameView extends JPanel {
 	public void refreshInfos() {
 		playersDataView.refresh();
 		resourcePan.refresh();
+		refreshDecks();
+	}
+	
+	public void refreshDecks() {
+		progressDeck.changePlayer(game.getActualPlayer());
+		progressDeck.refresh();
+		victoryPointsDeck.changePlayer(game.getActualPlayer());
+		victoryPointsDeck.refresh();
 	}
 	
 	public void refreshTradeButton(boolean enabled) {
 		tradeButton.setEnabled(enabled);
-		revalidate();
-		repaint();
 	}
 	
 	public PlayersDataView getPlayersDataView() {

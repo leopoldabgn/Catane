@@ -17,10 +17,17 @@ public enum Progress implements DevelopmentCard {
 		return name;
 	}
 	
+	@Override
+	public String getEnglishName() {
+		return super.toString().toLowerCase();
+	}
+	
+	@Override
 	public void canUse() {
 		usable = true;
 	}
 
+	@Override
 	public boolean isUsable() {
 		return usable;
 	}

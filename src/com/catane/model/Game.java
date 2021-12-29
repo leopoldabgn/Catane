@@ -17,8 +17,15 @@ public class Game {
 	private DevelopmentCardsDeck developmentCardsDeck;
 
 	public Game() {
-		board = new Board(4);
+		//board = new Board(4);
 		developmentCardsDeck = new DevelopmentCardsDeck();
+	}
+
+	public void setBoard(int n) {
+		if (n == 4 || n == 6)
+			board = new Board(n);
+		else
+			board = new Board(4);
 	}
 	
 	public void setPlayers(List<Player> players) { // Peut sûrement être supprimée

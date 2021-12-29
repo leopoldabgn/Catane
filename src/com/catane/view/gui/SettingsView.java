@@ -5,11 +5,13 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import com.catane.model.Game;
 import com.catane.model.Player;
@@ -20,7 +22,7 @@ public class SettingsView extends JPanel {
         setBackground(Color.ORANGE);
         FlowLayout layout = new FlowLayout();
         layout.setHgap(500);
-        layout.setVgap(100);
+        layout.setVgap(75);
         setLayout(layout);
 
         // Boutons
@@ -60,6 +62,22 @@ public class SettingsView extends JPanel {
         names.add(j3);
         names.add(j4);
         names.setOpaque(false);
+
+        // Taille du plateau
+        JLabel sizeLabel = new JLabel("Taille du plateau :");
+        JRadioButton size4 = new JRadioButton("4x4");
+        size4.setSelected(true);
+        size4.setActionCommand("4");
+        JRadioButton size6 = new JRadioButton("6x6");
+        size6.setActionCommand("6");
+        ButtonGroup selectSize = new ButtonGroup();
+        selectSize.add(size4);
+        selectSize.add(size6);
+        JPanel sizePanel = new JPanel();
+        sizePanel.add(sizeLabel);
+        sizePanel.add(size4);
+        sizePanel.add(size6);
+        sizePanel.setOpaque(false);
 
         // Sélection du nombre de joueurs
         JLabel labelJ = new JLabel("Nombre de joueurs");
@@ -151,13 +169,14 @@ public class SettingsView extends JPanel {
         ia.add(nbIA, BorderLayout.SOUTH);
         ia.setOpaque(false);
         
-
+        add(sizePanel);
         add(joueurs);
         add(ia);
         add(names);
         add(buttons);
 
         start.addActionListener(event -> {
+            game.setBoard(Integer.parseInt(selectSize.getSelection().getActionCommand()));
             game.setupPlayers(nbJ.getValue(), Math.min(nbIA.getValue(), nbJ.getValue()));
             for (Player p : game.getPlayers()) {
                 switch (p.getNumber()) {

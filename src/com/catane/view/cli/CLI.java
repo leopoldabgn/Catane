@@ -25,7 +25,6 @@ public class CLI {
 	
 	public CLI(Game game) {
 		this.game = game;
-		this.board = game.getBoard();
 		startGame();
 	}
 	
@@ -35,6 +34,14 @@ public class CLI {
 
 		System.out.println("Bonjour,");
 		System.out.println("Vous vous apprêtez à lancer une partie des Colons de Catane.\n");
+		int size;
+		do {
+			System.out.println("Combien de case doit comporter le plateau ? (4x4 -> 4, 6x6 -> 6)");
+			size = sc.nextInt();
+		}while (size != 4 && size != 6);
+		game.setBoard(size);
+		board = game.getBoard();
+		System.out.println();
 		int p;
 		int ia;
 		do {

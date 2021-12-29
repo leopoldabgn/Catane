@@ -53,13 +53,20 @@ public class BoardView extends JPanel {
 	
 	// Unique methode pour la CLI.
 	public static void display(Board board) {
-		int size = board.getSize(), space = 4, maxSize = 15;
+		int size = board.getSize(), maxSize = 15;
 		int size2 = size-2; // size sans les ports.
 		
 		char letter = 'A';
-		System.out.print(" ".repeat(space));
-		for(int i=0;i<size2;i++)
-			System.out.print((letter++)+" ".repeat(9));
+		System.out.print(" ".repeat(18));
+		for(int i=0;i<size2;i++) {
+			String s = "" + letter;
+			if (i % 2 == 0)
+				System.out.print(addSpaces(s, 4));
+			else
+				System.out.print(addSpaces(s, 15));
+			System.out.print(" ");
+			letter++;
+		}
 		System.out.println();
 		
 		int line = 1;

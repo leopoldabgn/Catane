@@ -119,7 +119,7 @@ public class Player {
 	}
 
 	public int canBuildColonyOn(Board board, int[] coord, boolean early) { // Le joueur peut construire une colonie sur la case donnée
-		if(!canAffordColony() && !early)// Si il n'a pas assez d'argent et que ce n'est ps le début de partie.
+		if(!canAffordColony() && !early)// Si il n'a pas assez d'argent et que ce n'est pas le début de partie.
 			return 1;
 		else {
 			if(!board.isEmptyColony(coord[0], coord[1]))

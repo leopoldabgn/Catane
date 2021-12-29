@@ -87,6 +87,36 @@ public class CLI {
 		
 		BoardView.display(board);
 		boolean endGame = game.endGame();
+
+		// Mise en place du jeu
+		for (Player player : game.getPlayers()) {
+			System.out.println(player + " doit choisir où poser ses premières constructions");
+			int[] coord = new int[2];
+			for (int i = 0; i < 2; i++) {
+				int n = i + 1;
+				System.out.println("Où voulez-vous poser la colonie " + n);
+				int ans = 2;
+				while (ans != 0) {
+					coord = askCoord(); // Coordonnees forcement dans le plateau.
+					ans = player.canBuildColonyOn(board, coord, true);
+					if(ans != 0)
+						System.out.println("Vous ne pouvez pas poser de route ici !");
+				}
+				board.putColony(player, coord[0], coord[1], true);
+			}
+			for (int i = 0; i < 2; i++) {
+				int n = i + 1;
+				System.out.println("Où voulez-vous poser la route " + n);
+				int ans = 2;	
+				while (ans == 2) {
+					coord = askCoord(); // Coordonnees forcement dans le plateau.
+					ans = player.canBuildRoadOn(board, coord, true);
+					if(ans == 2)
+						System.out.println("Vous ne pouvez pas poser de route ici !");
+				}
+				board.putRoad(player, coord[0], coord[1], true);
+			}
+		}
 		
 		while(!endGame) {
 			playRound();

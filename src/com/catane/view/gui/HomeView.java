@@ -16,8 +16,9 @@ import javax.swing.JPanel;
 import com.catane.model.Game;
 
 public class HomeView extends JPanel {
-
-    private BufferedImage bg;
+	private static final long serialVersionUID = 1L;
+	
+	private BufferedImage bg;
 
     public HomeView(GUI frame, Game game) {
         setLayout(new GridLayout(2, 1));

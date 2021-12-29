@@ -54,6 +54,11 @@ public abstract class ResourceCase extends Case {
 		public void giveResources(List<Colony> col) {
 			
 		}
+		
+		@Override
+		public String toString() {
+			return "Désert";
+		}
 	}
 	
 	public static class Field extends ResourceCase {
@@ -67,6 +72,11 @@ public abstract class ResourceCase extends Case {
 			for (Colony colony : col)
 				for (int i = 0; i < colony.resourceGain(); i++)
 					colony.getPlayer().gainResource(Resource.WHEAT);
+		}
+		
+		@Override
+		public String toString() {
+			return "Champ";
 		}
 	}
 	
@@ -82,6 +92,11 @@ public abstract class ResourceCase extends Case {
 				for (int i = 0; i < colony.resourceGain(); i++)
 					colony.getPlayer().gainResource(Resource.WOOD);
 		}
+		
+		@Override
+		public String toString() {
+			return "Forêt";
+		}
 	}
 	
 	public static class Hill extends ResourceCase {
@@ -95,6 +110,11 @@ public abstract class ResourceCase extends Case {
 			for (Colony colony : col)
 				for (int i = 0; i < colony.resourceGain(); i++)
 					colony.getPlayer().gainResource(Resource.CLAY);
+		}
+		
+		@Override
+		public String toString() {
+			return "Colline";
 		}
 	}
 	
@@ -110,6 +130,11 @@ public abstract class ResourceCase extends Case {
 				for (int i = 0; i < colony.resourceGain(); i++)
 					colony.getPlayer().gainResource(Resource.STONE);
 		}
+		
+		@Override
+		public String toString() {
+			return "Montagne";
+		}
 	}
 	
 	public static class Pre extends ResourceCase {
@@ -123,6 +148,11 @@ public abstract class ResourceCase extends Case {
 			for (Colony colony : col)
 				for (int i = 0; i < colony.resourceGain(); i++)
 					colony.getPlayer().gainResource(Resource.WOOL);
+		}
+		
+		@Override
+		public String toString() {
+			return "Pré";
 		}
 	}
 	

@@ -78,7 +78,7 @@ public class PortView extends CaseView {
 		lastFrame.setVisible(true);
 	}
 	
-	private class TradeFrame extends JFrame {
+	public class TradeFrame extends JFrame {
 		private static final long serialVersionUID = 1L;
 		
 		private TradePanel trade1, trade2;
@@ -123,6 +123,8 @@ public class PortView extends CaseView {
 				}
 				
 				boardView.getGameView().refreshInfos();
+				boardView.getGameView().refreshTradeButton(false);
+				
 				this.dispose();
 			});
 			

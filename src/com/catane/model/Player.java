@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 import com.catane.model.cards.DevelopmentCard;
+import com.catane.model.cards.Knight;
+import com.catane.model.cards.Progress;
 import com.catane.model.cards.VictoryPoints;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.Road;
@@ -86,6 +88,14 @@ public class Player {
 		int sum = 0;
 		for(DevelopmentCard c : developmentCards)
 			if(c.equals(card))
+				sum++;
+		return sum;
+	}
+
+	public int getUsableDevCard(DevelopmentCard card) {
+		int sum = 0;
+		for(DevelopmentCard c : developmentCards)
+			if(c.equals(card) && c.isUsable())
 				sum++;
 		return sum;
 	}
@@ -247,6 +257,13 @@ public class Player {
 		DevelopmentCard card = game.getDevCard();
 		if(card != null) // Normalement il est impossible que card soit null !
 			developmentCards.add(card);
+	}
+
+	public void refreshDevCards() {
+		for (DevelopmentCard card : developmentCards) {
+			if (card instanceof Knight || card instanceof Progress)
+				card.canUse();
+		}
 	}
 
 	public void devCardUsed(DevelopmentCard card) {

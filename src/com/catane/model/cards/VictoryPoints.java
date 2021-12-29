@@ -15,5 +15,13 @@ public enum VictoryPoints implements DevelopmentCard {
 	public String toString() {
 		return name;
 	}
+
+	public void canUse() {
+
+	}
+
+	public boolean isUsable() {
+		return true;
+	}
 	
 }

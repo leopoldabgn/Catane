@@ -6,6 +6,7 @@ public enum Progress implements DevelopmentCard {
 	MONOPOLY("Monopole");
 	
 	private String name;
+	private boolean usable;
 	
 	private Progress(String name) {
 		this.name = name;
@@ -16,4 +17,12 @@ public enum Progress implements DevelopmentCard {
 		return name;
 	}
 	
+	public void canUse() {
+		usable = true;
+	}
+
+	public boolean isUsable() {
+		return usable;
+	}
+
 }

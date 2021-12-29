@@ -7,7 +7,9 @@ import java.util.Scanner;
 import com.catane.model.Board;
 import com.catane.model.Game;
 import com.catane.model.Player;
+import com.catane.model.AI;
 import com.catane.model.Resource;
+import com.catane.model.cards.DevelopmentCard;
 import com.catane.model.cards.Knight;
 import com.catane.model.cards.Progress;
 import com.catane.model.cases.Colony;
@@ -34,23 +36,29 @@ public class CLI {
 		System.out.println("Bonjour,");
 		System.out.println("Vous vous apprêtez à lancer une partie des Colons de Catane.\n");
 		int p;
+		int ia;
 		do {
 			System.out.println("Voulez vous jouer à 3 ou 4 joueurs ? (3/4)");
 			p = sc.nextInt();
 		} while (p != 3 && p != 4);
-		game.setupPlayers(p, 0);
+		do {
+			System.out.println("Combien voulez-vous d'ordiateur ? (0/1/2/3/4)");
+			ia = sc.nextInt();
+		} while (ia != 0 && ia != 1 && ia != 2 && ia != 3 && ia != 4);
+		game.setupPlayers(p, Math.min(ia, p));
 		sc.nextLine();
 		System.out.println();
 
 		for (Player player : game.getPlayers()) {
-			do {
-				System.out.println("Choisissez un nom pour " + player.getName());
-				String s = sc.nextLine();
-				if (!s.isBlank()) {
-					player.setName(s);
-					break;
-				}
-			}while (true);
+			if (!(player instanceof AI))
+				do {
+					System.out.println("Choisissez un nom pour " + player.getName());
+					String s = sc.nextLine();
+					if (!s.isBlank()) {
+						player.setName(s);
+						break;
+					}
+				}while (true);
 		}
 
 		//ajout des ressources pour test
@@ -203,6 +211,7 @@ public class CLI {
 					case 't': // Passer au tour suivant
 						error = false;
 						endRound = true;
+						player.refreshDevCards();
 						break;
 				}
 				System.out.println();
@@ -225,7 +234,7 @@ public class CLI {
 		}while (c != 'c' && c != 'm' && c != 'r' && c != 'i');
 		switch (c) {
 			case 'c': // Chevalier
-				if (player.getNbDevCard(new Knight()) == 0) {
+				if (player.getUsableDevCard(new Knight()) == 0) {
 					System.out.println("Vous n'avez pas de carte de développement 'Chevalier'");
 					return false;
 				}
@@ -234,7 +243,7 @@ public class CLI {
 				player.devCardUsed(new Knight());
 				break;
 			case 'm': // Monopole
-				if (player.getNbDevCard(Progress.MONOPOLY) == 0) {
+				if (player.getUsableDevCard(Progress.MONOPOLY) == 0) {
 					System.out.println("Vous n'avez pas de carte de développement 'Monopole'");
 					return false;
 				}
@@ -254,7 +263,7 @@ public class CLI {
 				player.devCardUsed(Progress.MONOPOLY);
 				break;
 			case 'r': // Construction de route
-				if (player.getNbDevCard(Progress.ROAD_CONSTRUCTION) == 0) {
+				if (player.getUsableDevCard(Progress.ROAD_CONSTRUCTION) == 0) {
 					System.out.println("Vous n'avez pas de carte de développement 'Construction de route'");
 					return false;
 				}
@@ -275,7 +284,7 @@ public class CLI {
 				player.devCardUsed(Progress.ROAD_CONSTRUCTION);
 				break;
 			case 'i': // Invention
-				if (player.getNbDevCard(Progress.INVENTION) == 0) {
+				if (player.getUsableDevCard(Progress.INVENTION) == 0) {
 					System.out.println("Vous n'avez pas de carte de développement 'Invention'");
 					return false;
 				} // A faire !!

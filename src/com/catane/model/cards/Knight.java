@@ -1,6 +1,8 @@
 package com.catane.model.cards;
 
 public class Knight implements DevelopmentCard {
+
+	private boolean usable;
 	
 	@Override
 	public boolean equals(Object o) {
@@ -14,6 +16,14 @@ public class Knight implements DevelopmentCard {
 	@Override
 	public String toString() {
 		return "Chevalier";
+	}
+
+	public void canUse() {
+		usable = true;
+	}
+
+	public boolean isUsable() {
+		return usable;
 	}
 	
 }

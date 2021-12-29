@@ -114,25 +114,25 @@ public class Board {
 		case 13: return new Mountain(8);
 		case 14: return new Pre(5);
 		case 15: return new Forest(2);
-		case 16: return new Forest(5);
-		case 17: return new Pre(5);
-		case 18: return new Mountain(5);
-		case 19: return new Field(6);
-		case 20: return new Forest(5);
-		case 21: return new Hill(5);
-		case 22: return new Field(5);
-		case 23: return new Mountain(5);
-		case 24: return new Hill(5);
-		case 25: return new Pre(5);
-		case 26: return new Field(5);
-		case 27: return new Mountain(5);
-		case 28: return new Forest(5);
-		case 29: return new Pre(5);
+		case 16: return new Forest(6);
+		case 17: return new Pre(8);
+		case 18: return new Mountain(11);
+		case 19: return new Field(12);
+		case 20: return new Forest(2);
+		case 21: return new Hill(4);
+		case 22: return new Field(10);
+		case 23: return new Mountain(9);
+		case 24: return new Hill(8);
+		case 25: return new Pre(4);
+		case 26: return new Field(4);
+		case 27: return new Mountain(2);
+		case 28: return new Forest(12);
+		case 29: return new Pre(11);
 		case 30: return new Hill(5);
-		case 31: return new Mountain(5);
-		case 32: return new Field(5);
-		case 33: return new Hill(5);
-		case 34: return new Forest(5);
+		case 31: return new Mountain(3);
+		case 32: return new Field(6);
+		case 33: return new Hill(9);
+		case 34: return new Forest(8);
 		case 35: return new Pre(5);
 		}
 		return null;
@@ -204,16 +204,16 @@ public class Board {
 		return !((x >= 1 && x < size-1) && (y >= 1 && y < size-1));
 	}
 	
-	public Colony putColony(Player player, int x, int y) {
+	public Colony putColony(Player player, int x, int y, boolean early) {
 		Colony c = (Colony)cases[x][y];
 		c.setPlayer(player);
-		player.buildColony(c);
+		player.buildColony(c, early);
 		return c;
 	}
 	
-	public Colony putColony(Player player, Colony colony) { // colonie vide
+	public Colony putColony(Player player, Colony colony, boolean early) { // colonie vide
 		int[] coord = getIndexesOf(colony);
-		return putColony(player, coord[0], coord[1]);
+		return putColony(player, coord[0], coord[1], early);
 	}
 	
 	// Retourne la ville. Important uniquement pour la GUI.
@@ -231,16 +231,16 @@ public class Board {
 		return putTown(player, coord[0], coord[1]);
 	}
 	
-	public Road putRoad(Player player, int x, int y) {
+	public Road putRoad(Player player, int x, int y, boolean early) {
 		Road r = (Road)cases[x][y];
 		r.setPlayer(player);
-		player.buildRoad(r);
+		player.buildRoad(r, early);
 		return r;
 	}
 	
-	public Road putRoad(Player player, Road road) { // Route vide
+	public Road putRoad(Player player, Road road, boolean early) { // Route vide
 		int[] coord = getIndexesOf(road);
-		return putRoad(player, coord[0], coord[1]);
+		return putRoad(player, coord[0], coord[1], early);
 	}
 	
 	public boolean checkColoniesAround(Case c) {

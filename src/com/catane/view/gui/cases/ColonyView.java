@@ -26,27 +26,33 @@ public class ColonyView extends MovableCaseView {
 	@Override
 	public void mouseReleased(MouseEvent e) { // Pas besoin de redefinir cette methode dans Town.
 		super.mouseReleased(e);
-		Board board = boardView.getBoardModel();
-		Player actualPlayer = boardView.getActualPlayer();
-		if(isEmpty()) {
-			if(actualPlayer.canBuildColonyOn(board, board.getIndexesOf(colony)) != 0) {
-				// On affiche un message d'erreur. Impossible de poser la colony.
-				System.out.println("Impossible de construire la colonie : "+actualPlayer.canBuildColonyOn(board, board.getIndexesOf(colony)));
-				return;
+		if (boardView.getGameView().isColonyActive()) {
+			Board board = boardView.getBoardModel();
+			Player actualPlayer = boardView.getActualPlayer();
+			if(isEmpty()) {
+				if(actualPlayer.canBuildColonyOn(board, board.getIndexesOf(colony), boardView.getGameView().isEarly()) != 0) {
+					// On affiche un message d'erreur. Impossible de poser la colony.
+					System.out.println("Impossible de construire la colonie : "+actualPlayer.canBuildColonyOn(board, board.getIndexesOf(colony), boardView.getGameView().isEarly()));
+					return;
+				}
+				boardView.putColony(actualPlayer, this, boardView.getGameView().isEarly());
 			}
-			boardView.putColony(actualPlayer, this);
-		}
-		else {
-			if(actualPlayer.canBuildTownOn(board, board.getIndexesOf(colony)) != 0) {
-				// On affiche un message d'erreur. Impossible de poser la ville.
-				System.out.println("Impossible de construire la ville : "+actualPlayer.canBuildColonyOn(board, boardView.getIndexesOf(this)));
-				return;
+			else {
+				if (boardView.getGameView().isTownActive()) {
+					if(actualPlayer.canBuildTownOn(board, board.getIndexesOf(colony)) != 0) {
+						// On affiche un message d'erreur. Impossible de poser la ville.
+						System.out.println("Impossible de construire la ville : "+actualPlayer.canBuildColonyOn(board, boardView.getIndexesOf(this), boardView.getGameView().isEarly()));
+						return;
+					}
+					boardView.putTown(actualPlayer, this);
+				}
 			}
-			boardView.putTown(actualPlayer, this);
+			BoardView.display(boardView.getBoardModel());
+			revalidate();
+			repaint();
+			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbColonies() == 2)
+				boardView.getGameView().disableColony();
 		}
-		BoardView.display(boardView.getBoardModel());
-		revalidate();
-		repaint();
 	}
 	
 	@Override

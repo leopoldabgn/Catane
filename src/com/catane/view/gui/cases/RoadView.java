@@ -26,16 +26,20 @@ public class RoadView extends MovableCaseView {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
-		Board board = boardView.getBoardModel();
-		Player actualPlayer = boardView.getActualPlayer();
-		if(actualPlayer.canBuildRoadOn(board, board.getIndexesOf(road)) != 0) {
-			// On affiche un message d'erreur. Impossible de poser la route.
-			return;
+		if (boardView.getGameView().isRoadActive()) {
+			Board board = boardView.getBoardModel();
+			Player actualPlayer = boardView.getActualPlayer();
+			if(actualPlayer.canBuildRoadOn(board, board.getIndexesOf(road), boardView.getGameView().isEarly()) != 0) {
+				// On affiche un message d'erreur. Impossible de poser la route.
+				return;
+			}
+			boardView.putRoad(actualPlayer, this, boardView.getGameView().isEarly());
+			System.out.println("Longest Road : "+boardView.getBoardModel().getLongestRoad(actualPlayer));
+			revalidate();
+			repaint();
+			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbRoads() == 2)
+				boardView.getGameView().disableRoad();
 		}
-		boardView.putRoad(actualPlayer, this);
-		System.out.println("Longest Road : "+boardView.getBoardModel().getLongestRoad(actualPlayer));
-		revalidate();
-		repaint();
 	}
 	
 	@Override

@@ -9,7 +9,6 @@ import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.AI;
 import com.catane.model.Resource;
-import com.catane.model.cards.DevelopmentCard;
 import com.catane.model.cards.Knight;
 import com.catane.model.cards.Progress;
 import com.catane.model.cases.Colony;
@@ -90,31 +89,38 @@ public class CLI {
 
 		// Mise en place du jeu
 		for (Player player : game.getPlayers()) {
-			System.out.println(player + " doit choisir où poser ses premières constructions");
-			int[] coord = new int[2];
-			for (int i = 0; i < 2; i++) {
-				int n = i + 1;
-				System.out.println("Où voulez-vous poser la colonie " + n);
-				int ans = 2;
-				while (ans != 0) {
-					coord = askCoord(); // Coordonnees forcement dans le plateau.
-					ans = player.canBuildColonyOn(board, coord, true);
-					if(ans != 0)
-						System.out.println("Vous ne pouvez pas poser de route ici !");
+			if (player instanceof AI) {
+
+				((AI) player).earlyGame(game);
+
+			}else {
+
+				System.out.println(player + " doit choisir où poser ses premières constructions");
+				int[] coord = new int[2];
+				for (int i = 0; i < 2; i++) {
+					int n = i + 1;
+					System.out.println("Où voulez-vous poser la colonie " + n);
+					int ans = 2;
+					while (ans != 0) {
+						coord = askCoord(); // Coordonnees forcement dans le plateau.
+						ans = player.canBuildColonyOn(board, coord, true);
+						if(ans != 0)
+							System.out.println("Vous ne pouvez pas poser de route ici !");
+					}
+					board.putColony(player, coord[0], coord[1], true);
 				}
-				board.putColony(player, coord[0], coord[1], true);
-			}
-			for (int i = 0; i < 2; i++) {
-				int n = i + 1;
-				System.out.println("Où voulez-vous poser la route " + n);
-				int ans = 2;	
-				while (ans == 2) {
-					coord = askCoord(); // Coordonnees forcement dans le plateau.
-					ans = player.canBuildRoadOn(board, coord, true);
-					if(ans == 2)
-						System.out.println("Vous ne pouvez pas poser de route ici !");
+				for (int i = 0; i < 2; i++) {
+					int n = i + 1;
+					System.out.println("Où voulez-vous poser la route " + n);
+					int ans = 2;	
+					while (ans == 2) {
+						coord = askCoord(); // Coordonnees forcement dans le plateau.
+						ans = player.canBuildRoadOn(board, coord, true);
+						if(ans == 2)
+							System.out.println("Vous ne pouvez pas poser de route ici !");
+					}
+					board.putRoad(player, coord[0], coord[1], true);
 				}
-				board.putRoad(player, coord[0], coord[1], true);
 			}
 		}
 		
@@ -134,128 +140,136 @@ public class CLI {
 	
 	public void playRound() {
 		Player player = game.getActualPlayer();
-		
-		System.out.println("Au tour de "+player+"\n");
-		boolean endRound;
-		char c;
-		int[] coord;
-		boolean error;
-		boolean devBought = false;
-		
-		devBought = dices();
-		
-		do {
-			PlayerView.printScore(player);
-			PlayerView.printResources(player);
-			PlayerView.printDevelopmentCards(player);
-			System.out.println("\n");
-			endRound = false;
 
-			// A enlever
-			// System.out.println("éteindre ? (o/n)");
-			// if (sc.nextLine().charAt(0) == 'o')
-			// 	System.exit(0);
-			//thiefAction();
-			//
+		if (player instanceof AI) {
 
-			c = askAction(devBought);
-			System.out.println();
-			coord = null;
-			error = true;
+			((AI) player).midGame(game);
+
+		}else {
+		
+			System.out.println("Au tour de "+player+"\n");
+			boolean endRound;
+			char c;
+			int[] coord;
+			boolean error;
+			boolean devBought = false;
+			
+			devBought = dices();
 			
 			do {
-				switch(c) {
-					case 'c': // Construire une colonie
-						if(!player.canAffordColony()) {// Si il n'a pas assez d'argent. Ou il n'a pas de colony dans son inventaire.
-							System.out.println("Vous n'avez pas les ressources pour construire une colonie !");
-							error = false;
-						}
-						else {
-							coord = askCoord(); // Coordonnees forcement dans le plateau.
-							int ans = player.canBuildColonyOn(board, coord, false); // ans ne peut pas etre egale a 1 ici.
-							if(ans == 2)
-									System.out.println("Vous ne pouvez pas poser de colonie ici !");
-							else if(ans == 3)
-									System.out.println("Il y a deja une colonie ou une ville aux alentours !");
-							else {
-								error = false;
-								board.putColony(player, coord[0], coord[1], false);
-							}
-						}
-						break;
-					case 'v': // Construire une ville
-						if(!player.canAffordTown()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
-							System.out.println("Vous n'avez pas les ressources pour construire une ville !");
-							error = false;
-						}
-						else {
-							coord = askCoord(); // Coordonnees forcement dans le plateau.
-							int ans = player.canBuildTownOn(board, coord); // ans ne peut pas etre egale a 1 ici.
-							if(ans == 2)
-									System.out.println("Cette case n'est pas une colonie !");
-							else if(ans == 3)
-									System.out.println("Cette colonie n'est pas a vous !");
-							else {
-								error = false;
-								board.putTown(player, coord[0], coord[1]);
-							}
-						}
-						break;
-					case 'r': // Construire une route
-						if(!player.canAffordRoad()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
-							System.out.println("Vous n'avez pas les ressources pour construire une route !");
-							error = false;
-						}
-						else {
-							coord = askCoord(); // Coordonnees forcement dans le plateau.
-							int ans = player.canBuildRoadOn(board, coord, false); // ans ne peut pas etre egale a 1 ici.
-							if(ans == 2)
-									System.out.println("Vous ne pouvez pas poser de route ici !");
-							else {
-								error = false;
-								board.putRoad(player, coord[0], coord[1], false);
-								game.refreshLongestRoadOwner();
-							}
-						}
-						break;
-					case 'd': // Acheter une carte de développement
-						if(!player.canAffordDevCard()) {
-							System.out.println("Vous n'avez pas les ressources pour acheter une carte de développement !");
-						}
-						else {
-							int ans = player.canBuyDevCard(game);
-							if(ans == 2) 
-								System.out.println("Il n'y a plus de carte développement dans le paquet !");
-							else {
-								player.getDevCard(game);
-								devBought = true;
-							}
-						}
-						error = false;
-						break;
-					case 'u': // Utiliser une carte de développement
-						if (player.getNbDevCard(new Knight()) == 0 && player.getNbDevCard(Progress.ROAD_CONSTRUCTION) == 0 && player.getNbDevCard(Progress.INVENTION) == 0 && player.getNbDevCard(Progress.MONOPOLY) == 0) {
-							System.out.println("Vous n'avez pas de carte de développement !");
-						}else {
-							boolean used = false;
-							while (!used)
-								used = useDev(player);
-						}
-						break;
-					case 'e': // Echanger des ressources
-						error = !portAction();
-						break;
-					case 't': // Passer au tour suivant
-						error = false;
-						endRound = true;
-						player.refreshDevCards();
-						break;
-				}
+				PlayerView.printScore(player);
+				PlayerView.printResources(player);
+				PlayerView.printDevelopmentCards(player);
+				System.out.println("\n");
+				endRound = false;
+
+				// A enlever
+				// System.out.println("éteindre ? (o/n)");
+				// if (sc.nextLine().charAt(0) == 'o')
+				// 	System.exit(0);
+				//thiefAction();
+				//
+
+				c = askAction(devBought);
 				System.out.println();
+				coord = null;
+				error = true;
 				
-			} while(error && !player.hasWon());
-			
-		} while(!endRound && !player.hasWon());
+				do {
+					switch(c) {
+						case 'c': // Construire une colonie
+							if(!player.canAffordColony()) {// Si il n'a pas assez d'argent. Ou il n'a pas de colony dans son inventaire.
+								System.out.println("Vous n'avez pas les ressources pour construire une colonie !");
+								error = false;
+							}
+							else {
+								coord = askCoord(); // Coordonnees forcement dans le plateau.
+								int ans = player.canBuildColonyOn(board, coord, false); // ans ne peut pas etre egale a 1 ici.
+								if(ans == 2)
+										System.out.println("Vous ne pouvez pas poser de colonie ici !");
+								else if(ans == 3)
+										System.out.println("Il y a deja une colonie ou une ville aux alentours !");
+								else {
+									error = false;
+									board.putColony(player, coord[0], coord[1], false);
+								}
+							}
+							break;
+						case 'v': // Construire une ville
+							if(!player.canAffordTown()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
+								System.out.println("Vous n'avez pas les ressources pour construire une ville !");
+								error = false;
+							}
+							else {
+								coord = askCoord(); // Coordonnees forcement dans le plateau.
+								int ans = player.canBuildTownOn(board, coord); // ans ne peut pas etre egale a 1 ici.
+								if(ans == 2)
+										System.out.println("Cette case n'est pas une colonie !");
+								else if(ans == 3)
+										System.out.println("Cette colonie n'est pas a vous !");
+								else {
+									error = false;
+									board.putTown(player, coord[0], coord[1]);
+								}
+							}
+							break;
+						case 'r': // Construire une route
+							if(!player.canAffordRoad()) {// Si il n'a pas assez d'argent. Ou il n'a pas de ville dans son inventaire.
+								System.out.println("Vous n'avez pas les ressources pour construire une route !");
+								error = false;
+							}
+							else {
+								coord = askCoord(); // Coordonnees forcement dans le plateau.
+								int ans = player.canBuildRoadOn(board, coord, false); // ans ne peut pas etre egale a 1 ici.
+								if(ans == 2)
+										System.out.println("Vous ne pouvez pas poser de route ici !");
+								else {
+									error = false;
+									board.putRoad(player, coord[0], coord[1], false);
+									game.refreshLongestRoadOwner();
+								}
+							}
+							break;
+						case 'd': // Acheter une carte de développement
+							if(!player.canAffordDevCard()) {
+								System.out.println("Vous n'avez pas les ressources pour acheter une carte de développement !");
+							}
+							else {
+								int ans = player.canBuyDevCard(game);
+								if(ans == 2) 
+									System.out.println("Il n'y a plus de carte développement dans le paquet !");
+								else {
+									player.getDevCard(game);
+									devBought = true;
+								}
+							}
+							error = false;
+							break;
+						case 'u': // Utiliser une carte de développement
+							if (player.getNbDevCard(new Knight()) == 0 && player.getNbDevCard(Progress.ROAD_CONSTRUCTION) == 0 && player.getNbDevCard(Progress.INVENTION) == 0 && player.getNbDevCard(Progress.MONOPOLY) == 0) {
+								System.out.println("Vous n'avez pas de carte de développement !");
+							}else {
+								boolean used = false;
+								while (!used)
+									used = useDev(player);
+							}
+							break;
+						case 'e': // Echanger des ressources
+							error = !portAction();
+							break;
+						case 't': // Passer au tour suivant
+							error = false;
+							endRound = true;
+							player.refreshDevCards();
+							break;
+					}
+					System.out.println();
+					
+				} while(error && !player.hasWon());
+				
+			} while(!endRound && !player.hasWon());
+
+		}
 		
 	}
 

@@ -7,14 +7,16 @@ public class DevelopmentCardsDeck extends LinkedList<DevelopmentCard> {
 	private static final long serialVersionUID = 1L;
 
 	public DevelopmentCardsDeck() {
-		int nb = 2;
+		// Nombre de cartes de Catane d'apres le site internet :
+		// http://jeuxstrategie.free.fr/Siedler_complet.php
 		
 		DevelopmentCard[] tab;
 		tab = VictoryPoints.values();
-		addCards(tab, nb);
+		addCards(tab, 1);
 		tab = Progress.values();
-		addCards(tab, nb);
-		addCards(new Knight(), nb);
+		addCards(tab, 1);
+		addCards(new Knight(), 14);
+		
 		mixCards();
 	}
 	

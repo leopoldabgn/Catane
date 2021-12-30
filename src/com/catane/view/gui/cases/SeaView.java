@@ -14,7 +14,7 @@ public class SeaView extends CaseView {
 		super(board);
 		this.sea = sea;
 		isSelectable = false;
-		setBackground(Color.BLUE);
+		setBackground(new Color(66, 188, 245));
 	}
 	
 }

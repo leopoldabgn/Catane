@@ -33,10 +33,11 @@ public class ColonyView extends MovableCaseView {
 			if(isEmpty()) {
 				if(actualPlayer.canBuildColonyOn(board, board.getIndexesOf(colony), boardView.getGameView().isEarly()) != 0) {
 					// On affiche un message d'erreur. Impossible de poser la colony.
-					System.out.println("Impossible de construire la colonie : "+actualPlayer.canBuildColonyOn(board, board.getIndexesOf(colony), boardView.getGameView().isEarly()));
 					return;
 				}
 				boardView.putColony(actualPlayer, this, boardView.getGameView().isEarly());
+				boardView.getGame().refreshLongestRoadOwner(); // On verifie si la personne qui detient la carte a change.
+				boardView.getGameView().getActionPanel().refreshOptions();
 				
 				this.setOpaque(true);
 				this.setLayout(new BorderLayout());
@@ -47,10 +48,10 @@ public class ColonyView extends MovableCaseView {
 				if (boardView.getGameView().isTownActive()) {
 					if(actualPlayer.canBuildTownOn(board, board.getIndexesOf(colony)) != 0) {
 						// On affiche un message d'erreur. Impossible de poser la ville.
-						System.out.println("Impossible de construire la ville : "+actualPlayer.canBuildColonyOn(board, boardView.getIndexesOf(this), boardView.getGameView().isEarly()));
 						return;
 					}
 					boardView.putTown(actualPlayer, this);
+					boardView.getGameView().getActionPanel().refreshOptions();
 				}
 			}
 			BoardView.display(boardView.getBoardModel());
@@ -59,7 +60,7 @@ public class ColonyView extends MovableCaseView {
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbColonies() == 2)
 				boardView.getGameView().disableColony();
 			
-			if(boardView.getActualPlayer().hasWon())
+			if(boardView.getActualPlayer().hasWon()) // On verifie si il vient de gagne la partie
 				boardView.getGameView().displayVictoryFrame();
 		}
 	}

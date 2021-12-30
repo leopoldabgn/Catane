@@ -38,7 +38,7 @@ public class DeckView extends JPanel {
 	public void refresh() {
 		this.removeAll();
 		cards.removeAll(cards);
-		int x = 15;
+		int x = 10;
 		DevCardView cardView;
 		for(DevelopmentCard card : player.getDevCards()) {
 			// On skip les cartes qui ne nous interesse pas
@@ -49,14 +49,35 @@ public class DeckView extends JPanel {
 			cards.add(cardView);
 			add(cardView);
 			cardView.setLocation(x, upSpace);
-			x += CardView.WIDTH-15;
+			//x += CardView.WIDTH-15;
+			x += getCoeff();
 		}
 		revalidate();
 		repaint();
 	}
 	
+	public int totalCards() {
+		int size = 0;
+		for(DevelopmentCard card : player.getDevCards()) {
+			// On skip les cartes qui ne nous interesse pas
+			if(victoryPoints && !(card instanceof VictoryPoints) ||
+			  !victoryPoints &&   card instanceof VictoryPoints)
+				continue;
+			size++;
+		}
+		return size;
+	}
+	
 	public int getCoeff() {
-		return -1;
+		int totalCards = totalCards();
+		int start = 10;
+		int coeff = CardView.WIDTH-15;
+		
+		while(start+coeff*totalCards+CardView.WIDTH > getWidth()-20) {
+			coeff -= 5;
+		}
+		
+		return coeff;
 	}
 	
 	public void changePlayer(Player player) {

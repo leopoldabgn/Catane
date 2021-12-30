@@ -1,9 +1,12 @@
 package com.catane.view.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -37,15 +40,32 @@ public class PlayersDataView extends JPanel {
 
 		private Player player;
 		
-		private JLabel name;
-		private JLabel score;
+		private JLabel name, score,
+		longestRoad = new JLabel("Route la plus longue"),
+		mostPowerfulArmy = new JLabel("Armée la plus puissante");
 		
 		public PlayerDataPanel(Player player) {
 			this.player = player;
 			name = new JLabel(player.toString());
 			score = new JLabel("Score : "+player.getScore());
-			add(name);
-			add(score);
+			
+			JPanel pan = new JPanel();
+			pan.setOpaque(false);
+			
+			pan.add(new Square(player.getColor(), 13, 13));
+			pan.add(name);
+			pan.add(score);
+			
+			this.add(pan);
+			
+			pan = new JPanel();
+			pan.setOpaque(false);
+			pan.setLayout(new BoxLayout(pan, BoxLayout.PAGE_AXIS));
+			pan.add(longestRoad);
+			pan.add(mostPowerfulArmy);
+			
+			this.add(pan);
+			
 			refresh();
 		}
 		
@@ -54,9 +74,39 @@ public class PlayersDataView extends JPanel {
 				setBorder(BorderFactory.createEtchedBorder(Color.RED, Color.PINK));
 			else
 				setBorder(BorderFactory.createEtchedBorder(Color.WHITE, Color.BLACK));
+			
+			if(game.longestRoadOwner() == player)
+				longestRoad.setVisible(true);
+			else
+				longestRoad.setVisible(false);
+			
+			if(game.mostPowerfulArmyOwner() == player)
+				mostPowerfulArmy.setVisible(true);
+			else
+				mostPowerfulArmy.setVisible(false);
+			
 			score.setText("Score : "+player.getScore());
+			
 			revalidate();
 			repaint();
+		}
+		
+	}
+	
+	private class Square extends JPanel {
+		
+		private Color color;
+		
+		public Square(Color color, int w, int h) {
+			this.color = color;
+			setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			setPreferredSize(new Dimension(w, h));
+		}
+		
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.setColor(color);
+			g.fillRect(0, 0, getWidth(), getHeight());
 		}
 		
 	}

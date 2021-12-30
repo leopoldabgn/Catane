@@ -36,6 +36,8 @@ public class RoadView extends MovableCaseView {
 				return;
 			}
 			boardView.putRoad(actualPlayer, this, boardView.getGameView().isEarly());
+			boardView.getGameView().getActionPanel().refreshOptions();
+			boardView.getGame().refreshLongestRoadOwner(); // On verifie si la personne qui detient la carte a change.
 			
 			this.setOpaque(true);
 			this.setLayout(new BorderLayout());

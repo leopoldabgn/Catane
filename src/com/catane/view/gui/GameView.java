@@ -90,9 +90,11 @@ public class GameView extends JPanel {
 				int[] vals = game.rollDices();
 				int value = vals[0]+vals[1];
 				dicesLbl.setText("Dés : "+value);
+				game.getBoard().gainResource(value);
+				refreshInfos();
+				dices.setEnabled(false); // Le faire avant refreshOptions ! Attention.
 				actionPanel.refreshOptions();
 				nextTurnButton.setEnabled(true);
-				dices.setEnabled(false);
 				revalidate();
 				repaint();
 			}
@@ -235,7 +237,7 @@ public class GameView extends JPanel {
 		dices.setVisible(true);
 	}
 	
-	private class ActionPanel extends JPanel {
+	public class ActionPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 		
 		private ButtonGroup group;
@@ -278,6 +280,8 @@ public class GameView extends JPanel {
 		}
 	
 		public void refreshOptions() {
+			if(dices.isEnabled())
+				return;
 			Player player = game.getActualPlayer();
 			if(player.canAffordColony())
 				colony.setEnabled(true);
@@ -325,6 +329,10 @@ public class GameView extends JPanel {
 			gui.setHomePage();
 		else
 			gui.close();
+	}
+	
+	public ActionPanel getActionPanel() {
+		return actionPanel;
 	}
 	
 	public PlayersDataView getPlayersDataView() {

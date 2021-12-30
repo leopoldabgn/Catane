@@ -18,7 +18,7 @@ public abstract class CaseView extends JPanel implements MouseListener {
 	// Et les cases routes ont leur bordure en rouge par exemple
 	// Et si le joueur clique sur une case avec isSelectable = false;
 	// Alors l'action est directement ignoree.
-	protected boolean isSelectable = true;
+	protected boolean isSelectable = false;
 	protected BoardView boardView;
 	
 	public CaseView(BoardView boardView) {

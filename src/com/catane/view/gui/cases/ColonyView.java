@@ -1,12 +1,13 @@
 package com.catane.view.gui.cases;
 
-import java.awt.Graphics;
+import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
 
 import com.catane.model.Board;
 import com.catane.model.Player;
 import com.catane.model.cases.Colony;
 import com.catane.view.gui.BoardView;
+import com.catane.view.gui.IconPanel;
 
 public class ColonyView extends MovableCaseView {
 	private static final long serialVersionUID = 1L;
@@ -36,6 +37,11 @@ public class ColonyView extends MovableCaseView {
 					return;
 				}
 				boardView.putColony(actualPlayer, this, boardView.getGameView().isEarly());
+				
+				this.setOpaque(true);
+				this.setLayout(new BorderLayout());
+				this.setBackground(actualPlayer.getColor());
+				add(new IconPanel("colony_64", 32), BorderLayout.CENTER);
 			}
 			else {
 				if (boardView.getGameView().isTownActive()) {
@@ -58,15 +64,16 @@ public class ColonyView extends MovableCaseView {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		super.mouseEntered(e);
-		// On dessine un triangle avec la couleur du joueur actuel (recuperer via boardView.getActualPlayer() Par exemple)
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		super.mouseExited(e);
-		// On efface le triangle avec la couleur du joueur actuel (recuperer via boardView.getActualPlayer() Par exemple)
+
 	}
 	
+	/* Ancienne methode : On dessinait un triangle.
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -80,5 +87,5 @@ public class ColonyView extends MovableCaseView {
 		int[] valY = {size - space, space, size - space};
 		g.fillPolygon(valX, valY, 3);
 	}
-	
+	*/
 }

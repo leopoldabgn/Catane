@@ -1,3 +1,7 @@
-wheat.png, stone.png, wood.png, boat.png, dices.png -> by Freepik : https://www.freepik.com
+wheat.png, stone.png, wood.png, boat.png, dices.png, colony.png, mountain.png, desert.png, field.png, pre.png, road.png -> by Freepik : https://www.freepik.com
 wool.png  -> by Those Icons : https://www.flaticon.com/authors/those-icons
 clay.png  -> Good Ware : https://www.flaticon.com/authors/good-ware
+town.png  -> Eucalyp : https://www.flaticon.com/fr/auteurs/eucalyp
+hill.png ->  Vitaly Gorbachev : https://www.flaticon.com/authors/vitaly-gorbachev
+forest.png -> Smashicons : https://www.flaticon.com/authors/smashicons 
+stealer.png -> alkhalifi design : https://www.flaticon.com/authors/alkhalifi-design

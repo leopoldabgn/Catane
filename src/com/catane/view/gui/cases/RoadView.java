@@ -1,5 +1,6 @@
 package com.catane.view.gui.cases;
 
+import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
@@ -7,6 +8,7 @@ import com.catane.model.Board;
 import com.catane.model.Player;
 import com.catane.model.cases.Road;
 import com.catane.view.gui.BoardView;
+import com.catane.view.gui.IconPanel;
 
 public class RoadView extends MovableCaseView {
 	private static final long serialVersionUID = 1L;
@@ -34,11 +36,22 @@ public class RoadView extends MovableCaseView {
 				return;
 			}
 			boardView.putRoad(actualPlayer, this, boardView.getGameView().isEarly());
-			System.out.println("Longest Road : "+boardView.getBoardModel().getLongestRoad(actualPlayer));
-			revalidate();
-			repaint();
+			
+			this.setOpaque(true);
+			this.setLayout(new BorderLayout());
+			this.setBackground(actualPlayer.getColor());
+			IconPanel iconPan;
+			if(road.isVertical())
+				iconPan = new IconPanel("road_v_64", 32);
+			else
+				iconPan = new IconPanel("road_h_64", 32, false);
+			add(iconPan, BorderLayout.CENTER);
+			
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbRoads() == 2)
 				boardView.getGameView().disableRoad();
+			
+			revalidate();
+			repaint();
 		}
 	}
 	

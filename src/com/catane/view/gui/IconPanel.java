@@ -2,7 +2,6 @@ package com.catane.view.gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridBagLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,11 +13,16 @@ public class IconPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private BufferedImage icon, defaultIcon, grayIcon;
+	private boolean center = true;
+	
+	public IconPanel(String path, int size, boolean center) {
+		this(path, size);
+		this.center = center;
+	}
 	
 	public IconPanel(String path, int size) {
 		this.setPreferredSize(new Dimension(size, size));
 		setOpaque(false);
-		this.setLayout(new GridBagLayout());
 		String name = path;
 		path = convertPath(path);
 		
@@ -27,6 +31,7 @@ public class IconPanel extends JPanel {
 		}
 		catch(IOException e) {
 			e.printStackTrace();
+			System.out.println(path);
 		}
 		
 		defaultIcon = icon;
@@ -64,7 +69,11 @@ public class IconPanel extends JPanel {
 		super.paintComponent(g);
 		int size = Math.min(getWidth(), getHeight());
 		if(icon != null) {
-			g.drawImage(icon, 0, 0, size, size, null);
+			if(center)
+				g.drawImage(icon, (getWidth()-size)/2, 
+						(getHeight()-size)/2, size, size, null);
+			else
+				g.drawImage(icon, 0, 0, getWidth(), size, null);
 		}
 	}
 }

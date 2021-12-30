@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.catane.model.Resource;
@@ -64,14 +65,26 @@ public class CardView extends JPanel {
 				@Override
 				public void mousePressed(MouseEvent e) {
 					super.mousePressed(e);
-					
+					int ans = JOptionPane.showOptionDialog(null,
+								 "Voulez-vous utiliser votre carte "+devCard.toString().toLowerCase()+" ?",
+					             devCard.toString(),
+					             JOptionPane.YES_NO_OPTION,
+					             JOptionPane.QUESTION_MESSAGE,
+					             null,
+					             new String[] {"Oui", "Non"}, "Oui");
 					if(devCard instanceof Knight) {
-						// .....
+
 					}
 					else if(devCard instanceof Progress) {
-						// .....
-						// If monopoly...
-						// if ...
+						if(devCard == Progress.ROAD_CONSTRUCTION) {
+							
+						}
+						else if(devCard == Progress.MONOPOLY) {
+							
+						}
+						else if(devCard == Progress.INVENTION) {
+							
+						}
 					}
 				}
 				

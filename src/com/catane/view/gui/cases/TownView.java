@@ -1,19 +1,26 @@
 package com.catane.view.gui.cases;
 
-import java.awt.Graphics;
+import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
 
+import com.catane.model.Player;
 import com.catane.model.cases.Town;
 import com.catane.view.gui.BoardView;
+import com.catane.view.gui.IconPanel;
 
 public class TownView extends ColonyView {
 	private static final long serialVersionUID = 1L;
 
 	private Town town;
 	
-	public TownView(BoardView board, Town town) {
-		super(board, town);
+	public TownView(BoardView boardView, Town town) {
+		super(boardView, town);
 		this.town = town;
+		this.setOpaque(true);
+		this.setLayout(new BorderLayout());
+		Player actualPlayer = boardView.getActualPlayer();
+		this.setBackground(actualPlayer.getColor());
+		add(new IconPanel("town_64", 32), BorderLayout.CENTER);
 	}
 	
 	@Override
@@ -24,15 +31,16 @@ public class TownView extends ColonyView {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		super.mouseEntered(e);
-		// On dessine un cercle de la couleur du joueur actuel (recuperer via board.getActualPlayer() Par exemple)
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		super.mouseExited(e);
-		// On efface le cercle de la joueur du joueur actuel (recuperer via board.getActualPlayer() Par exemple)
+
 	}
 	
+	/* Ancienne methode : on dessinait un cercle.
 	@Override
 	public void paintComponent(Graphics g) {
 		// super.paintComponent(g); // On n'appelle pas cette methode pour eviter que ça dessine le cercle de Colony sous le triangle.
@@ -44,5 +52,5 @@ public class TownView extends ColonyView {
 		int space = (int)(coeff*getWidth()); // Le panel est un carré normalement, donc getWidth == getHeigt.
 		g.fillOval(space, space, getWidth() - 2*space, getHeight() - 2*space);
 	}
-	
+	*/
 }

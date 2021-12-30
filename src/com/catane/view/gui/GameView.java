@@ -84,7 +84,7 @@ public class GameView extends JPanel {
 				int[] vals = game.rollDices();
 				int value = vals[0]+vals[1];
 				dicesLbl.setText("Dés : "+value);
-				actionPanel.setButtonsEnabled(true);
+				actionPanel.refreshOptions();
 				nextTurnButton.setEnabled(true);
 				dices.setEnabled(false);
 				revalidate();
@@ -184,7 +184,7 @@ public class GameView extends JPanel {
 				isTownActive = true;
 				isRoadActive = true;
 				early = false;
-				startGame(boardView, northPan, southPan);
+				startGame(boardView, northPan, eastPan, southPan);
 			}else {
 				if (game.getActualPlayer().isReady()) {
 					game.nextRound();
@@ -201,8 +201,13 @@ public class GameView extends JPanel {
 		this.setLayout(new BorderLayout());
 		this.add(northPan, BorderLayout.NORTH);
 		this.add(boardView, BorderLayout.CENTER);
+		
+		// Tu mets ça en commentaire si tu veux continuer ton travail
+		////////////////
 		this.add(eastPan, BorderLayout.EAST);
 		this.add(southPan, BorderLayout.SOUTH);
+		////////////////
+		
 		//this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
 
 	}
@@ -215,10 +220,11 @@ public class GameView extends JPanel {
 		return r;
 	}
 	
-	public void startGame(JPanel boardView, JPanel northPan, JPanel southPan) {
+	public void startGame(JPanel boardView, JPanel northPan, JPanel eastPan, JPanel southPan) {
 		this.removeAll();
 		this.add(boardView, BorderLayout.CENTER);
 		this.add(northPan, BorderLayout.NORTH);
+		this.add(eastPan, BorderLayout.EAST);
 		this.add(southPan, BorderLayout.SOUTH);
 	}
 	
@@ -264,7 +270,18 @@ public class GameView extends JPanel {
 			setButtonsEnabled(false);
 		}
 	
+		public void refreshOptions() {
+			Player player = game.getActualPlayer();
+			if(player.canAffordColony())
+				colony.setEnabled(true);
+			if(player.canAffordTown())
+				town.setEnabled(true);
+			if(player.canAffordRoad())
+				road.setEnabled(true);
+		}
+		
 		public void setButtonsEnabled(boolean enable) {
+			group.clearSelection();
 			colony.setEnabled(enable);
 			town.setEnabled(enable);
 			road.setEnabled(enable);

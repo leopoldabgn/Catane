@@ -1,16 +1,15 @@
 package com.catane.view.gui.cases;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
 import com.catane.model.cases.ResourceCase;
@@ -21,39 +20,56 @@ import com.catane.model.cases.ResourceCase.Hill;
 import com.catane.model.cases.ResourceCase.Mountain;
 import com.catane.model.cases.ResourceCase.Pre;
 import com.catane.view.gui.BoardView;
+import com.catane.view.gui.IconPanel;
 
 public abstract class ResourceCaseView extends CaseView {
 	private static final long serialVersionUID = 1L;
 
 	private ResourceCase modelCase;
 	
-	private GridBagConstraints gbc = new GridBagConstraints();
+	private JPanel mainPan;
 	
 	public ResourceCaseView(BoardView board, ResourceCase rC) {
 		super(board);
 		this.modelCase = rC;
 		setBorder(BorderFactory.createBevelBorder(EtchedBorder.RAISED));
-		setPreferredSize(new Dimension(80, 80));
+		//setBorder(BorderFactory.createBevelBorder(EtchedBorder.RAISED));
 		setBackground(getColor());
+		//setBackground(Color.WHITE);
+		setLayout(new BorderLayout());
 		
-		setLayout(new GridBagLayout());
+		mainPan = new JPanel();
+		mainPan.setOpaque(false);
+		mainPan.setLayout(new GridLayout(1, 2));
 		
-		JLabel label = new JLabel(rC.toString());
-		label.setFont(new Font("Verdana", Font.BOLD, 14));
-		label.setForeground(Color.BLACK);
+		JPanel tmp = new JPanel();
+		tmp.setOpaque(false);
+		tmp.setLayout(new GridLayout());
+		tmp.add(new IconPanel(rC.getClass().getSimpleName().toLowerCase()+"_64", 32));
+		mainPan.add(tmp);
+	    
+		tmp = new JPanel();
+		tmp.setOpaque(false);
+		tmp.setLayout(new BorderLayout());
 		
-	    gbc.gridx = 0;
-	    gbc.gridy = 0; 
-		add(label, gbc); // On place le label en haut(gridy=0)
-		
-		gbc.gridx = 0;
-		gbc.gridy = 1; // On place un cercle ou le voleur en dessous.(gridy=1)
 		if(hasThief()) {
-			add(new Thief(10, 20), gbc);
+			tmp.add(new IconPanel("stealer_64", 64), BorderLayout.CENTER);
+			mainPan.add(tmp);
 		}
 		else if(!(this instanceof DesertView)) { // Le desert n'a pas de chiffre.
-			add(new Circle(getNumber(), (int)getPreferredSize().getWidth()/5), gbc); // 80
+			//add(new Circle(getNumber(), (int)getPreferredSize().getWidth()/5), gbc); // 80
+			JLabel lbl = new JLabel(getNumber()+"", SwingConstants.CENTER);
+			lbl.setFont(new Font("Verdana", Font.BOLD, 13));
+			if(getNumber() == 6 || getNumber() == 8)
+				lbl.setForeground(Color.RED);
+			else
+				lbl.setForeground(Color.BLACK);
+			tmp.add(lbl, BorderLayout.CENTER);
+			mainPan.add(tmp);
 		}
+		
+		
+		this.add(mainPan, BorderLayout.CENTER);
 	}
 	
 	@Override
@@ -71,56 +87,6 @@ public abstract class ResourceCaseView extends CaseView {
 			setBorder(BorderFactory.createBevelBorder(EtchedBorder.RAISED));
 	}
 	
-	public class Circle extends JPanel {
-		private static final long serialVersionUID = 1L;
-
-		private JLabel number;
-		
-		public Circle(int number, int size) {
-			setPreferredSize(new Dimension(size, size)); // On change la dimension du panel
-			this.number = new JLabel(number+"");
-			if(number == 6 || number == 8)
-				this.number.setForeground(Color.RED); // Couleur rouge pour le 6 et le 8
-			else
-				this.number.setForeground(Color.BLACK);
-			setOpaque(false); // Comme on va dessiner un rond, il ne faut pas qu'on voit les coins carres du panel
-			setLayout(new GridBagLayout()); // Pour centrer les elements a l'interieur
-			add(this.number); // On ajoute le JLabel au panel
-			
-		}
-		
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			double width = getPreferredSize().getWidth();
-			double height = getPreferredSize().getHeight();
-			g.setColor(Color.WHITE);
-			g.fillOval(0, 0, (int)width, (int)height); // On dessine un cercle au centre qui fait la taille du panel
-			g.setColor(Color.BLACK);
-			g.drawOval(0, 0, (int)width, (int)height);
-		}
-		
-	}
-	
-	public class Thief extends JPanel {
-		private static final long serialVersionUID = 1L;
-		
-		public Thief(int width, int height) {
-			setPreferredSize(new Dimension(width, height)); // On change la dimension du panel
-			setOpaque(false); // Comme on va dessiner un rond, il ne faut pas qu'on voit les coins carres du panel
-		}
-		
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.setColor(Color.BLACK);
-			g.fillOval(0, 0, getWidth(), getWidth());
-			int space = 0;
-			int[] valX = {space, getWidth()/2, getWidth() - space};
-			int[] valY = {getHeight() - space, space, getHeight() - space};
-			g.fillPolygon(valX, valY, 3);
-		}
-		
-	}
-	
 	public int getNumber() {
 		return modelCase.getNumber();
 	}
@@ -135,12 +101,14 @@ public abstract class ResourceCaseView extends CaseView {
 		modelCase.setThief(thief);
 		
 		// TODO : ATTENTION : cas ou le voleur revient sur le desert peut causer une erreur
-		remove(getComponentCount()-1); // On retire le dernier element
+		mainPan.remove(getComponentCount()-1); // On retire le dernier element
 		if(thief) {
-			add(new Thief(10, 20), gbc);
+			mainPan.add(new IconPanel("stealer_64", 64));
 		}
 		else if(!(this instanceof DesertView)) { // Le desert n'a pas de chiffre.
-			add(new Circle(getNumber(), 80), gbc);
+			//add(new Circle(getNumber(), 80), gbc);
+			JLabel lbl = new JLabel(getNumber()+"");
+			mainPan.add(lbl);
 		}
 		repaint();
 	}

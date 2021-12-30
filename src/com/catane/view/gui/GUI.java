@@ -13,8 +13,7 @@ public class GUI extends JFrame {
 	private int height;
 	
 	// Pour l'instant la GUI prend un game en parametre.
-	public GUI(Game game, int w, int h) {
-		super();
+	public GUI(int w, int h) {
 		this.setTitle("Catane");
 		this.width = w;
 		this.height = h;
@@ -25,11 +24,8 @@ public class GUI extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setDefaultLookAndFeelDecorated(true);
-		
-		// Pour l'instant on appelle ça ici.
-		//setGameViewPage(game);
 
-		setHomePage(game);
+		setHomePage();
 		
 		this.setVisible(true);
 	}
@@ -42,21 +38,29 @@ public class GUI extends JFrame {
 		this.setSize(new Dimension(width, height));
 		this.setResizable(true);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.getContentPane().add(new GameView(game));
+		this.getContentPane().add(new GameView(this, game));
 		revalidate();
 	}
 
-	public void setHomePage(Game game) {
+	public void setHomePage() {
+		this.setExtendedState(JFrame.NORMAL);
+		this.setMinimumSize(new Dimension(1000, 650));
+		this.setSize(new Dimension(1000, 650));
 		this.getContentPane().removeAll();
-		this.getContentPane().add(new HomeView(this, game));
+		this.getContentPane().add(new HomeView(this));
 		revalidate();
 		setResizable(false);
 	}
 
-	public void setSettingsPage(Game game) {
+	public void setSettingsPage() {
 		this.getContentPane().removeAll();
-		this.getContentPane().add(new SettingsView(this, game));
+		this.getContentPane().add(new SettingsView(this, new Game()));
 		revalidate();
+	}
+	
+	public void close() {
+    	this.dispose();
+        System.exit(0);
 	}
 	
 }

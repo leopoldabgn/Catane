@@ -22,8 +22,8 @@ public class CLI {
 	private Board board;
 	private Scanner sc;
 	
-	public CLI(Game game) {
-		this.game = game;
+	public CLI() {
+		this.game = new Game();
 		startGame();
 	}
 	
@@ -36,7 +36,7 @@ public class CLI {
 		int size;
 		do {
 			System.out.println("Combien de case doit comporter le plateau ? (4x4 -> 4, 6x6 -> 6)");
-			size = sc.nextInt();
+			size = askNumber();
 		}while (size != 4 && size != 6);
 		game.setBoard(size);
 		board = game.getBoard();
@@ -45,14 +45,13 @@ public class CLI {
 		int ia;
 		do {
 			System.out.println("Voulez vous jouer à 3 ou 4 joueurs ? (3/4)");
-			p = sc.nextInt();
+			p = askNumber();
 		} while (p != 3 && p != 4);
 		do {
-			System.out.println("Combien voulez-vous d'ordiateur ? (0/1/2/3/4)");
-			ia = sc.nextInt();
+			System.out.println("Combien voulez-vous d'ordinateur ? (0/1/2/3/4)");
+			ia = askNumber();
 		} while (ia != 0 && ia != 1 && ia != 2 && ia != 3 && ia != 4);
 		game.setupPlayers(p, Math.min(ia, p));
-		sc.nextLine();
 		System.out.println();
 
 		for (Player player : game.getPlayers()) {

@@ -17,6 +17,7 @@ import com.catane.model.Resource;
 import com.catane.model.cards.DevelopmentCard;
 import com.catane.model.cards.Knight;
 import com.catane.model.cards.Progress;
+import com.catane.model.cards.VictoryPoints;
 
 public class CardView extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -61,40 +62,42 @@ public class CardView extends JPanel {
 			super(devCard.getEnglishName());
 			this.devCard = devCard;
 			setBorder(null);
-			addMouseListener(new MouseAdapter() {
-				@Override
-				public void mousePressed(MouseEvent e) {
-					super.mousePressed(e);
-					int ans = JOptionPane.showOptionDialog(null,
-								 "Voulez-vous utiliser votre carte "+devCard.toString().toLowerCase()+" ?",
-					             devCard.toString(),
-					             JOptionPane.YES_NO_OPTION,
-					             JOptionPane.QUESTION_MESSAGE,
-					             null,
-					             new String[] {"Oui", "Non"}, "Oui");
-					if(devCard instanceof Knight) {
-
+			if(!(devCard instanceof VictoryPoints)) {
+				addMouseListener(new MouseAdapter() {
+					@Override
+					public void mousePressed(MouseEvent e) {
+						super.mousePressed(e);
+						int ans = JOptionPane.showOptionDialog(null,
+									 "Voulez-vous utiliser votre carte "+devCard.toString().toLowerCase()+" ?",
+						             devCard.toString(),
+						             JOptionPane.YES_NO_OPTION,
+						             JOptionPane.QUESTION_MESSAGE,
+						             null,
+						             new String[] {"Oui", "Non"}, "Oui");
+						if(devCard instanceof Knight) {
+	
+						}
+						else if(devCard instanceof Progress) {
+							if(devCard == Progress.ROAD_CONSTRUCTION) {
+								
+							}
+							else if(devCard == Progress.MONOPOLY) {
+								
+							}
+							else if(devCard == Progress.INVENTION) {
+								
+							}
+						}
 					}
-					else if(devCard instanceof Progress) {
-						if(devCard == Progress.ROAD_CONSTRUCTION) {
-							
-						}
-						else if(devCard == Progress.MONOPOLY) {
-							
-						}
-						else if(devCard == Progress.INVENTION) {
-							
-						}
+					
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						super.mouseEntered(e);
+						repaint();
 					}
-				}
-				
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					super.mouseEntered(e);
-					repaint();
-				}
-				
-			});
+					
+				});
+			}
 		}
 		
 		public DevelopmentCard getDevCard() {

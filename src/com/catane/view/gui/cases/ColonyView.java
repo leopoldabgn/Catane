@@ -58,6 +58,9 @@ public class ColonyView extends MovableCaseView {
 			repaint();
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbColonies() == 2)
 				boardView.getGameView().disableColony();
+			
+			if(boardView.getActualPlayer().hasWon())
+				boardView.getGameView().displayVictoryFrame();
 		}
 	}
 	

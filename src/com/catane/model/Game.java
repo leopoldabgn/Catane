@@ -17,7 +17,7 @@ public class Game {
 	private DevelopmentCardsDeck developmentCardsDeck;
 
 	public Game() {
-		//board = new Board(4);
+		Player.nextPlayerNb = 1; // On remet a 1 au cas ou il s'agirait d'une nouvelle partie.
 		developmentCardsDeck = new DevelopmentCardsDeck();
 	}
 

@@ -17,8 +17,9 @@ import com.catane.model.Game;
 import com.catane.model.Player;
 
 public class SettingsView extends JPanel {
+	private static final long serialVersionUID = 1L;
 
-    public SettingsView(GUI frame, Game game) {
+	public SettingsView(GUI frame, Game game) {
         setBackground(Color.ORANGE);
         FlowLayout layout = new FlowLayout();
         layout.setHgap(500);
@@ -29,7 +30,7 @@ public class SettingsView extends JPanel {
         JButton start = new JButton("Jouer");
         JButton back = new JButton("Retour");
         back.addActionListener(event -> {
-            frame.setHomePage(game);
+            frame.setHomePage();
         });
         JPanel buttons = new JPanel();
         buttons.add(back);

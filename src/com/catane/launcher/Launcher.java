@@ -1,6 +1,5 @@
 package com.catane.launcher;
 
-import com.catane.model.Game;
 import com.catane.view.cli.CLI;
 import com.catane.view.gui.GUI;
 
@@ -13,13 +12,11 @@ public class Launcher {
 				if(args[0].toUpperCase().equals("GUI"))
 					jouer = "gui";
 		
-		Game game = new Game();
-		
 		if(jouer.equals("command")) {
-			new CLI(game);
+			new CLI();
 		}
 		else if(jouer.equals("gui")) {
-			new GUI(game, 1000, 800);
+			new GUI(1000, 800);
 		}
 
 	}

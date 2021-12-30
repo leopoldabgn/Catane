@@ -13,14 +13,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import com.catane.model.Game;
-
 public class HomeView extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private BufferedImage bg;
 
-    public HomeView(GUI frame, Game game) {
+    public HomeView(GUI frame) {
         setLayout(new GridLayout(2, 1));
         setPreferredSize(new Dimension(1000, 630));
 
@@ -37,14 +35,14 @@ public class HomeView extends JPanel {
         JButton start = new JButton("Jouer");
         start.setPreferredSize(dim);
         start.addActionListener(event -> {
-            frame.setSettingsPage(game);
+            frame.setSettingsPage();
         });
         
         // Bouton quitter
         JButton quit = new JButton("Quitter");
         quit.setPreferredSize(dim);
         quit.addActionListener(event -> {
-            System.exit(0);
+        	frame.close();
         });
 
         JPanel pan = new JPanel();

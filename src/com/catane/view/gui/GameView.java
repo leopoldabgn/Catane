@@ -10,6 +10,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.EmptyBorder;
@@ -23,7 +24,10 @@ import com.catane.view.gui.cases.PortView;
 public class GameView extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
+	private GUI gui;
 	private Game game;
+	
+	private BoardView boardView;
 	
 	private JLabel dicesLbl;
 	private PlayersDataView playersDataView;
@@ -58,7 +62,8 @@ public class GameView extends JPanel {
 		isRoadActive = false;
 	}
 	
-	public GameView(Game game) {
+	public GameView(GUI gui, Game game) {
+		this.gui = gui;
 		this.game = game;
 		int count = 0;
 		for(Player p : game.getPlayers()) {
@@ -74,7 +79,8 @@ public class GameView extends JPanel {
 		}
 		
 		dices = new IconPanel("dices_64", 32);
-
+		dices.setVisible(false);
+		
 		dices.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -104,7 +110,7 @@ public class GameView extends JPanel {
 		northPan.add(dicesLbl, BorderLayout.WEST);
 		northPan.add(tmp, BorderLayout.CENTER);
 		
-		BoardView boardView = new BoardView(this);
+		boardView = new BoardView(this);
 		resourcePan = new ResourcePanel(game);
 		actionPanel = new ActionPanel();
 		progressDeck = new DeckView(game.getActualPlayer(), false);
@@ -204,11 +210,11 @@ public class GameView extends JPanel {
 		
 		// Tu mets ça en commentaire si tu veux continuer ton travail
 		////////////////
-		this.add(eastPan, BorderLayout.EAST);
-		this.add(southPan, BorderLayout.SOUTH);
+		//this.add(eastPan, BorderLayout.EAST);
+		//this.add(southPan, BorderLayout.SOUTH);
 		////////////////
 		
-		//this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
+		this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
 
 	}
 
@@ -226,6 +232,7 @@ public class GameView extends JPanel {
 		this.add(northPan, BorderLayout.NORTH);
 		this.add(eastPan, BorderLayout.EAST);
 		this.add(southPan, BorderLayout.SOUTH);
+		dices.setVisible(true);
 	}
 	
 	private class ActionPanel extends JPanel {
@@ -304,6 +311,20 @@ public class GameView extends JPanel {
 	
 	public void refreshTradeButton(boolean enabled) {
 		tradeButton.setEnabled(enabled);
+	}
+	
+	public void displayVictoryFrame() {
+		int ans = JOptionPane.showOptionDialog(null,
+				 game.getActualPlayer()+" a gagné !",
+	             "Victoire de "+game.getActualPlayer(),
+	             JOptionPane.YES_NO_OPTION,
+	             JOptionPane.QUESTION_MESSAGE,
+	             null,
+	             new String[] {"Menu", "Quitter"}, "Menu");
+		if(ans == 0)
+			gui.setHomePage();
+		else
+			gui.close();
 	}
 	
 	public PlayersDataView getPlayersDataView() {

@@ -55,10 +55,13 @@ public class ColonyView extends MovableCaseView {
 				}
 			}
 			BoardView.display(boardView.getBoardModel());
-			revalidate();
-			repaint();
+
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbColonies() == 2)
 				boardView.getGameView().disableColony();
+			
+			boardView.getGameView().refreshInfos();
+			revalidate();
+			repaint();
 			
 			if(boardView.getActualPlayer().hasWon()) // On verifie si il vient de gagne la partie
 				boardView.getGameView().displayVictoryFrame();

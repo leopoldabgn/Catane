@@ -6,7 +6,7 @@ import com.catane.view.gui.GUI;
 public class Launcher {
 
 	public static void main(String[] args) {
-		String jouer = "command";
+		String jouer = "gui";
 		if(args != null)
 			if(args.length > 0)
 				if(args[0].toUpperCase().equals("GUI"))

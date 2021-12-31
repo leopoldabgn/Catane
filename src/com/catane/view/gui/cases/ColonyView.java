@@ -27,22 +27,24 @@ public class ColonyView extends MovableCaseView {
 	@Override
 	public void mouseReleased(MouseEvent e) { // Pas besoin de redefinir cette methode dans Town.
 		super.mouseReleased(e);
-		if (boardView.getGameView().isColonyActive()) {
+		if (boardView.getGameView().isColonyActive() || boardView.getGameView().isTownActive()) {
 			Board board = boardView.getBoardModel();
 			Player actualPlayer = boardView.getActualPlayer();
 			if(isEmpty()) {
-				if(actualPlayer.canBuildColonyOn(board, board.getIndexesOf(colony), boardView.getGameView().isEarly()) != 0) {
-					// On affiche un message d'erreur. Impossible de poser la colony.
-					return;
+				if (boardView.getGameView().isColonyActive()) {
+					if(actualPlayer.canBuildColonyOn(board, board.getIndexesOf(colony), boardView.getGameView().isEarly()) != 0) {
+						// On affiche un message d'erreur. Impossible de poser la colony.
+						return;
+					}
+					boardView.putColony(actualPlayer, this, boardView.getGameView().isEarly());
+					boardView.getGame().refreshLongestRoadOwner(); // On verifie si la personne qui detient la carte a change.
+					boardView.getGameView().getActionPanel().refreshOptions();
+					
+					this.setOpaque(true);
+					this.setLayout(new BorderLayout());
+					this.setBackground(actualPlayer.getColor());
+					add(new IconPanel("colony_64", 32), BorderLayout.CENTER);
 				}
-				boardView.putColony(actualPlayer, this, boardView.getGameView().isEarly());
-				boardView.getGame().refreshLongestRoadOwner(); // On verifie si la personne qui detient la carte a change.
-				boardView.getGameView().getActionPanel().refreshOptions();
-				
-				this.setOpaque(true);
-				this.setLayout(new BorderLayout());
-				this.setBackground(actualPlayer.getColor());
-				add(new IconPanel("colony_64", 32), BorderLayout.CENTER);
 			}
 			else {
 				if (boardView.getGameView().isTownActive()) {

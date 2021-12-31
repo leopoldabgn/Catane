@@ -58,7 +58,7 @@ public class ColonyView extends MovableCaseView {
 			revalidate();
 			repaint();
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbColonies() == 2)
-				boardView.getGameView().disableColony();
+				boardView.getGameView().setSelectedRoad(true);
 			
 			if(boardView.getActualPlayer().hasWon()) // On verifie si il vient de gagne la partie
 				boardView.getGameView().displayVictoryFrame();

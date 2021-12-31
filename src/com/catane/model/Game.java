@@ -57,7 +57,7 @@ public class Game {
 		Player player = null;
 		for (int i = 0; i < p - ia; i++) {
 			switch (i) {
-				case 0:	player = new Player(Color.ORANGE);
+				case 0:	player = new Player(Color.WHITE);
 						break;
 				case 1:	player = new Player(Color.BLUE);
 						break;

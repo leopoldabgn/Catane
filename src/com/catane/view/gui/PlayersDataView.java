@@ -2,7 +2,9 @@ package com.catane.view.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -44,10 +46,14 @@ public class PlayersDataView extends JPanel {
 		longestRoad = new JLabel("Route la plus longue"),
 		mostPowerfulArmy = new JLabel("Armée la plus puissante");
 		
+		private JPanel cardsPan;
+		
 		public PlayerDataPanel(Player player) {
 			this.player = player;
 			name = new JLabel(player.toString());
 			score = new JLabel("Score : "+player.getScore());
+			
+			setBackground(Color.WHITE);
 			
 			JPanel pan = new JPanel();
 			pan.setOpaque(false);
@@ -58,13 +64,14 @@ public class PlayersDataView extends JPanel {
 			
 			this.add(pan);
 			
-			pan = new JPanel();
-			pan.setOpaque(false);
-			pan.setLayout(new BoxLayout(pan, BoxLayout.PAGE_AXIS));
-			pan.add(longestRoad);
-			pan.add(mostPowerfulArmy);
+			cardsPan = new JPanel();
+			cardsPan.setVisible(false);
+			cardsPan.setOpaque(false);
+			cardsPan.setLayout(new BoxLayout(cardsPan, BoxLayout.PAGE_AXIS));
+			cardsPan.add(longestRoad);
+			cardsPan.add(mostPowerfulArmy);
 			
-			this.add(pan);
+			this.add(cardsPan);
 			
 			refresh();
 		}
@@ -85,6 +92,15 @@ public class PlayersDataView extends JPanel {
 			else
 				mostPowerfulArmy.setVisible(false);
 			
+			if(longestRoad.isVisible() || mostPowerfulArmy.isVisible()) {
+				setLayout(new GridLayout(2, 1));
+				cardsPan.setVisible(true);
+			}
+			else {
+				setLayout(new FlowLayout());
+				cardsPan.setVisible(false);
+			}
+			
 			score.setText("Score : "+player.getScore());
 			
 			revalidate();
@@ -94,6 +110,7 @@ public class PlayersDataView extends JPanel {
 	}
 	
 	private class Square extends JPanel {
+		private static final long serialVersionUID = 1L;
 		
 		private Color color;
 		

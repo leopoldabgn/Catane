@@ -53,4 +53,8 @@ public abstract class CaseView extends JPanel implements MouseListener {
 			setBorder(null);
 	}
 	
+	public void setSelectable(boolean selectable) {
+		this.isSelectable = selectable;
+	}
+	
 }

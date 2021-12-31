@@ -124,19 +124,23 @@ public class Game {
 		for(int i=0;i<roads.length;i++) {
 			p = players.get(i);
 			roads[i] = board.getLongestRoad(p);
+			
 			if(roads[i] >= 5 && roads[i] > maxSize) {
 					maxSize = roads[i];
+					
 					longestRoadOwner = p;
 			}
 		}
-
+		
 		if(longestRoadOwner == null)
 			return;
 		
 		for(int i=0;i<roads.length;i++) {
 			p = players.get(i);
-			if(p != longestRoadOwner && roads[i] == maxSize)
+			if(p != longestRoadOwner && roads[i] == maxSize) {
+				
 				longestRoadOwner = null;
+			}
 		}
 	}
 	// Si deux joueurs ont la même longueur de route la carte n'est pas donnée (longestRoadOwner = null)

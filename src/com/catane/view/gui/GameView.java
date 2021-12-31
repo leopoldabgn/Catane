@@ -19,7 +19,9 @@ import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.Resource;
 import com.catane.model.cases.Port;
+import com.catane.view.gui.cases.ColonyView;
 import com.catane.view.gui.cases.PortView;
+import com.catane.view.gui.cases.RoadView;
 
 public class GameView extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -56,7 +58,6 @@ public class GameView extends JPanel {
 		actionPanel.town.setSelected(selected);
 	}
 	public boolean isRoadActive() {
-		System.out.println(actionPanel.road.isSelected());
 		return actionPanel.road.isSelected();
 	}
 	public void setSelectedRoad(boolean selected) {
@@ -259,6 +260,27 @@ public class GameView extends JPanel {
 			road = new JRadioButton("Route");
 			road.setOpaque(false);
 			
+			colony.addChangeListener(e -> {
+				if(colony.isSelected())
+					boardView.changeSelectableCases(new ColonyView(null, null), true);
+				else
+					boardView.changeSelectableCases(null, true);
+			});
+			
+			town.addChangeListener(e -> {
+				if(town.isSelected())
+					boardView.changeSelectableCases(new ColonyView(null, null), false);
+				else
+					boardView.changeSelectableCases(null, true);
+			});
+			
+			road.addChangeListener(e -> {
+				if(road.isSelected())
+					boardView.changeSelectableCases(new RoadView(null, null), true);
+				else
+					boardView.changeSelectableCases(null, true);
+			});
+			
 			group = new ButtonGroup();
 			group.add(colony);
 			group.add(town);
@@ -300,6 +322,7 @@ public class GameView extends JPanel {
 			colony.setEnabled(enable);
 			town.setEnabled(enable);
 			road.setEnabled(enable);
+			boardView.changeSelectableCases(null, false);
 		}
 		
 	}

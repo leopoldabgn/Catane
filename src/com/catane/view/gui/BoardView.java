@@ -23,6 +23,7 @@ import com.catane.model.cases.Sea;
 import com.catane.model.cases.Town;
 import com.catane.view.gui.cases.CaseView;
 import com.catane.view.gui.cases.ColonyView;
+import com.catane.view.gui.cases.MovableCaseView;
 import com.catane.view.gui.cases.PortView;
 import com.catane.view.gui.cases.ResourceCaseView.DesertView;
 import com.catane.view.gui.cases.ResourceCaseView.FieldView;
@@ -227,6 +228,24 @@ public class BoardView extends JPanel {
 					return new int[] {i, j};
 		
 		return null;
+	}
+	
+	public void changeSelectableCases(CaseView c, boolean onlyEmpty) {
+		for(CaseView[] cases : casesView)
+			for(CaseView ca : cases) {
+				boolean selectable = c != null && ca.getClass().equals(c.getClass());
+				if(selectable && ca instanceof MovableCaseView) {
+					if(!(((MovableCaseView)ca).isEmpty() && onlyEmpty))
+						selectable = false;
+				}
+
+				if(selectable)
+					ca.setSelectable(true);
+				else
+					ca.setSelectable(false);
+			}
+		revalidate();
+		repaint();
 	}
 	
 	public void replaceCaseBy(CaseView c, CaseView newCase) { // newCase peut etre null, c'est autorisé.

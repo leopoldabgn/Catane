@@ -16,6 +16,9 @@ public class TownView extends ColonyView {
 	public TownView(BoardView boardView, Town town) {
 		super(boardView, town);
 		this.town = town;
+		// On le precise meme si c'est deja le cas par default...
+		this.isSelectable = false; // Cette case n'est plus selectionable
+		/////
 		this.setOpaque(true);
 		this.setLayout(new BorderLayout());
 		Player actualPlayer = boardView.getActualPlayer();

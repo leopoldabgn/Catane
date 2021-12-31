@@ -45,6 +45,15 @@ public class ColonyView extends MovableCaseView {
 					this.setBackground(actualPlayer.getColor());
 					add(new IconPanel("colony_64", 32), BorderLayout.CENTER);
 				}
+				boardView.putColony(actualPlayer, this, boardView.getGameView().isEarly());
+				boardView.getGame().refreshLongestRoadOwner(); // On verifie si la personne qui detient la carte a change.
+				boardView.getGameView().getActionPanel().refreshOptions();
+				
+				this.isSelectable = false; // Cette case n'est plus selectionable
+				this.setOpaque(true);
+				this.setLayout(new BorderLayout());
+				this.setBackground(actualPlayer.getColor());
+				add(new IconPanel("colony_64", 32), BorderLayout.CENTER);
 			}
 			else {
 				if (boardView.getGameView().isTownActive()) {
@@ -56,11 +65,13 @@ public class ColonyView extends MovableCaseView {
 					boardView.getGameView().getActionPanel().refreshOptions();
 				}
 			}
-			BoardView.display(boardView.getBoardModel());
-			revalidate();
-			repaint();
+
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbColonies() == 2)
 				boardView.getGameView().setSelectedRoad(true);
+			
+			boardView.getGameView().refreshInfos();
+			revalidate();
+			repaint();
 			
 			if(boardView.getActualPlayer().hasWon()) // On verifie si il vient de gagne la partie
 				boardView.getGameView().displayVictoryFrame();

@@ -50,7 +50,7 @@ public class RoadView extends MovableCaseView {
 			add(iconPan, BorderLayout.CENTER);
 			
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbRoads() == 2)
-				boardView.getGameView().disableRoad();
+				boardView.getGameView().clear();
 			
 			boardView.getGameView().refreshInfos();
 			revalidate();

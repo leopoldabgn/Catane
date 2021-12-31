@@ -39,27 +39,31 @@ public class GameView extends JPanel {
 
 	private int nbReady;
 	private boolean early = true;
-	private boolean isColonyActive = true;
-	private boolean isTownActive = false;
-	private boolean isRoadActive = true;
 
 	public boolean isEarly() {
 		return early;
 	}
 	public boolean isColonyActive() {
-		return isColonyActive;
+		return actionPanel.colony.isSelected();
 	}
-	public void disableColony() {
-		isColonyActive = false;
+	public void setSelectedColony(boolean selected) {
+		actionPanel.colony.setSelected(selected);
 	}
 	public boolean isTownActive() {
-		return isTownActive;
+		return actionPanel.town.isSelected();
+	}
+	public void setSelectedTown(boolean selected) {
+		actionPanel.town.setSelected(selected);
 	}
 	public boolean isRoadActive() {
-		return isRoadActive;
+		System.out.println(actionPanel.road.isSelected());
+		return actionPanel.road.isSelected();
 	}
-	public void disableRoad() {
-		isRoadActive = false;
+	public void setSelectedRoad(boolean selected) {
+		actionPanel.road.setSelected(selected);;
+	}
+	public void clear() {
+		actionPanel.group.clearSelection();
 	}
 	
 	public GameView(GUI gui, Game game) {
@@ -188,16 +192,13 @@ public class GameView extends JPanel {
 			nbReady = refreshReady();
 			if (game.getPlayers().size() == nbReady) {
 				game.nextRound();
-				isColonyActive = true;
-				isTownActive = true;
-				isRoadActive = true;
+				actionPanel.refreshOptions();
 				early = false;
 				startGame(boardView, northPan, eastPan, southPan);
 			}else {
 				if (game.getActualPlayer().isReady()) {
 					game.nextRound();
-					isColonyActive = true;
-					isRoadActive = true;
+					setSelectedColony(true);
 				}
 			}
 			refreshInfos();
@@ -217,6 +218,9 @@ public class GameView extends JPanel {
 		////////////////
 		
 		this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
+
+		// Lancer earlyGame
+		setSelectedColony(true);
 
 	}
 

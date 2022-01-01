@@ -25,6 +25,7 @@ import com.catane.view.gui.cases.CaseView;
 import com.catane.view.gui.cases.ColonyView;
 import com.catane.view.gui.cases.MovableCaseView;
 import com.catane.view.gui.cases.PortView;
+import com.catane.view.gui.cases.ResourceCaseView;
 import com.catane.view.gui.cases.ResourceCaseView.DesertView;
 import com.catane.view.gui.cases.ResourceCaseView.FieldView;
 import com.catane.view.gui.cases.ResourceCaseView.ForestView;
@@ -230,13 +231,41 @@ public class BoardView extends JPanel {
 		return null;
 	}
 	
-	public void changeSelectableCases(CaseView c, boolean onlyEmpty) {
+	public void changeSelectableCases(CaseView c, Player player, boolean onlyEmpty) {
+		changeSelectableCases(c, player, onlyEmpty, false);
+	}
+	
+	public void changeSelectableCases(CaseView c, Player player, boolean onlyEmpty, boolean early) {
+		boolean selectable = false;
 		for(CaseView[] cases : casesView)
 			for(CaseView ca : cases) {
-				boolean selectable = c != null && ca.getClass().equals(c.getClass());
-				if(selectable && ca instanceof MovableCaseView) {
-					if(!(((MovableCaseView)ca).isEmpty() && onlyEmpty))
-						selectable = false;
+				
+				if(ca instanceof ColonyView && c instanceof ColonyView && player != null) {
+					if(((MovableCaseView)ca).isEmpty() && onlyEmpty) {
+						selectable = player.canBuildColonyOn(board, getIndexesOf(ca), early) == 0;
+					}
+					else if(!onlyEmpty && ((MovableCaseView)ca).getPlayer() == player) {
+						selectable = true;
+					}
+				}
+				else if(ca instanceof RoadView && c instanceof RoadView && player != null) {
+					if(((MovableCaseView)ca).isEmpty() && onlyEmpty) {
+						selectable = player.canBuildRoadOn(board, getIndexesOf(ca), early) == 0;
+					}
+					else if(!onlyEmpty && ((MovableCaseView)ca).getPlayer() == player) {
+						selectable = true;
+					}
+				}
+				else if(ca instanceof ResourceCaseView && c instanceof ResourceCaseView) {
+					selectable = !((ResourceCaseView)ca).hasThief();
+				}
+				else {
+					selectable = c != null && ca.getClass().equals(c.getClass());
+					if(selectable && ca instanceof MovableCaseView) {
+						if(!(((MovableCaseView)ca).isEmpty() && onlyEmpty)) {
+							selectable = false;
+						}
+					}
 				}
 
 				if(selectable)
@@ -278,6 +307,18 @@ public class BoardView extends JPanel {
 		board.putRoad(player, roadView.getModelCase(), early); // On indique au model le changement
 		// La view va interroger le modele et changera son apparence.
 		gameView.refreshInfos();
+	}
+	
+	public void switchThief(ResourceCaseView resCase) {
+		int[] coord = getIndexesOf(resCase);
+		if(coord == null)
+			return;
+		int[] old = board.getThiefCoord();
+		board.switchThief(coord); // On switch le voleur dans le model board
+		ResourceCaseView oldThief = (ResourceCaseView)casesView[old[0]][old[1]];
+		oldThief.refreshThiefView(); // On rafraichit les voleurs dans la view
+		resCase.refreshThiefView(); // On rafraichit les voleurs dans la view
+		changeSelectableCases(null, null, false);
 	}
 	
 	public GameView getGameView() {

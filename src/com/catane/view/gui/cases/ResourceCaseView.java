@@ -22,16 +22,24 @@ import com.catane.model.cases.ResourceCase.Pre;
 import com.catane.view.gui.BoardView;
 import com.catane.view.gui.IconPanel;
 
-public abstract class ResourceCaseView extends CaseView {
+public class ResourceCaseView extends CaseView {
 	private static final long serialVersionUID = 1L;
 
 	private ResourceCase modelCase;
 	
 	private JPanel mainPan;
 	
+	public ResourceCaseView() {
+		super(null);
+	}
+	
 	public ResourceCaseView(BoardView board, ResourceCase rC) {
 		super(board);
 		this.modelCase = rC;
+		setupView();
+	}
+	
+	public void setupView() {
 		setBorder(BorderFactory.createBevelBorder(EtchedBorder.RAISED));
 		//setBorder(BorderFactory.createBevelBorder(EtchedBorder.RAISED));
 		setBackground(getColor());
@@ -45,7 +53,7 @@ public abstract class ResourceCaseView extends CaseView {
 		JPanel tmp = new JPanel();
 		tmp.setOpaque(false);
 		tmp.setLayout(new GridLayout());
-		tmp.add(new IconPanel(rC.getClass().getSimpleName().toLowerCase()+"_64", 32));
+		tmp.add(new IconPanel(modelCase.getClass().getSimpleName().toLowerCase()+"_64", 32));
 		mainPan.add(tmp);
 	    
 		tmp = new JPanel();
@@ -68,8 +76,9 @@ public abstract class ResourceCaseView extends CaseView {
 			mainPan.add(tmp);
 		}
 		
-		
 		this.add(mainPan, BorderLayout.CENTER);
+		revalidate();
+		repaint();
 	}
 	
 	@Override
@@ -77,7 +86,16 @@ public abstract class ResourceCaseView extends CaseView {
 		super.mouseReleased(e);
 		if(!isSelectable)
 			return;
-		
+		boardView.switchThief(this);
+		revalidate();
+		repaint();
+	}
+	
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		super.mouseEntered(e);
+		if(isSelectable)
+			setBorder(BorderFactory.createLineBorder(Color.RED));
 	}
 	
 	@Override
@@ -95,22 +113,9 @@ public abstract class ResourceCaseView extends CaseView {
 		return modelCase.getColor();
 	}
 	
-	public void setThief(boolean thief) {
-		if((thief && hasThief()) || (!thief && !hasThief()))
-			return;
-		modelCase.setThief(thief);
-		
-		// TODO : ATTENTION : cas ou le voleur revient sur le desert peut causer une erreur
-		mainPan.remove(getComponentCount()-1); // On retire le dernier element
-		if(thief) {
-			mainPan.add(new IconPanel("stealer_64", 64));
-		}
-		else if(!(this instanceof DesertView)) { // Le desert n'a pas de chiffre.
-			//add(new Circle(getNumber(), 80), gbc);
-			JLabel lbl = new JLabel(getNumber()+"");
-			mainPan.add(lbl);
-		}
-		repaint();
+	public void refreshThiefView() {
+		this.removeAll();
+		setupView();
 	}
 	
 	public boolean hasThief() {

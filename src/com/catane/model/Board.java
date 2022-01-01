@@ -276,6 +276,10 @@ public class Board {
 		thief = newThief;
 	}
 
+	public int[] getThiefCoord() {
+		return thief;
+	}
+	
 	public List<Colony> getColonies(Case c) {
 		 int[] coord = getIndexesOf(c);
 		 if(coord == null)

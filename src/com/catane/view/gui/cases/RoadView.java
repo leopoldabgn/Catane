@@ -71,6 +71,7 @@ public class RoadView extends MovableCaseView {
 		// On efface le rectangle de la couleur du joueur actuel (recuperer via board.getActualPlayer() Par exemple) de la mm size que la route classique
 	}
 	
+	/* Ancienne methode. On trace un rectangle
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -93,5 +94,5 @@ public class RoadView extends MovableCaseView {
 		spaceY = (getHeight() - height)/2;
 		g.fillRect(spaceX, spaceY, width, height);
 	}
-	
+	*/
 }

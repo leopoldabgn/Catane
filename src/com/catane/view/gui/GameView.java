@@ -21,6 +21,7 @@ import com.catane.model.Resource;
 import com.catane.model.cases.Port;
 import com.catane.view.gui.cases.ColonyView;
 import com.catane.view.gui.cases.PortView;
+import com.catane.view.gui.cases.ResourceCaseView;
 import com.catane.view.gui.cases.RoadView;
 
 public class GameView extends JPanel {
@@ -100,6 +101,13 @@ public class GameView extends JPanel {
 				dices.setEnabled(false); // Le faire avant refreshOptions ! Attention.
 				actionPanel.refreshOptions();
 				nextTurnButton.setEnabled(true);
+				
+				value = 7;
+				// Le mettre apres le refreshOptions ! Important !
+				if(value == 7) {
+					boardView.changeSelectableCases(new ResourceCaseView(), null, false);
+				}
+				
 				revalidate();
 				repaint();
 			}
@@ -262,23 +270,23 @@ public class GameView extends JPanel {
 			
 			colony.addChangeListener(e -> {
 				if(colony.isSelected())
-					boardView.changeSelectableCases(new ColonyView(null, null), true);
+					boardView.changeSelectableCases(new ColonyView(null, null), game.getActualPlayer(), true, early);
 				else
-					boardView.changeSelectableCases(null, true);
+					boardView.changeSelectableCases(null, null, true);
 			});
 			
 			town.addChangeListener(e -> {
 				if(town.isSelected())
-					boardView.changeSelectableCases(new ColonyView(null, null), false);
+					boardView.changeSelectableCases(new ColonyView(null, null), game.getActualPlayer(), false, early);
 				else
-					boardView.changeSelectableCases(null, true);
+					boardView.changeSelectableCases(null, null, true);
 			});
 			
 			road.addChangeListener(e -> {
 				if(road.isSelected())
-					boardView.changeSelectableCases(new RoadView(null, null), true);
+					boardView.changeSelectableCases(new RoadView(null, null), game.getActualPlayer(), true, early);
 				else
-					boardView.changeSelectableCases(null, true);
+					boardView.changeSelectableCases(null, null, true);
 			});
 			
 			group = new ButtonGroup();
@@ -322,7 +330,7 @@ public class GameView extends JPanel {
 			colony.setEnabled(enable);
 			town.setEnabled(enable);
 			road.setEnabled(enable);
-			boardView.changeSelectableCases(null, false);
+			boardView.changeSelectableCases(null, null, false);
 		}
 		
 	}

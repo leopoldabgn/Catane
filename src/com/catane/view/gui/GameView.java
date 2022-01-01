@@ -44,6 +44,7 @@ public class GameView extends JPanel {
 	private ActionPanel actionPanel;
 	private DeckView progressDeck, victoryPointsDeck;
 	private JPanel actions, actionsEarly;
+	private JPanel knight;
 
 	private int nbReady;
 	private boolean early = true;
@@ -93,7 +94,7 @@ public class GameView extends JPanel {
 		for(Player p : game.getPlayers()) {
 			if(++count == 3)
 				continue;
-			for(int i=0;i<2;i++) {
+			for(int i=0;i<20;i++) {
 				p.gainResource(Resource.CLAY);
 				p.gainResource(Resource.WHEAT);
 				p.gainResource(Resource.STONE);
@@ -122,7 +123,7 @@ public class GameView extends JPanel {
 				// Le mettre apres le refreshOptions ! Important !
 				if(value == 7) {
 					setEnabledActions(false);
-					discard();
+					//discard();
 					thiefAction();
 				}
 
@@ -197,7 +198,10 @@ public class GameView extends JPanel {
 		buttonsPan.add(tmp);
 		
 		JPanel southPan = new JPanel();
+		knight = new JPanel();
+		refreshKnight();
 		southPan.setOpaque(false);
+		southPan.add(knight);
 		southPan.add(resourcePan);
 		southPan.add(progressDeck);
 		southPan.add(victoryPointsDeck);
@@ -286,7 +290,6 @@ public class GameView extends JPanel {
 	}
 
 	public void discard() {
-		// TODO: Chaque joueur ayant plus de 7 ressources doit se défausser de la moitié
 		List<Player> players = new ArrayList<Player>();
 		for (Player p : game.getPlayers())
 			if (p.getResources() > 7)
@@ -301,6 +304,14 @@ public class GameView extends JPanel {
 		boardView.changeSelectableCases(new ResourceCaseView(), null, false);
 		refreshInfos();
 		// TODO: voler une ressource au hasard à un joueur de notre choix (parmis les colonies autour)
+	}
+
+	public void refreshKnight() {
+		knight.removeAll();
+		knight.add(new CardView("knight"));
+		knight.add(new JLabel("x"+game.getActualPlayer().getArmy()));
+		knight.revalidate();
+		knight.repaint();
 	}
 
 	public void refreshActions() {
@@ -508,6 +519,7 @@ public class GameView extends JPanel {
 		resourcePan.refresh();
 		refreshDecks();
 		refreshActions();
+		refreshKnight();
 	}
 	
 	public void refreshDecks() {

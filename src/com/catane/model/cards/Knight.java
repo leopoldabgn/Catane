@@ -2,7 +2,7 @@ package com.catane.model.cards;
 
 public class Knight implements DevelopmentCard {
 
-	private boolean usable;
+	private boolean usable = false;
 	
 	@Override
 	public boolean equals(Object o) {

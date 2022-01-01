@@ -72,7 +72,7 @@ public class CardView extends JPanel {
 					@Override
 					public void mousePressed(MouseEvent e) {
 						super.mousePressed(e);
-						if (!gameView.isDev() && devCard.isUsable()) {
+						if (!gameView.isDev() && devCard.isUsable()) { // ne prend pas compte de isUsable()
 							int ans = JOptionPane.showOptionDialog(null,
 										"Voulez-vous utiliser votre carte "+devCard.toString().toLowerCase()+" ?",
 										devCard.toString(),

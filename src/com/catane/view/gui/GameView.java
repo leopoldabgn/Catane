@@ -230,6 +230,8 @@ public class GameView extends JPanel {
 		// Lancer earlyGame
 		setSelectedColony(true);
 
+		System.out.println(game.getActualPlayer().getNbColonies());
+
 	}
 
 	public int refreshReady() {

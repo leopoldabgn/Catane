@@ -73,7 +73,6 @@ public class ColonyView extends MovableCaseView {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		super.mouseEntered(e);
-
 	}
 
 	@Override

@@ -19,11 +19,18 @@ public class ResourcePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private Game game;
+	private Player player;
 	
 	public ResourcePanel(Game game) {
 		this.game = game;
 		this.setOpaque(false);
 		setupPlayer(game.getActualPlayer());
+	}
+
+	public ResourcePanel(Player player) {
+		this.player = player;
+		this.setOpaque(false);
+		setupPlayer(player);
 	}
 	
 	public void setupPlayer(Player player) {
@@ -54,7 +61,10 @@ public class ResourcePanel extends JPanel {
 		
 		public IconPanel(Resource res) {
 			this.res = res;
-			this.number = new JLabel(game.getActualPlayer().getResource(res)+"");
+			if (game != null)
+				this.number = new JLabel(game.getActualPlayer().getResource(res)+"");
+			else
+				this.number = new JLabel(player.getResource(res)+"");
 			this.setOpaque(false);
 			String path = res.getEnglishName().toLowerCase();
 			path = "res/icons/"+path+".png";
@@ -73,7 +83,10 @@ public class ResourcePanel extends JPanel {
 		}
 		
 		private void refreshPan() {
-			this.number.setText(game.getActualPlayer().getResource(res)+"");
+			if (game != null)
+				this.number.setText(game.getActualPlayer().getResource(res)+"");
+			else
+				this.number.setText(player.getResource(res)+"");
 		}
 		
 		private class ImagePanel extends JPanel {

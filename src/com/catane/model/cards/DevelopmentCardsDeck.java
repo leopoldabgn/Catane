@@ -12,9 +12,9 @@ public class DevelopmentCardsDeck extends LinkedList<DevelopmentCard> {
 		
 		DevelopmentCard[] tab;
 		tab = VictoryPoints.values();
-		addCards(tab, 1);
+		addCards(tab, 1); // combien ?
 		tab = Progress.values();
-		addCards(tab, 1);
+		addCards(tab, 2); // en deux exemplaires
 		addCards(new Knight(), 14);
 		
 		mixCards();

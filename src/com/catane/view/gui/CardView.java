@@ -76,7 +76,7 @@ public class CardView extends JPanel {
 							int ans = JOptionPane.showOptionDialog(null,
 										"Voulez-vous utiliser votre carte "+devCard.toString().toLowerCase()+" ?",
 										devCard.toString(),
-										JOptionPane.YES_NO_OPTION,
+										JOptionPane.YES_NO_OPTION, // même en appuyant sur non ca ouvre la fenêtre
 										JOptionPane.QUESTION_MESSAGE,
 										null,
 										new String[] {"Oui", "Non"}, "Oui");
@@ -136,7 +136,7 @@ public class CardView extends JPanel {
 				save.addActionListener(event -> {
 					if (invention1.getSelected() == null || invention2.getSelected() == null) {
 						if(error == null) {
-							error = new JLabel("Merci de selectionner les ressources !");
+							error = new JLabel("Merci de sélectionner les ressources !");
 							error.setForeground(Color.RED);
 							getContentPane().add(error, 0);
 							revalidate();

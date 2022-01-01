@@ -51,6 +51,8 @@ public class RoadView extends MovableCaseView {
 			
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbRoads() == 2)
 				boardView.getGameView().clear();
+			if (boardView.getGameView().isEarly())
+				boardView.getGameView().refreshActionsEarly();
 
 			if (boardView.getGameView().isEarly() && boardView.getGameView().getConstrucRoad() >= 1)
 				boardView.getGameView().constructRoad();

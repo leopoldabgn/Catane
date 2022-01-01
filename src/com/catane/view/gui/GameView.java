@@ -6,6 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -41,14 +43,21 @@ public class GameView extends JPanel {
 	private JButton nextTurnButton, tradeButton, buyDevCardButton;
 	private ActionPanel actionPanel;
 	private DeckView progressDeck, victoryPointsDeck;
-	private JPanel actions;
+	private JPanel actions, actionsEarly;
 
 	private int nbReady;
 	private boolean early = true;
 	private int constructRoad = 0;
 	private boolean isBeforeDices;
 	private boolean isDev = false;
+	private boolean isThiefActive = false;
+	private boolean isBeforeDev = false;
 
+	public void endThief() {
+		isThiefActive = false;
+		setEnabledActions(true);
+		dices.setEnabled(false);
+	}
 	public boolean isDev() {
 		return isDev;
 	}
@@ -84,7 +93,7 @@ public class GameView extends JPanel {
 		for(Player p : game.getPlayers()) {
 			if(++count == 3)
 				continue;
-			for(int i=0;i<20;i++) {
+			for(int i=0;i<2;i++) {
 				p.gainResource(Resource.CLAY);
 				p.gainResource(Resource.WHEAT);
 				p.gainResource(Resource.STONE);
@@ -112,7 +121,9 @@ public class GameView extends JPanel {
 				
 				// Le mettre apres le refreshOptions ! Important !
 				if(value == 7) {
-					boardView.changeSelectableCases(new ResourceCaseView(), null, false);
+					setEnabledActions(false);
+					discard();
+					thiefAction();
 				}
 
 				refreshInfos();
@@ -149,6 +160,7 @@ public class GameView extends JPanel {
 			if(actualPlayer.canBuyDevCard(game) == 0) {
 				actualPlayer.getDevCard(game);
 				buyDevCardButton.setEnabled(false);
+				isBeforeDev = buyDevCardButton.isEnabled();
 				refreshInfos();
 			}
 		});
@@ -162,6 +174,7 @@ public class GameView extends JPanel {
 			buyDevCardButton.setEnabled(game.getActualPlayer().canBuyDevCard(game) == 0);
 			nextTurnButton.setEnabled(false);
 			game.getActualPlayer().refreshDevCards();
+			isBeforeDev = buyDevCardButton.isEnabled();
 			refreshInfos();
 		});
 		
@@ -198,7 +211,7 @@ public class GameView extends JPanel {
 		eastPan.add(tmp, BorderLayout.NORTH);
 		eastPan.add(nextTurnButton, BorderLayout.SOUTH);
 
-		// tests
+		// panel actions possibles
 		actions = new JPanel();
 		actions.setLayout(new GridLayout(0, 1, 5, 5));
 		actions.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -229,14 +242,21 @@ public class GameView extends JPanel {
 				}
 			}
 			refreshInfos();
+			refreshActionsEarly();
 			revalidate();
 			repaint();
 		});
+
+		// Instruction début de partie
+		actionsEarly = new JPanel();
+		actionsEarly.setLayout(new GridLayout(0, 1));
+		actionsEarly.setBorder(new EmptyBorder(10, 10, 10, 10));
 		
 		this.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.setLayout(new BorderLayout());
 		this.add(northPan, BorderLayout.NORTH);
 		this.add(boardView, BorderLayout.CENTER);
+		this.add(actionsEarly, BorderLayout.EAST);
 		
 		// Tu mets ça en commentaire si tu veux continuer ton travail (à enlever)
 		////////////////
@@ -246,45 +266,101 @@ public class GameView extends JPanel {
 		
 		// pour le début de game (à décommenter)
 		// this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
-
+		
 		// Lancer earlyGame (à décommenter)
 		// setSelectedColony(true);
-
+		// refreshActionsEarly();
+		
 		// pour ne pas avoir à placer toutes les colonies/routes a chaque fois (à enlever)
 		startGame(boardView, northPan, eastPan, southPan);
+		early = false;
+		
+	}
 
+	public void setEnabledActions(boolean enabled) { // appel de isBeforeDices() avant
+		dices.setEnabled(enabled);
+		tradeButton.setEnabled(enabled);
+		nextTurnButton.setEnabled(enabled);
+		actionPanel.setButtonsEnabled(enabled);
+		buyDevCardButton.setEnabled(enabled ? isBeforeDev : false);
+	}
+
+	public void discard() {
+		// TODO: Chaque joueur ayant plus de 7 ressources doit se défausser de la moitié
+		List<Player> players = new ArrayList<Player>();
+		for (Player p : game.getPlayers())
+			if (p.getResources() > 7)
+				players.add(p);
+		if (!players.isEmpty())
+			new DiscardFrame(players, 0, players.get(0).getResources()/2);
+	}
+
+	public void thiefAction() {
+		// Déplacer le voleur
+		isThiefActive = true;
+		boardView.changeSelectableCases(new ResourceCaseView(), null, false);
+		refreshInfos();
+		// TODO: voler une ressource au hasard à un joueur de notre choix (parmis les colonies autour)
 	}
 
 	public void refreshActions() {
 		actions.removeAll();
-		if (isDev) {
-			actions.add(new JLabel("Vous devez :"));
-			int nb = 3 - constructRoad;
-			String s = "- Poser " + nb + " route(s)";
-			actions.add(new JLabel(s));
+		String p = "Au tour de " + game.getActualPlayer().toString();
+		actions.add(new JLabel(p));
+		if (isThiefActive) {
+			actions.add(new JLabel("Déplacez le voleur"));
 		}else {
-			actions.add(new JLabel("Vous pouvez :"));
-			if (buyDevCardButton.isEnabled())
-				actions.add(new JLabel("- Acheter une carte de développement"));
-			if (tradeButton.isEnabled())
-				actions.add(new JLabel("- Echanger des ressources (4:1)"));
-			if (progressDeck.isUsable())
-				actions.add(new JLabel("- Utiliser une carte progrès"));
-			if (dices.isEnabled()) {
-				actions.add(new JLabel("- Lancer les dés"));
+			if (isDev) {
+				actions.add(new JLabel("Vous devez :"));
+				int nb = 3 - constructRoad;
+				String s = "- Poser " + nb + " route(s)";
+				actions.add(new JLabel(s));
 			}else {
-				if (game.getActualPlayer().canAffordColony())
-					actions.add(new JLabel("- Construire une colonie"));
-				if (game.getActualPlayer().canAffordTown() && game.getActualPlayer().getNbColonies() > 0)
-					actions.add(new JLabel("- Construire une ville"));
-				if (game.getActualPlayer().canAffordRoad())
-					actions.add(new JLabel("- Construire une route"));
+				actions.add(new JLabel("Vous pouvez :"));
+				if (buyDevCardButton.isEnabled())
+					actions.add(new JLabel("- Acheter une carte de développement"));
+				if (tradeButton.isEnabled())
+					actions.add(new JLabel("- Echanger des ressources"));
+				if (progressDeck.isUsable())
+					actions.add(new JLabel("- Utiliser une carte progrès"));
+				if (dices.isEnabled()) {
+					actions.add(new JLabel("- Lancer les dés"));
+				}else {
+					if (game.getActualPlayer().canAffordColony())
+						actions.add(new JLabel("- Construire une colonie"));
+					if (game.getActualPlayer().canAffordTown() && game.getActualPlayer().getNbColonies() > 0)
+						actions.add(new JLabel("- Construire une ville"));
+					if (game.getActualPlayer().canAffordRoad())
+						actions.add(new JLabel("- Construire une route"));
+				}
+				if (nextTurnButton.isEnabled())
+					actions.add(new JLabel("- Passer le tour"));
 			}
-			if (nextTurnButton.isEnabled())
-				actions.add(new JLabel("- Passer le tour"));
 		}
 		actions.revalidate();
 		actions.repaint();
+	}
+
+	public void refreshActionsEarly() {
+		actionsEarly.removeAll();
+		Player p = game.getActualPlayer();
+		if (p.isReady()) {
+			actionsEarly.add(new JLabel("Passez au joueur suivant"));
+		}else {
+			String s = p.toString() + " doit poser ses premières constructions :";
+			actionsEarly.add(new JLabel(s));
+			if (isColonyActive()) {
+				int nb = 2 - p.getNbColonies();
+				s = "- Posez " + nb + " colonie(s)";
+			}
+			if (isRoadActive()) {
+				int nb = 2 - p.getNbRoads();
+				s = "- Posez " + nb + " route(s)";
+			}
+			actionsEarly.add(new JLabel(s));
+		}
+		actionsEarly.revalidate();
+		actionsEarly.repaint();
 	}
 
 	public void constructRoad() {
@@ -292,10 +368,7 @@ public class GameView extends JPanel {
 			isDev = true;
 			early = true;
 			constructRoad++;
-			dices.setEnabled(false);
-			actionPanel.setButtonsEnabled(false);
-			nextTurnButton.setEnabled(false);
-			tradeButton.setEnabled(false);
+			setEnabledActions(false);
 			setSelectedRoad(true);
 		}else {
 			early = false;
@@ -310,6 +383,7 @@ public class GameView extends JPanel {
 				dices.setEnabled(true);
 				actionPanel.setButtonsEnabled(false);
 			}
+			buyDevCardButton.setEnabled(isBeforeDev);
 			game.getActualPlayer().devCardUsed(Progress.ROAD_CONSTRUCTION);
 		}
 		refreshInfos();

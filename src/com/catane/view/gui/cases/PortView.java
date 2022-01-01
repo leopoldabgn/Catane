@@ -99,7 +99,7 @@ public class PortView extends CaseView {
 					// On affiche le message d'erreur que une seule fois.
 					// La deuxieme fois on fait rien.
 					if(error == null) {
-						error = new JLabel("Merci de selectionner les ressources !");
+						error = new JLabel("Merci de sélectionner les ressources !");
 						error.setForeground(Color.RED);
 						getContentPane().add(error, 0);
 						revalidate();
@@ -125,7 +125,7 @@ public class PortView extends CaseView {
 				this.dispose();
 			});
 			
-			String sentence1 = "Vous allez echanger "+port.getResourcesToGive();
+			String sentence1 = "Vous allez échanger "+port.getResourcesToGive();
 			Resource type = port.getResourceType();
 
 			JPanel container = new JPanel();

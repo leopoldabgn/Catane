@@ -7,7 +7,6 @@ import com.catane.model.Board;
 import com.catane.model.Player;
 import com.catane.model.cases.Road;
 import com.catane.view.gui.BoardView;
-import com.catane.view.gui.GameView;
 import com.catane.view.gui.IconPanel;
 
 public class RoadView extends MovableCaseView {

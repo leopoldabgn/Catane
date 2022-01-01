@@ -167,6 +167,8 @@ public class CLI {
 				System.out.println("\n");
 				endRound = false;
 
+				// print mostPowerfulArmy et longestRoad ?
+
 				// A enlever
 				// System.out.println("éteindre ? (o/n)");
 				// if (sc.nextLine().charAt(0) == 'o')

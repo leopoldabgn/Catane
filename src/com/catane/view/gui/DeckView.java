@@ -81,6 +81,13 @@ public class DeckView extends JPanel {
 		
 		return coeff;
 	}
+
+	public boolean isUsable() {
+		for (DevCardView cardView : cards)
+			if (cardView.getDevCard().isUsable())
+				return true;
+		return false;
+	}
 	
 	public void changePlayer(Player player) {
 		this.player = player;

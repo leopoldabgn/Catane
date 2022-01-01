@@ -3,6 +3,7 @@ package com.catane.view.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -40,6 +41,7 @@ public class GameView extends JPanel {
 	private JButton nextTurnButton, tradeButton, buyDevCardButton;
 	private ActionPanel actionPanel;
 	private DeckView progressDeck, victoryPointsDeck;
+	private JPanel actions;
 
 	private int nbReady;
 	private boolean early = true;
@@ -104,7 +106,6 @@ public class GameView extends JPanel {
 				int value = vals[0]+vals[1];
 				dicesLbl.setText("Dés : "+value);
 				game.getBoard().gainResource(value);
-				refreshInfos();
 				dices.setEnabled(false); // Le faire avant refreshOptions ! Attention.
 				actionPanel.refreshOptions();
 				nextTurnButton.setEnabled(true);
@@ -113,6 +114,8 @@ public class GameView extends JPanel {
 				if(value == 7) {
 					boardView.changeSelectableCases(new ResourceCaseView(), null, false);
 				}
+
+				refreshInfos();
 				
 				revalidate();
 				repaint();
@@ -145,21 +148,21 @@ public class GameView extends JPanel {
 			Player actualPlayer = game.getActualPlayer();
 			if(actualPlayer.canBuyDevCard(game) == 0) {
 				actualPlayer.getDevCard(game);
-				refreshInfos();
 				buyDevCardButton.setEnabled(false);
+				refreshInfos();
 			}
 		});
 		
 		nextTurnButton.addActionListener(e -> {
 			game.nextRound();
 			dicesLbl.setText("");
-			refreshInfos();
 			actionPanel.setButtonsEnabled(false);
 			refreshTradeButton(true);
 			dices.setEnabled(true);
 			buyDevCardButton.setEnabled(game.getActualPlayer().canBuyDevCard(game) == 0);
 			nextTurnButton.setEnabled(false);
 			game.getActualPlayer().refreshDevCards();
+			refreshInfos();
 		});
 		
 		tradeButton.addActionListener(e -> {
@@ -192,8 +195,16 @@ public class GameView extends JPanel {
 		tmp = new JPanel();
 		tmp.setOpaque(false);
 		tmp.add(buttonsPan);
-		eastPan.add(tmp, BorderLayout.CENTER);
+		eastPan.add(tmp, BorderLayout.NORTH);
 		eastPan.add(nextTurnButton, BorderLayout.SOUTH);
+
+		// tests
+		actions = new JPanel();
+		actions.setLayout(new GridLayout(0, 1, 5, 5));
+		actions.setBorder(new EmptyBorder(10, 10, 10, 10));
+		eastPan.add(actions, BorderLayout.CENTER);
+		refreshActions();
+		
 		
 		JPanel boardContainer = new JPanel();
 		boardContainer.setLayout(new GridBagLayout());
@@ -234,14 +245,46 @@ public class GameView extends JPanel {
 		////////////////
 		
 		// pour le début de game (à décommenter)
-		this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
+		// this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
 
 		// Lancer earlyGame (à décommenter)
-		setSelectedColony(true);
+		// setSelectedColony(true);
 
 		// pour ne pas avoir à placer toutes les colonies/routes a chaque fois (à enlever)
-		// startGame(boardView, northPan, eastPan, southPan);
+		startGame(boardView, northPan, eastPan, southPan);
 
+	}
+
+	public void refreshActions() {
+		actions.removeAll();
+		if (isDev) {
+			actions.add(new JLabel("Vous devez :"));
+			int nb = 3 - constructRoad;
+			String s = "- Poser " + nb + " route(s)";
+			actions.add(new JLabel(s));
+		}else {
+			actions.add(new JLabel("Vous pouvez :"));
+			if (buyDevCardButton.isEnabled())
+				actions.add(new JLabel("- Acheter une carte de développement"));
+			if (tradeButton.isEnabled())
+				actions.add(new JLabel("- Echanger des ressources (4:1)"));
+			if (progressDeck.isUsable())
+				actions.add(new JLabel("- Utiliser une carte progrès"));
+			if (dices.isEnabled()) {
+				actions.add(new JLabel("- Lancer les dés"));
+			}else {
+				if (game.getActualPlayer().canAffordColony())
+					actions.add(new JLabel("- Construire une colonie"));
+				if (game.getActualPlayer().canAffordTown() && game.getActualPlayer().getNbColonies() > 0)
+					actions.add(new JLabel("- Construire une ville"));
+				if (game.getActualPlayer().canAffordRoad())
+					actions.add(new JLabel("- Construire une route"));
+			}
+			if (nextTurnButton.isEnabled())
+				actions.add(new JLabel("- Passer le tour"));
+		}
+		actions.revalidate();
+		actions.repaint();
 	}
 
 	public void constructRoad() {
@@ -269,6 +312,7 @@ public class GameView extends JPanel {
 			}
 			game.getActualPlayer().devCardUsed(Progress.ROAD_CONSTRUCTION);
 		}
+		refreshInfos();
 	}
 
 	public int getConstrucRoad() {
@@ -389,6 +433,7 @@ public class GameView extends JPanel {
 		playersDataView.refresh();
 		resourcePan.refresh();
 		refreshDecks();
+		refreshActions();
 	}
 	
 	public void refreshDecks() {

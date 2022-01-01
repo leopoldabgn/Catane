@@ -119,8 +119,8 @@ public class PortView extends CaseView {
 					boardView.getActualPlayer().trade(r1, port.getResourcesToGive(), r2);
 				}
 				
-				boardView.getGameView().refreshInfos();
 				boardView.getGameView().refreshTradeButton(false);
+				boardView.getGameView().refreshInfos();
 				
 				this.dispose();
 			});

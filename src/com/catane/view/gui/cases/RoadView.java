@@ -1,7 +1,6 @@
 package com.catane.view.gui.cases;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 import com.catane.model.Board;

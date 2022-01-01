@@ -102,7 +102,6 @@ public class GameView extends JPanel {
 				actionPanel.refreshOptions();
 				nextTurnButton.setEnabled(true);
 				
-				value = 7;
 				// Le mettre apres le refreshOptions ! Important !
 				if(value == 7) {
 					boardView.changeSelectableCases(new ResourceCaseView(), null, false);

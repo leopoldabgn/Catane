@@ -8,6 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -18,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.catane.model.Player;
 import com.catane.model.Resource;
 import com.catane.model.cards.DevelopmentCard;
 import com.catane.model.cards.Knight;
@@ -72,7 +75,9 @@ public class CardView extends JPanel {
 					@Override
 					public void mousePressed(MouseEvent e) {
 						super.mousePressed(e);
-						if (!gameView.isDev() && devCard.isUsable()) { // ne prend pas compte de isUsable()
+						if (!devCard.isUsable())
+							return;
+						if (!gameView.isDev()) {
 							int ans = JOptionPane.showOptionDialog(null,
 										"Voulez-vous utiliser votre carte "+devCard.toString().toLowerCase()+" ?",
 										devCard.toString(),
@@ -80,21 +85,23 @@ public class CardView extends JPanel {
 										JOptionPane.QUESTION_MESSAGE,
 										null,
 										new String[] {"Oui", "Non"}, "Oui");
-							if(devCard instanceof Knight) {
-								gameView.getGame().refreshMostPowerfulArmyOwner();
-								// thief
-								gameView.refreshInfos();
-							}
-							else if(devCard instanceof Progress) {
-								if(devCard == Progress.ROAD_CONSTRUCTION) {
-									gameView.isBeforeDices(gameView.getDicesEnabled());
-									gameView.constructRoad();
+							if (ans == JOptionPane.YES_OPTION) {
+								if(devCard instanceof Knight) {
+									gameView.getGame().refreshMostPowerfulArmyOwner();
+									// thief
+									gameView.refreshInfos();
 								}
-								else if(devCard == Progress.MONOPOLY) {
-									new MonopolyFrame(gameView);
-								}
-								else if(devCard == Progress.INVENTION) {
-									new InventionFrame(gameView);
+								else if(devCard instanceof Progress) {
+									if(devCard == Progress.ROAD_CONSTRUCTION) {
+										gameView.isBeforeDices(gameView.getDicesEnabled());
+										gameView.constructRoad();
+									}
+									else if(devCard == Progress.MONOPOLY) {
+										new MonopolyFrame(gameView);
+									}
+									else if(devCard == Progress.INVENTION) {
+										new InventionFrame(gameView);
+									}
 								}
 							}
 						}
@@ -179,19 +186,20 @@ public class CardView extends JPanel {
 
 			private ResourceChoicePanel monopoly;
 			private JLabel error;
-
+			
 			public MonopolyFrame(GameView gameView) {
-				setTitle("Monopole");
-				setSize(450, 270);
-				setLocationRelativeTo(null);
 
+				setTitle("Monopole");
+				setSize(450, 370);
+				setLocationRelativeTo(null);
+				
 				JButton save = new JButton("Confirmer");
 				JButton cancel = new JButton("Annuler");
-
+				
 				cancel.addActionListener(event -> {
 					this.dispose();
 				});
-
+				
 				save.addActionListener(event -> {
 					if (monopoly.getSelected() == null) {
 						if(error == null) {
@@ -201,17 +209,30 @@ public class CardView extends JPanel {
 							revalidate();
 							repaint();
 						}
-					return;
+						return;
 					}
 					Resource r = ((ResourceCardView) monopoly.getSelected()).getResource();
 					gameView.getGame().monopoly(r);
 					gameView.refreshInfos();
-
+					
 					this.dispose();
 				});
+				
+				JPanel panel = new JPanel();
+				
+				// Ressources des autres joeurs
+				List<Player> players = new ArrayList<Player>();
+				for (Player player : gameView.getGame().getPlayers())
+					if (!player.equals(gameView.getGame().getActualPlayer()))
+						players.add(player);
+				for (Player player : players) {
+					JPanel playerPanel = new JPanel();
+					playerPanel.add(new JLabel(player + " -> "));
+					playerPanel.add(new ResourcePanel(player));
+					panel.add(playerPanel);
+				}
 
 				JLabel label = new JLabel("Choisissez une ressource");
-				JPanel panel = new JPanel();
 				setContentPane(panel);
 				panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 				panel.add(label);

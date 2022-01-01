@@ -167,6 +167,7 @@ public class GameView extends JPanel {
 		});
 		
 		nextTurnButton.addActionListener(e -> {
+			game.getActualPlayer().refreshDevCards();
 			game.nextRound();
 			dicesLbl.setText("");
 			actionPanel.setButtonsEnabled(false);
@@ -174,7 +175,6 @@ public class GameView extends JPanel {
 			dices.setEnabled(true);
 			buyDevCardButton.setEnabled(game.getActualPlayer().canBuyDevCard(game) == 0);
 			nextTurnButton.setEnabled(false);
-			game.getActualPlayer().refreshDevCards();
 			isBeforeDev = buyDevCardButton.isEnabled();
 			refreshInfos();
 		});

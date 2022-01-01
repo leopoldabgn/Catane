@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 import com.catane.model.cards.DevelopmentCard;
-import com.catane.model.cards.Knight;
-import com.catane.model.cards.Progress;
 import com.catane.model.cards.VictoryPoints;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.Road;
@@ -263,8 +261,7 @@ public class Player {
 
 	public void refreshDevCards() {
 		for (DevelopmentCard card : developmentCards) {
-			if (card instanceof Knight || card instanceof Progress)
-				card.canUse();
+			card.canUse();
 		}
 	}
 

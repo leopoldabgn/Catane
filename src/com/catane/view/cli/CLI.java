@@ -90,7 +90,7 @@ public class CLI {
 		for (Player player : game.getPlayers()) {
 			if (player instanceof AI) {
 
-				((AI) player).earlyGame(game);
+				//((AI) player).earlyGame(game);
 
 			}else {
 
@@ -121,6 +121,9 @@ public class CLI {
 					board.putRoad(player, coord[0], coord[1], true);
 				}
 			}
+
+			System.out.println();
+
 		}
 		
 		while(!endGame) {
@@ -140,11 +143,11 @@ public class CLI {
 	public void playRound() {
 		Player player = game.getActualPlayer();
 
-		if (player instanceof AI) {
+		// if (player instanceof AI) {
 
-			((AI) player).midGame(game);
+		// 	((AI) player).midGame(game);
 
-		}else {
+		// }else {
 		
 			System.out.println("Au tour de "+player+"\n");
 			boolean endRound;
@@ -152,6 +155,8 @@ public class CLI {
 			int[] coord;
 			boolean error;
 			boolean devBought = false;
+
+			useDev(player);
 			
 			devBought = dices();
 			
@@ -270,7 +275,7 @@ public class CLI {
 
 		}
 		
-	}
+	// }
 
 	public boolean useDev(Player player) {
 		char c = ' ';
@@ -288,9 +293,9 @@ public class CLI {
 					System.out.println("Vous n'avez pas de carte de développement 'Chevalier'");
 					return false;
 				}
-				game.refreshMostPowerfulArmyOwner(player);
+				game.refreshMostPowerfulArmyOwner();
 				thiefAction();
-				player.devCardUsed(new Knight());
+				System.out.println(player.getArmy() + " et " + game.mostPowerfulArmyOwner());
 				break;
 			case 'm': // Monopole
 				if (player.getUsableDevCard(Progress.MONOPOLY) == 0) {
@@ -301,16 +306,7 @@ public class CLI {
 				System.out.println("De quelle ressource voulez-vous avoir le monopole ?");
 				Resource r = askResource();
 				// Prendre les ressources
-				List<Player> players = game.getPlayers();
-				players.remove(player);
-				for (Player p : players) {
-					int n = p.getResource(r);
-					for (int i = 0; i < n; i++) {
-						p.pay(r);
-						player.gainResource(r);
-					}
-				}
-				player.devCardUsed(Progress.MONOPOLY);
+				game.monopoly(r);
 				break;
 			case 'r': // Construction de route
 				if (player.getUsableDevCard(Progress.ROAD_CONSTRUCTION) == 0) {
@@ -337,8 +333,12 @@ public class CLI {
 				if (player.getUsableDevCard(Progress.INVENTION) == 0) {
 					System.out.println("Vous n'avez pas de carte de développement 'Invention'");
 					return false;
-				} // A faire !!
-				player.devCardUsed(Progress.INVENTION);
+				}
+				System.out.println("Choisissez la première ressource");
+				Resource r1 = askResource();
+				System.out.println("Choisissez la deuxième ressource");
+				Resource r2 = askResource();
+				game.invention(r1, r2);
 				break;
 		}
 		return true;

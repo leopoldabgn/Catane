@@ -16,14 +16,16 @@ public class DeckView extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private Player player;
+	private GameView gameView;
 	private List<DevCardView> cards;
 	private boolean victoryPoints;
 	private int upSpace = 17, bottomSpace = 6;
 	
 	// Si victoryPoints : true -> on met que les victory points cards.
 	// Sinon, on met le reste -> progressCard et Knight
-	public DeckView(Player player, boolean victoryPoints) {
-		this.player = player;
+	public DeckView(boolean victoryPoints, GameView gameView) {
+		this.gameView = gameView;
+		this.player = gameView.getGame().getActualPlayer();
 		this.victoryPoints = victoryPoints;
 		this.setLayout(null);
 		if(victoryPoints)
@@ -45,7 +47,7 @@ public class DeckView extends JPanel {
 			if(victoryPoints && !(card instanceof VictoryPoints) ||
 			  !victoryPoints &&   card instanceof VictoryPoints)
 				continue;
-			cardView = new DevCardView(card);
+			cardView = new DevCardView(card, gameView);
 			cards.add(cardView);
 			add(cardView);
 			cardView.setLocation(x, upSpace);

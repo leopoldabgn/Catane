@@ -60,8 +60,6 @@ public class ColonyView extends MovableCaseView {
 
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbColonies() == 2)
 				boardView.getGameView().setSelectedRoad(true);
-
-			System.out.println(boardView.getGame().getActualPlayer().getNbColonies());
 			
 			boardView.getGameView().refreshInfos();
 			revalidate();

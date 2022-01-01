@@ -7,6 +7,8 @@ import java.util.Random;
 
 import com.catane.model.cards.DevelopmentCard;
 import com.catane.model.cards.DevelopmentCardsDeck;
+import com.catane.model.cards.Knight;
+import com.catane.model.cards.Progress;
 
 public class Game {
 
@@ -104,15 +106,37 @@ public class Game {
 		return false;
 	}
 
-	public void refreshMostPowerfulArmyOwner(Player p) {
-		p.armyIncreased();
-		if (p.getArmy() >= 3) {
+	public void refreshMostPowerfulArmyOwner() {
+		actualPlayer.armyIncreased();
+		if (actualPlayer.getArmy() >= 3) {
 			if (mostPowerfulArmyOwner == null)
-				mostPowerfulArmyOwner = p;
+				mostPowerfulArmyOwner = actualPlayer;
 			else
-				if (mostPowerfulArmyOwner.getArmy() < p.getArmy())
-					mostPowerfulArmyOwner = p;
+				if (mostPowerfulArmyOwner.getArmy() < actualPlayer.getArmy())
+					mostPowerfulArmyOwner = actualPlayer;
 		}
+		actualPlayer.devCardUsed(new Knight());
+	}
+
+	public void monopoly(Resource r) {
+		List<Player> otherPlayers = new ArrayList<Player>();
+		for (Player p : players)
+			if (!p.equals(actualPlayer))
+				otherPlayers.add(p);
+		for (Player p : otherPlayers) {
+			int n = p.getResource(r);
+			for (int i = 0; i < n; i++) {
+				p.pay(r);
+				actualPlayer.gainResource(r);
+			}
+		}
+		actualPlayer.devCardUsed(Progress.MONOPOLY);
+	}
+
+	public void invention(Resource r1, Resource r2) {
+		actualPlayer.gainResource(r1);
+		actualPlayer.gainResource(r2);
+		actualPlayer.devCardUsed(Progress.INVENTION);
 	}
 	
 	// On verifie qui a la plus grande route, et on lui donne la carte.

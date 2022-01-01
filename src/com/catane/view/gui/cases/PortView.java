@@ -4,12 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,8 +18,8 @@ import com.catane.model.Resource;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.Port;
 import com.catane.view.gui.BoardView;
-import com.catane.view.gui.CardView;
 import com.catane.view.gui.IconPanel;
+import com.catane.view.gui.ResourceChoicePanel;
 import com.catane.view.gui.CardView.ResourceCardView;;
 
 public class PortView extends CaseView {
@@ -81,7 +78,7 @@ public class PortView extends CaseView {
 	public class TradeFrame extends JFrame {
 		private static final long serialVersionUID = 1L;
 		
-		private TradePanel trade1, trade2;
+		private ResourceChoicePanel trade1, trade2;
 		private JLabel error;
 		
 		public TradeFrame(boolean canTrade) {
@@ -97,8 +94,8 @@ public class PortView extends CaseView {
 			});
 			
 			trade.addActionListener(e -> {
-				if(trade1 != null && trade1.selectedCard == null ||
-				   trade2 != null && trade2.selectedCard == null) {
+				if(trade1 != null && trade1.getSelected() == null ||
+				   trade2 != null && trade2.getSelected() == null) {
 					// On affiche le message d'erreur que une seule fois.
 					// La deuxieme fois on fait rien.
 					if(error == null) {
@@ -112,13 +109,13 @@ public class PortView extends CaseView {
 				}
 				Resource r1, r2;
 				if(trade2 == null) {
-					r1 = ((ResourceCardView)trade1.selectedCard).getResource();
+					r1 = ((ResourceCardView)trade1.getSelected()).getResource();
 					boardView.getActualPlayer().trade(port.getResourceType(),
 							port.getResourcesToGive(), r1);
 				}
 				else {
-					r1 = ((ResourceCardView)trade1.selectedCard).getResource();
-					r2 = ((ResourceCardView)trade2.selectedCard).getResource();
+					r1 = ((ResourceCardView)trade1.getSelected()).getResource();
+					r2 = ((ResourceCardView)trade2.getSelected()).getResource();
 					boardView.getActualPlayer().trade(r1, port.getResourcesToGive(), r2);
 				}
 				
@@ -148,11 +145,11 @@ public class PortView extends CaseView {
 					else {
 						sentence1 += " fois la ressource suivante :";
 						container.add(new JLabel(sentence1));
-						trade1 = new TradePanel(resources);
+						trade1 = new ResourceChoicePanel(resources);
 						container.add(trade1);
 						String sentence2 = "Veuillez choisir la ressource que vous voulez en échange :";
 						container.add(new JLabel(sentence2));
-						trade2 = new TradePanel();
+						trade2 = new ResourceChoicePanel();
 						container.add(trade2);
 					}
 				}
@@ -170,7 +167,7 @@ public class PortView extends CaseView {
 						sentence1 += " "+port.getResourceType()
 						.toString().toLowerCase()+" en echange de :";
 						container.add(new JLabel(sentence1));
-						trade1 = new TradePanel();
+						trade1 = new ResourceChoicePanel();
 						container.add(trade1);
 					}
 				}
@@ -190,7 +187,7 @@ public class PortView extends CaseView {
 			
 			container.add(buttons);
 		}
-		
+		/*
 		private class TradePanel extends JPanel {
 			private static final long serialVersionUID = 1L;
 			
@@ -249,7 +246,7 @@ public class PortView extends CaseView {
 				};
 			}
 			
-		}
+		}*/
 		
 	}
 	

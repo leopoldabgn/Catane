@@ -8,6 +8,7 @@ import com.catane.model.Board;
 import com.catane.model.Player;
 import com.catane.model.cases.Road;
 import com.catane.view.gui.BoardView;
+import com.catane.view.gui.GameView;
 import com.catane.view.gui.IconPanel;
 
 public class RoadView extends MovableCaseView {
@@ -52,6 +53,9 @@ public class RoadView extends MovableCaseView {
 			
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbRoads() == 2)
 				boardView.getGameView().clear();
+
+			if (boardView.getGameView().isEarly() && boardView.getGameView().getConstrucRoad() >= 1)
+				boardView.getGameView().constructRoad();
 			
 			boardView.getGameView().refreshInfos();
 			revalidate();

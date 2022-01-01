@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.Resource;
+import com.catane.model.cards.Progress;
 import com.catane.model.cases.Port;
 import com.catane.view.gui.cases.ColonyView;
 import com.catane.view.gui.cases.PortView;
@@ -41,7 +42,13 @@ public class GameView extends JPanel {
 
 	private int nbReady;
 	private boolean early = true;
+	private int constructRoad = 0;
+	private boolean isBeforeDices;
+	private boolean isDev = false;
 
+	public boolean isDev() {
+		return isDev;
+	}
 	public boolean isEarly() {
 		return early;
 	}
@@ -120,8 +127,8 @@ public class GameView extends JPanel {
 		boardView = new BoardView(this);
 		resourcePan = new ResourcePanel(game);
 		actionPanel = new ActionPanel();
-		progressDeck = new DeckView(game.getActualPlayer(), false);
-		victoryPointsDeck = new DeckView(game.getActualPlayer(), true);
+		progressDeck = new DeckView(false, this);
+		victoryPointsDeck = new DeckView(true, this);
 		buyDevCardButton = new JButton("Acheter carte dev.");
 		nextTurnButton = new JButton("Passer au prochain tour");
 		nextTurnButton.setEnabled(false);
@@ -131,7 +138,7 @@ public class GameView extends JPanel {
 			Player actualPlayer = game.getActualPlayer();
 			if(actualPlayer.canBuyDevCard(game) == 0) {
 				actualPlayer.getDevCard(game);
-				refreshDecks();
+				refreshInfos();
 				buyDevCardButton.setEnabled(false);
 			}
 		});
@@ -145,6 +152,7 @@ public class GameView extends JPanel {
 			dices.setEnabled(true);
 			buyDevCardButton.setEnabled(game.getActualPlayer().canBuyDevCard(game) == 0);
 			nextTurnButton.setEnabled(false);
+			game.getActualPlayer().refreshDevCards();
 		});
 		
 		tradeButton.addActionListener(e -> {
@@ -212,19 +220,60 @@ public class GameView extends JPanel {
 		this.add(northPan, BorderLayout.NORTH);
 		this.add(boardView, BorderLayout.CENTER);
 		
-		// Tu mets ça en commentaire si tu veux continuer ton travail
+		// Tu mets ça en commentaire si tu veux continuer ton travail (à enlever)
 		////////////////
-		//this.add(eastPan, BorderLayout.EAST);
-		//this.add(southPan, BorderLayout.SOUTH);
+		// this.add(eastPan, BorderLayout.EAST);
+		// this.add(southPan, BorderLayout.SOUTH);
 		////////////////
 		
+		// pour le début de game (à décommenter)
 		this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
 
-		// Lancer earlyGame
+		// Lancer earlyGame (à décommenter)
 		setSelectedColony(true);
 
-		System.out.println(game.getActualPlayer().getNbColonies());
+		// pour ne pas avoir à placer toutes les colonies/routes a chaque fois (à enlever)
+		// startGame(boardView, northPan, eastPan, southPan);
 
+	}
+
+	public void constructRoad() {
+		if (constructRoad < 2) {
+			isDev = true;
+			early = true;
+			constructRoad++;
+			dices.setEnabled(false);
+			actionPanel.setButtonsEnabled(false);
+			nextTurnButton.setEnabled(false);
+			tradeButton.setEnabled(false);
+			setSelectedRoad(true);
+		}else {
+			early = false;
+			constructRoad = 0;
+			isDev = false;
+			clear();
+			tradeButton.setEnabled(true);
+			if (!isBeforeDices) {
+				nextTurnButton.setEnabled(true);
+				actionPanel.setButtonsEnabled(true);
+			}else {
+				dices.setEnabled(true);
+				actionPanel.setButtonsEnabled(false);
+			}
+			game.getActualPlayer().devCardUsed(Progress.ROAD_CONSTRUCTION);
+		}
+	}
+
+	public int getConstrucRoad() {
+		return constructRoad;
+	}
+
+	public void isBeforeDices(boolean isBeforeDices) {
+		this.isBeforeDices = isBeforeDices;
+	}
+
+	public boolean getDicesEnabled() {
+		return dices.isEnabled();
 	}
 
 	public int refreshReady() {

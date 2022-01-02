@@ -252,13 +252,10 @@ public class CLI {
 							error = false;
 							break;
 						case 'u': // Utiliser une carte de développement
-							if (player.getNbDevCard(new Knight()) == 0 && player.getNbDevCard(Progress.ROAD_CONSTRUCTION) == 0 && player.getNbDevCard(Progress.INVENTION) == 0 && player.getNbDevCard(Progress.MONOPOLY) == 0) {
-								System.out.println("Vous n'avez pas de carte de développement !");
-							}else {
-								boolean used = false;
-								while (!used)
-									used = useDev(player);
-							}
+							if (player.getUsableDevCard(new Knight()) == 0 && player.getUsableDevCard(Progress.ROAD_CONSTRUCTION) == 0 && player.getUsableDevCard(Progress.INVENTION) == 0 && player.getUsableDevCard(Progress.MONOPOLY) == 0)
+								System.out.println("Vous n'avez pas de carte de développement utilisable !");
+							else
+								useDev(player);
 							break;
 						case 'e': // Echanger des ressources
 							error = !portAction();
@@ -283,21 +280,23 @@ public class CLI {
 		char c = ' ';
 		do {
 			System.out.println("Choisissez une carte développement à utiliser (c -> Chevalier / m -> Monopole / r -> Construction de route / i -> Invention)");
+			System.out.println("annuler -> a");
 			String s = sc.nextLine();
 			if (!s.isBlank())
 				c = s.charAt(0);
 			else
 				c = ' ';
-		}while (c != 'c' && c != 'm' && c != 'r' && c != 'i');
+		}while (c != 'c' && c != 'm' && c != 'r' && c != 'i' && c != 'a');
 		switch (c) {
+			case 'a':
+				break;
 			case 'c': // Chevalier
 				if (player.getUsableDevCard(new Knight()) == 0) {
-					System.out.println("Vous n'avez pas de carte de développement 'Chevalier'");
+					System.out.println("Vous n'avez pas de carte de développement 'Chevalier' utilisable");
 					return false;
 				}
 				game.refreshMostPowerfulArmyOwner();
 				thiefAction();
-				System.out.println(player.getArmy() + " et " + game.mostPowerfulArmyOwner());
 				break;
 			case 'm': // Monopole
 				if (player.getUsableDevCard(Progress.MONOPOLY) == 0) {
@@ -374,6 +373,25 @@ public class CLI {
 				}
 			}
 		}
+		System.out.println();
+
+		// Utiliser une carte de développement
+		c = ' ';
+		do {
+			System.out.println("Voulez-vous utiliser une carte de développement ? (o/n)");
+			String s = sc.nextLine();
+			if (!s.isBlank())
+				c = s.charAt(0);
+			else
+				c = ' ';
+		}while (c != 'o' && c != 'n');
+		if (c == 'o') {
+			if (game.getActualPlayer().getUsableDevCard(new Knight()) == 0 && game.getActualPlayer().getUsableDevCard(Progress.ROAD_CONSTRUCTION) == 0 && game.getActualPlayer().getUsableDevCard(Progress.INVENTION) == 0 && game.getActualPlayer().getUsableDevCard(Progress.MONOPOLY) == 0)
+				System.out.println("Vous n'avez pas de carte de développement utilisable !");
+			else
+				useDev(game.getActualPlayer());
+		}
+
 
 		// Lance les dés
 		int[] d = game.rollDices();

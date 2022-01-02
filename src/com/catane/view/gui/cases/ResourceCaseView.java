@@ -87,8 +87,7 @@ public class ResourceCaseView extends CaseView {
 		if(!isSelectable)
 			return;
 		boardView.switchThief(this);
-		boardView.getGameView().endThief();
-		boardView.getGameView().refreshInfos();
+		boardView.getGameView().stealResource();
 		revalidate();
 		repaint();
 	}

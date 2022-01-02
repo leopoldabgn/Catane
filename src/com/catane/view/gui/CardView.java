@@ -88,8 +88,7 @@ public class CardView extends JPanel {
 							if (ans == JOptionPane.YES_OPTION) {
 								if(devCard instanceof Knight) {
 									gameView.getGame().refreshMostPowerfulArmyOwner();
-									// thief
-									gameView.refreshInfos();
+									gameView.thiefAction();
 								}
 								else if(devCard instanceof Progress) {
 									if(devCard == Progress.ROAD_CONSTRUCTION) {

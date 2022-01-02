@@ -84,13 +84,5 @@ public class DiscardFrame extends JFrame {
 
 		setVisible(true);
     }
-
-    public static class ResourcePlayerPanel extends JPanel {
-
-        public ResourcePlayerPanel(Player p) {
-
-        }
-
-    }
     
 }

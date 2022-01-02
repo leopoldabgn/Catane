@@ -22,6 +22,7 @@ import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.Resource;
 import com.catane.model.cards.Progress;
+import com.catane.model.cases.Colony;
 import com.catane.model.cases.Port;
 import com.catane.view.gui.cases.ColonyView;
 import com.catane.view.gui.cases.PortView;
@@ -58,6 +59,8 @@ public class GameView extends JPanel {
 		isThiefActive = false;
 		setEnabledActions(true);
 		dices.setEnabled(false);
+		refreshInfos();
+		refreshActions();
 	}
 	public boolean isDev() {
 		return isDev;
@@ -123,7 +126,7 @@ public class GameView extends JPanel {
 				// Le mettre apres le refreshOptions ! Important !
 				if(value == 7) {
 					setEnabledActions(false);
-					//discard();
+					// discard();
 					thiefAction();
 				}
 
@@ -303,7 +306,20 @@ public class GameView extends JPanel {
 		isThiefActive = true;
 		boardView.changeSelectableCases(new ResourceCaseView(), null, false);
 		refreshInfos();
-		// TODO: voler une ressource au hasard à un joueur de notre choix (parmis les colonies autour)
+	}
+
+	public void stealResource() { // Voler une ressource au hasard, appelé quand le voleur est déplacé
+		int[] coord = game.getBoard().getThiefCoord();
+		List<Colony> col = game.getBoard().getColonies(coord[0], coord[1]);
+		List<Player> players = new ArrayList<Player>();
+		for (Colony c : col)
+			if (game.getActualPlayer() != c.getPlayer() && !players.contains(c.getPlayer()))
+				players.add(c.getPlayer());
+		if (players.isEmpty()) {
+			endThief();
+			return;
+		}
+		new PlayerFrame(players, this);
 	}
 
 	public void refreshKnight() {

@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -220,9 +221,14 @@ public class GameView extends JPanel {
 
 		// panel actions possibles
 		actions = new JPanel();
-		actions.setLayout(new GridLayout(0, 1, 5, 5));
+		JPanel border = new JPanel();
+		border.setLayout(new BorderLayout());
 		actions.setBorder(new EmptyBorder(10, 10, 10, 10));
-		eastPan.add(actions, BorderLayout.CENTER);
+		actions.setMinimumSize(new java.awt.Dimension(200, 400));
+		actions.setLayout(new GridLayout(0, 1, 5, 5));
+		border.setBorder(BorderFactory.createEtchedBorder());
+		border.add(actions, BorderLayout.NORTH);
+		eastPan.add(border, BorderLayout.CENTER);
 		refreshActions();
 		
 		

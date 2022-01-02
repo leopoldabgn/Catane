@@ -143,11 +143,11 @@ public class CLI {
 	public void playRound() {
 		Player player = game.getActualPlayer();
 
-		// if (player instanceof AI) {
+		if (player instanceof AI) {
 
 		// 	((AI) player).midGame(game);
 
-		// }else {
+		}else {
 		
 			System.out.println("Au tour de "+player+"\n");
 			boolean endRound;
@@ -274,7 +274,7 @@ public class CLI {
 
 		}
 		
-	// }
+	}
 
 	public boolean useDev(Player player) {
 		char c = ' ';

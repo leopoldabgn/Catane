@@ -17,6 +17,7 @@ public class AI extends Player {
 		return getName();
 	}
 
+	@Override
 	public void setName(String name) {
 
 	}

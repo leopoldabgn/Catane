@@ -17,10 +17,13 @@ public class Game {
 	private Player longestRoadOwner, mostPowerfulArmyOwner; // On sait qui detient les cartes.
 	private Board board;
 	private DevelopmentCardsDeck developmentCardsDeck;
+	private History history;
 
 	public Game() {
 		Player.nextPlayerNb = 1; // On remet a 1 au cas ou il s'agirait d'une nouvelle partie.
 		developmentCardsDeck = new DevelopmentCardsDeck();
+		this.history = new History();
+		history.add("Configuration de la partie : ");
 	}
 
 	public void setBoard(int n) {
@@ -28,6 +31,7 @@ public class Game {
 			board = new Board(n);
 		else
 			board = new Board(4);
+		history.add("Plateau "+n+"x"+n);
 	}
 	
 	public void setPlayers(List<Player> players) { // Peut sûrement être supprimée
@@ -38,7 +42,9 @@ public class Game {
 	
 	public int[] rollDices() {
 		Random rd = new Random();
-		return new int[] {rd.nextInt(6)+1, rd.nextInt(6)+1};
+		int[] vals = new int[] {rd.nextInt(6)+1, rd.nextInt(6)+1};
+		history.add("Les dés sont lancés : "+(vals[0]+vals[1]));
+		return vals;
 	}
 	
 	public int[] convertCoord(String coord) {
@@ -97,6 +103,7 @@ public class Game {
 			return;
 		
 		actualPlayer = players.get(index  == players.size()-1 ? 0 : index+1);
+		history.add("Au tour de "+actualPlayer);
 	}
 	
 	public boolean endGame() { // Ou alors on dit que celui qui vient de jouer a gagné ? actualPlayer.hasWon() ?
@@ -197,4 +204,8 @@ public class Game {
 		return players;
 	}
 
+	public History getHistory() {
+		return history;
+	}
+	
 }

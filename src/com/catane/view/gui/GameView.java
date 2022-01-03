@@ -2,6 +2,7 @@ package com.catane.view.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -47,7 +48,8 @@ public class GameView extends JPanel {
 	private DeckView progressDeck, victoryPointsDeck;
 	private JPanel actions, actionsEarly;
 	private JPanel knight;
-
+	private HistoryView historyView;
+	
 	private int nbReady;
 	private boolean early = true;
 	private int constructRoad = 0;
@@ -156,6 +158,7 @@ public class GameView extends JPanel {
 		progressDeck = new DeckView(false, this);
 		victoryPointsDeck = new DeckView(true, this);
 		buyDevCardButton = new JButton("Acheter carte dev.");
+		historyView = new HistoryView(game.getHistory());
 		nextTurnButton = new JButton("Passer au prochain tour");
 		nextTurnButton.setEnabled(false);
 		tradeButton = new JButton("Echange (4:1)");
@@ -189,6 +192,7 @@ public class GameView extends JPanel {
 			// Ouvre une fenetre d'echange 4:1
 			PortView.TradeFrame tradeFrame = (portView.new TradeFrame(true));
 			tradeFrame.setVisible(true);
+			refreshInfos();
 		});
 		
 		JPanel buttonsPan = new JPanel();
@@ -224,11 +228,17 @@ public class GameView extends JPanel {
 		JPanel border = new JPanel();
 		border.setLayout(new BorderLayout());
 		actions.setBorder(new EmptyBorder(10, 10, 10, 10));
-		actions.setMinimumSize(new java.awt.Dimension(200, 400));
+		actions.setMinimumSize(new Dimension(200, 400));
 		actions.setLayout(new GridLayout(0, 1, 5, 5));
 		border.setBorder(BorderFactory.createEtchedBorder());
 		border.add(actions, BorderLayout.NORTH);
-		eastPan.add(border, BorderLayout.CENTER);
+		
+		// Pour faire des tests. Je vais faire mieux que ça demain.
+		eastPan.add(historyView, BorderLayout.CENTER);
+		// a decommenter pour retrouver le panel actions
+		//eastPan.add(border, BorderLayout.CENTER);
+		
+		
 		refreshActions();
 		
 		
@@ -542,6 +552,7 @@ public class GameView extends JPanel {
 		refreshDecks();
 		refreshActions();
 		refreshKnight();
+		historyView.refresh();
 	}
 	
 	public void refreshDecks() {

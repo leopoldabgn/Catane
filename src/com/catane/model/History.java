@@ -8,7 +8,7 @@ public class History extends ArrayList<String> {
 	public History() {
 		
 	}
-	
+
 	@Override
 	public String toString() {
 		String str = "";

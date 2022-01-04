@@ -264,7 +264,7 @@ public class Player {
 	}
 
 	public boolean canUseDev(DevelopmentCard card) {
-		if (getNbDevCard(card) > 0) {
+		if (getNbDevCard(card) > 0 && !(card instanceof VictoryPoints)) {
 			if (hasDrawDev == false)
 				return true;
 			if (getNbDevCard(card) == 1 && developmentCards.get(developmentCards.size() -1).equals(card))

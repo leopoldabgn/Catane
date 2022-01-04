@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.catane.model.AI;
 import com.catane.model.Board;
 import com.catane.model.Game;
 import com.catane.model.Player;
-import com.catane.model.AI;
 import com.catane.model.Resource;
-import com.catane.model.cards.DevelopmentCard;
 import com.catane.model.cards.Knight;
 import com.catane.model.cards.Progress;
 import com.catane.model.cases.Colony;
@@ -349,25 +348,6 @@ public class CLI {
 	}
 
 	public boolean dices() {
-
-		if(game.getActualPlayer().isAI()) {
-			AI ai = (AI)game.getActualPlayer();
-			if(ai.wantsTo()) {
-				if(ai.canBuyDevCard(game) == 0) {
-					ai.getDevCard(game);
-				}
-			}
-				
-			if(ai.wantsTo()) {
-				DevelopmentCard card = ai.getUsableDevCard();
-				if(card != null) {
-					useDev(ai);
-				}
-			}
-			
-			return false;
-		}
-		
 		// Achat facultatif d'une carte de développement avant le lancement des dés
 		char c;
 		boolean devBought = false;

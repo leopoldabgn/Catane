@@ -1,9 +1,15 @@
 package com.catane.model;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.catane.model.cards.DevelopmentCard;
+import com.catane.model.cards.Knight;
+import com.catane.model.cards.Progress;
+import com.catane.model.cases.Colony;
+import com.catane.model.cases.ResourceCase;
 
 public class AI extends Player {
 
@@ -41,8 +47,10 @@ public class AI extends Player {
 		}
 	}
 
-	public void midGame(Game game) {
+	public History midGame(Game game) {
+		History history = new History();
 		Board board = game.getBoard();
+		
 		int[] dices = game.rollDices();
 		int gain = dices[0] + dices[1];
 		if (gain == 7) {
@@ -52,29 +60,87 @@ public class AI extends Player {
 		}
 
 		// Action de l'IA
+		return history;
 	}
 
+	public void rollDices(Game game) {
+		if(wantsTo()) {
+			if(canBuyDevCard(game) == 0) {
+				getDevCard(game);
+			}
+		}
+			
+		if(wantsTo()) {
+			DevelopmentCard card = getUsableDevCard();
+			if(card != null) {
+				if(card instanceof Knight) {
+					game.refreshMostPowerfulArmyOwner();
+					// thiefAction();
+				}
+				else if(card == Progress.MONOPOLY) {
+					// Resource r = askResource();
+					// game.monopoly(r);
+				}
+				else if(card == Progress.ROAD_CONSTRUCTION) {
+					//board.putRoad(player, coord[0], coord[1], true);
+					// game.refreshLongestRoadOwner();
+					// player.devCardUsed(Progress.ROAD_CONSTRUCTION);
+				}
+				else if(card == Progress.INVENTION) {
+					/*
+						Resource r1 = askResource();
+						Resource r2 = askResource();
+						game.invention(r1, r2);
+					 */			
+				}
+			}
+		}
+			
+	}
+
+	
+			
 	public void action(Game game) {
+		Board board = game.getBoard();
 		Random rd = new Random();
-		int nbActions = 2;
-		switch(rd.nextInt(nbActions)+1) {
-			case 0:
-				
+		char[] actions = {'c', 'v', 'r', 'd', 'u', 'e'};
+		int rand = rd.nextInt(actions.length);
+		int[] coord;
+		Colony c;
+		switch(actions[rand]) {
+			case 'c':
+				if(!canAffordColony())
+					break;
+				c = findColony(board);
+				if(c == null)
+					break;
+				board.putColony(this, c, false);
 				break;
-			case 1:
+			case 'v':
+				if(!canAffordTown())
+					break;
+				c = findTown(board);
+				if(c == null)
+					break;
+				board.putTown(this, c, false);
 				break;
-			case 2:
-				//drawDevCard(game);
+			case 'r':
+				break;
+			case 'd':
+				break;
+			case 'u':
+				break;
+			case 'e':
 				break;
 		}
 	}
 	
 	public DevelopmentCard getUsableDevCard() {
-		Random rd = new Random();
-		int rand = getDevCards().size();
-		if(rand == 0)
-			return null;
-		return getDevCards().get(rd.nextInt(rand));
+		for(DevelopmentCard card : getDevCards()) {
+			if(canUseDev(card))
+				return card;
+		}
+		return null;
 	}
 	
 	public boolean wantsTo() {

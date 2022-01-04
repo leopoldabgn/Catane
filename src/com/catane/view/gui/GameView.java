@@ -299,12 +299,14 @@ public class GameView extends JPanel {
 		// this.add(southPan, BorderLayout.SOUTH);
 		////////////////
 		
-		// pour le début de game (à décommenter)
-		// this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
-		
 		// Lancer earlyGame (à décommenter)
+		// this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
 		// setSelectedColony(true);
 		// refreshActionsEarly();
+		if (game.getActualPlayer().isAI()) {
+			((AI) game.getActualPlayer()).earlyGame(game);
+			nextTurnButtonEarly.doClick();
+		}
 		
 		// pour ne pas avoir à placer toutes les colonies/routes a chaque fois (à enlever)
 		startGame(boardView, northPan, eastPan, southPan);

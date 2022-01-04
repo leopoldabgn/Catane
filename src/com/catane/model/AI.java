@@ -196,7 +196,7 @@ public class AI extends Player {
 		List<Case> list = board.findFreeCase(new Road(), null);
 		Collections.shuffle(list);
 		for (Case c : list)
-			if (canBuildColonyOn(board, board.getIndexesOf(c), early) == 0)
+			if (canBuildRoadOn(board, board.getIndexesOf(c), early) == 0)
 				return (Road) c;
 		return null;
 	}

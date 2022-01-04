@@ -1,6 +1,7 @@
 package com.catane.model;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -164,6 +165,15 @@ public class AI extends Player {
 		ResourceCase rC = findResourceCase(board);
 		int[] newThief = board.getIndexesOf(rC);
 		board.switchThief(newThief);
+		List<Colony> col = board.getColonies(newThief[0], newThief[1]);
+		List<Player> players = new ArrayList<Player>();
+		for (Colony c : col)
+			if (c.getPlayer() != this && !players.contains(c.getPlayer()))
+				players.add(c.getPlayer());
+		if (players.isEmpty())
+			return;
+		Random r = new Random();
+		stealResource(players.get(r.nextInt(players.size() - 1)));
 	}
 	
 	public DevelopmentCard getUsableDevCard() {
@@ -192,7 +202,7 @@ public class AI extends Player {
 		List<Case> list = board.findFreeCase(new Road(), null);
 		Collections.shuffle(list);
 		for (Case c : list)
-			if (canBuildColonyOn(board, board.getIndexesOf(c), early) == 0)
+			if (canBuildRoadOn(board, board.getIndexesOf(c), early) == 0)
 				return (Road) c;
 		return null;
 	}

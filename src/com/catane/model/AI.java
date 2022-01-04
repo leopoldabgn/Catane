@@ -11,6 +11,7 @@ import com.catane.model.cards.Knight;
 import com.catane.model.cards.Progress;
 import com.catane.model.cases.Case;
 import com.catane.model.cases.Colony;
+import com.catane.model.cases.Port;
 import com.catane.model.cases.ResourceCase;
 import com.catane.model.cases.Road;
 import com.catane.view.cli.CLI;
@@ -73,7 +74,7 @@ public class AI extends Player {
 				getDevCard(game);
 			}
 		}
-			
+		
 		if(wantsTo()) {
 			DevelopmentCard card = getUsableDevCard();
 			if(card != null) {
@@ -126,6 +127,7 @@ public class AI extends Player {
 		char[] actions = {'c', 'v', 'r', 'd', 'u', 'e'};
 		int rand = rd.nextInt(actions.length);
 		Case c;
+		List<Port> ports;
 		switch(actions[rand]) {
 			case 'c':
 				if(!canAffordColony())
@@ -156,6 +158,34 @@ public class AI extends Player {
 			case 'u':
 				break;
 			case 'e':
+				ports = board.getPorts(this);
+				List<Resource> resources;
+				Resource r;
+				if(ports.isEmpty()) {
+					resources = getResourcesByNb(4);
+					if(!resources.isEmpty()) {
+						r = resources.get(0);
+						trade(r, 4, askResource(r));
+					}
+				}
+				else {
+					for(Port p : ports) {
+						if(p.getResourceType() == null) {
+							resources = getResourcesByNb(p.getResourcesToGive());
+							if(resources.isEmpty())
+								continue;
+							r = resources.get(0);
+						}
+						else {
+							int nb = getResource(p.getResourceType());
+							if(nb < p.getResourcesToGive())
+								continue;
+							r = p.getResourceType();
+						}
+
+						trade(r, p.getResourcesToGive(), askResource(r));
+					}
+				}
 				break;
 		}
 	}
@@ -229,6 +259,16 @@ public class AI extends Player {
 		return res[r.nextInt(res.length)];
 	}
 
+	public Resource askResource(Resource re) {
+		Resource[] res = Resource.values();
+		Random r = new Random();
+		int rand;
+		do {
+			rand = r.nextInt(res.length);
+		} while(res[rand] == re);
+		return res[rand];
+	}
+	
 	public int[] moveThief() {
 		int[] coord = new int[2];
 		return coord;

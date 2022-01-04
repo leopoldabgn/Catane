@@ -211,7 +211,9 @@ public class Player {
 		pay(Resource.CLAY);
 	}
 
-	public void trade(Resource aPayer, int nbAPayer, Resource aGagner){
+	public void trade(Resource aPayer, int nbAPayer, Resource aGagner) {
+		if(aPayer == null)
+			return;
 		addHistory(this+" a échangé "+nbAPayer+" "+aPayer+" contre 1 "+aGagner);
 		for(int i=0;i<nbAPayer;i++)
 			pay(aPayer);

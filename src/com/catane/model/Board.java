@@ -6,7 +6,6 @@ import java.util.Random;
 
 import com.catane.model.cases.Case;
 import com.catane.model.cases.Colony;
-import com.catane.model.cases.MovableCase;
 import com.catane.model.cases.Port;
 import com.catane.model.cases.ResourceCase;
 import com.catane.model.cases.ResourceCase.Desert;
@@ -220,22 +219,26 @@ public class Board {
 		return putColony(player, coord[0], coord[1], early);
 	}
 
-	public List<MovableCase> findFreeCase(MovableCase movableCase, Player player) {
-		List<MovableCase> list = new ArrayList<MovableCase>();
+	public List<Case> findFreeCase(Case ca, Player player) {
+		List<Case> list = new ArrayList<Case>();
 		for (Case[] tab : cases)
 			for (Case c : tab) {
-				if (movableCase instanceof Colony && c instanceof Colony) {
+				if (ca instanceof Colony && c instanceof Colony) {
 					if (player == null) { // On cherche une colonie libre
 						if (((Colony) c).isEmpty())
-							list.add((MovableCase) c);
+							list.add(c);
 					}else { // On cherche une colonie pour poser une ville
 						if (((Colony) c).getPlayer().equals(player))
-							list.add((MovableCase) c);
+							list.add(c);
 					}
 				}
-				if (movableCase instanceof Road && c instanceof Road) { // On cherche une route libre
+				if (ca instanceof Road && c instanceof Road) { // On cherche une route libre
 					if (((Road) c).isEmpty())
-							list.add((MovableCase) c);
+							list.add(c);
+				}
+				if (ca instanceof ResourceCase && c instanceof ResourceCase) { // On cherche une case ressource case vide
+					if (!((ResourceCase)c).hasThief())
+							list.add(c);
 				}
 			}
 		return list;

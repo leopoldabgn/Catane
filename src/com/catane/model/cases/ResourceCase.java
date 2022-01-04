@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.catane.model.Resource;
 
-public abstract class ResourceCase extends Case {
+public class ResourceCase extends Case {
 
 	private Color color;
 	private int number;
@@ -16,7 +16,7 @@ public abstract class ResourceCase extends Case {
 		this.color = color;
 	}
 	
-	public abstract void giveResources(List<Colony> col);
+	public void giveResources(List<Colony> col) {}
 	
 	@Override
 	public String toString() {
@@ -48,11 +48,6 @@ public abstract class ResourceCase extends Case {
 
 		public Desert() {
 			super(-1, Color.WHITE);
-		}
-		
-		@Override
-		public void giveResources(List<Colony> col) {
-			
 		}
 		
 		@Override

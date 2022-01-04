@@ -21,14 +21,4 @@ public enum VictoryPoints implements DevelopmentCard {
 		return super.toString().toLowerCase();
 	}
 	
-	@Override
-	public void canUse() {
-
-	}
-	
-	@Override
-	public boolean isUsable() {
-		return true;
-	}
-	
 }

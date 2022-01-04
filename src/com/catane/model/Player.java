@@ -20,6 +20,7 @@ public class Player {
 	private List<Colony> colonies; // Comprend egalement les villes...
 	private List<Road> roads;
 	private List<DevelopmentCard> developmentCards;
+	private boolean hasDrawDev = false;
 	private String name;
 
 	private History history;
@@ -88,14 +89,6 @@ public class Player {
 		int sum = 0;
 		for(DevelopmentCard c : developmentCards)
 			if(c.equals(card))
-				sum++;
-		return sum;
-	}
-
-	public int getUsableDevCard(DevelopmentCard card) {
-		int sum = 0;
-		for(DevelopmentCard c : developmentCards)
-			if(c.equals(card) && c.isUsable())
 				sum++;
 		return sum;
 	}
@@ -260,14 +253,25 @@ public class Player {
 		addHistory(this+" a acheté une carte de developpement");
 		payDevCard();
 		DevelopmentCard card = game.getDevCard();
-		if(card != null) // Normalement il est impossible que card soit null !
+		if(card != null) { // Normalement il est impossible que card soit null !
 			developmentCards.add(card);
+			hasDrawDev = true;
+		}
 	}
 
 	public void refreshDevCards() {
-		for (DevelopmentCard card : developmentCards) {
-			card.canUse();
+		hasDrawDev = false;
+	}
+
+	public boolean canUseDev(DevelopmentCard card) {
+		if (getNbDevCard(card) > 0) {
+			if (hasDrawDev == false)
+				return true;
+			if (getNbDevCard(card) == 1 && developmentCards.get(developmentCards.size() -1).equals(card))
+				return false;
+			return true;
 		}
+		return false;
 	}
 
 	public void devCardUsed(DevelopmentCard card) {

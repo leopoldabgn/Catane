@@ -90,7 +90,7 @@ public class Game {
 		}
 		for (int i = 0 + p; i < ia + p; i++) {
 			switch (i) {
-				case 0:	player = new AI(Color.ORANGE);
+				case 0:	player = new AI(Color.WHITE);
 						break;
 				case 1:	player = new AI(Color.BLUE);
 						break;

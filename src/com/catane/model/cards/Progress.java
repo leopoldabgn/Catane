@@ -6,7 +6,6 @@ public enum Progress implements DevelopmentCard {
 	MONOPOLY("Monopole");
 	
 	private String name;
-	private boolean usable = false;
 	
 	private Progress(String name) {
 		this.name = name;

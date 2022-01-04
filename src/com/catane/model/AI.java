@@ -60,7 +60,6 @@ public class AI extends Player {
 
 	public History midGame(Game game) {
 		int beginIndexHist = game.getHistory().size();
-		Board board = game.getBoard();
 		rollDices(game);
 
 		// Action de l'IA

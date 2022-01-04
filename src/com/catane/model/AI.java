@@ -8,8 +8,9 @@ import java.util.Random;
 import com.catane.model.cards.DevelopmentCard;
 import com.catane.model.cards.Knight;
 import com.catane.model.cards.Progress;
+import com.catane.model.cases.Case;
 import com.catane.model.cases.Colony;
-import com.catane.model.cases.MovableCase;
+import com.catane.model.cases.ResourceCase;
 import com.catane.model.cases.Road;
 
 public class AI extends Player {
@@ -45,19 +46,12 @@ public class AI extends Player {
 	}
 
 	public History midGame(Game game) {
-		History history = new History();
+		int beginIndexHist = game.getHistory().size();
 		Board board = game.getBoard();
-		
-		int[] dices = game.rollDices();
-		int gain = dices[0] + dices[1];
-		if (gain == 7) {
-			// Voleur
-		}else {
-			board.gainResource(gain);
-		}
+		rollDices(game);
 
 		// Action de l'IA
-		return history;
+		return game.getHistory().cutHistory(beginIndexHist);
 	}
 
 	public void rollDices(Game game) {
@@ -92,11 +86,17 @@ public class AI extends Player {
 				}
 			}
 		}
-			
+		
+		int[] d = game.rollDices();
+		int gain = d[0] + d[1];
+		if (gain == 7) {
+			// discard();
+			// thiefAction();
+		}
+		else
+			game.getBoard().gainResource(gain);
 	}
 
-	
-			
 	public void action(Game game) {
 		Board board = game.getBoard();
 		Random rd = new Random();
@@ -145,32 +145,39 @@ public class AI extends Player {
 	}
 	
 	public Colony findColony(Board board, boolean early) {
-		List<MovableCase> list = board.findFreeCase(new Colony(), null);
+		List<Case> list = board.findFreeCase(new Colony(), null);
 		Collections.shuffle(list);
-		for (MovableCase c : list)
+		for (Case c : list)
 			if (canBuildColonyOn(board, board.getIndexesOf(c), early) == 0)
 				return (Colony) c;
 		return null;
 	}
 
 	public Road findRoad(Board board, boolean early) {
-		List<MovableCase> list = board.findFreeCase(new Colony(), null);
+		List<Case> list = board.findFreeCase(new Colony(), null);
 		Collections.shuffle(list);
-		for (MovableCase c : list)
+		for (Case c : list)
 			if (canBuildColonyOn(board, board.getIndexesOf(c), early) == 0)
 				return (Road) c;
 		return null;
 	}
 
 	public Colony findTown(Board board, boolean early) {
-		List<MovableCase> list = board.findFreeCase(new Colony(), this);
+		List<Case> list = board.findFreeCase(new Colony(), this);
 		Collections.shuffle(list);
-		for (MovableCase c : list)
+		for (Case c : list)
 			if (canBuildColonyOn(board, board.getIndexesOf(c), early) == 0)
 				return (Colony) c;
 		return null;
 	}
 
+	public ResourceCase findResourceCase(Board board, boolean early) {
+		List<Case> list = board.findFreeCase(new ResourceCase(-1, null), this);
+		Collections.shuffle(list);
+		// Liste forcement non vide.
+		return (ResourceCase)list.get(0);
+	}
+	
 	public int[] moveThief() {
 		int[] coord = new int[2];
 		return coord;

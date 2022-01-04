@@ -72,7 +72,7 @@ public class AI extends Player {
 		int gain = d[0] + d[1];
 		if (gain == 7) {
 			// discard();
-			// thiefAction();
+			thiefAction(game);
 		}
 		else
 			game.getBoard().gainResource(gain);
@@ -123,7 +123,7 @@ public class AI extends Player {
 			case 'v':
 				if(!canAffordTown())
 					break;
-				c = findTown(board, false);
+				c = findTown(board);
 				if(c == null)
 					break;
 				board.putTown(this, c);
@@ -137,6 +137,13 @@ public class AI extends Player {
 			case 'e':
 				break;
 		}
+	}
+	
+	public void thiefAction(Game game) {
+		Board board = game.getBoard();
+		ResourceCase rC = findResourceCase(board);
+		int[] newThief = board.getIndexesOf(rC);
+		board.switchThief(newThief);
 	}
 	
 	public DevelopmentCard getUsableDevCard() {
@@ -170,7 +177,7 @@ public class AI extends Player {
 		return null;
 	}
 
-	public Colony findTown(Board board, boolean early) {
+	public Colony findTown(Board board) {
 		List<Case> list = board.findFreeCase(new Colony(), this);
 		Collections.shuffle(list);
 		for (Case c : list)
@@ -179,8 +186,8 @@ public class AI extends Player {
 		return null;
 	}
 
-	public ResourceCase findResourceCase(Board board, boolean early) {
-		List<Case> list = board.findFreeCase(new ResourceCase(-1, null), this);
+	public ResourceCase findResourceCase(Board board) {
+		List<Case> list = board.findFreeCase(new ResourceCase(-1, null), null);
 		Collections.shuffle(list);
 		// Liste forcement non vide.
 		return (ResourceCase)list.get(0);

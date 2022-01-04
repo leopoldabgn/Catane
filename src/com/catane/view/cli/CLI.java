@@ -90,7 +90,7 @@ public class CLI {
 
 		// Mise en place du jeu
 		for (Player player : game.getPlayers()) {
-			if (player instanceof AI) {
+			if (player.isAI()) {
 
 				((AI) player).earlyGame(game);
 
@@ -145,7 +145,7 @@ public class CLI {
 	public void playRound() {
 		Player player = game.getActualPlayer();
 
-		// if (player instanceof AI) {
+		// if (player.isAI()) {
 
 		// // 	((AI) player).midGame(game);
 

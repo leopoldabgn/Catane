@@ -58,7 +58,6 @@ public class GameView extends JPanel {
 	private boolean isBeforeDices;
 	private boolean isDev = false;
 	private boolean isThiefActive = false;
-	private boolean isBeforeDev = false;
 
 	public void endThief() {
 		isThiefActive = false;
@@ -175,7 +174,6 @@ public class GameView extends JPanel {
 			if(actualPlayer.canBuyDevCard(game) == 0) {
 				actualPlayer.getDevCard(game);
 				buyDevCardButton.setEnabled(false);
-				isBeforeDev = buyDevCardButton.isEnabled();
 				refreshInfos();
 			}
 		});
@@ -189,8 +187,11 @@ public class GameView extends JPanel {
 			dices.setEnabled(true);
 			buyDevCardButton.setEnabled(game.getActualPlayer().canBuyDevCard(game) == 0);
 			nextTurnButton.setEnabled(false);
-			isBeforeDev = buyDevCardButton.isEnabled();
 			refreshInfos();
+			if (game.getActualPlayer().isAI()) {
+				((AI) game.getActualPlayer()).midGame(game);
+				nextTurnButton.doClick();
+			}
 		});
 		
 		tradeButton.addActionListener(e -> {
@@ -274,6 +275,10 @@ public class GameView extends JPanel {
 				if (game.getActualPlayer().isReady()) {
 					game.nextRound();
 					setSelectedColony(true);
+					if (game.getActualPlayer().isAI()) {
+						((AI) game.getActualPlayer()).earlyGame(game);
+						nextTurnButtonEarly.doClick();
+					}
 				}
 			}
 			refreshInfos();
@@ -319,7 +324,7 @@ public class GameView extends JPanel {
 		tradeButton.setEnabled(enabled);
 		nextTurnButton.setEnabled(enabled);
 		actionPanel.setButtonsEnabled(enabled);
-		buyDevCardButton.setEnabled(enabled ? isBeforeDev : false);
+		buyDevCardButton.setEnabled(enabled ? !game.getActualPlayer().hasDrawDev() : false);
 	}
 
 	public void discard() {
@@ -440,7 +445,7 @@ public class GameView extends JPanel {
 				dices.setEnabled(true);
 				actionPanel.setButtonsEnabled(false);
 			}
-			buyDevCardButton.setEnabled(isBeforeDev);
+			buyDevCardButton.setEnabled(!game.getActualPlayer().hasDrawDev());
 			game.getActualPlayer().devCardUsed(Progress.ROAD_CONSTRUCTION);
 		}
 		refreshInfos();
@@ -473,6 +478,10 @@ public class GameView extends JPanel {
 		this.add(eastPan, BorderLayout.EAST);
 		this.add(southPan, BorderLayout.SOUTH);
 		dices.setVisible(true);
+		if (game.getActualPlayer().isAI()) {
+			((AI) game.getActualPlayer()).midGame(game);
+			nextTurnButton.doClick();
+		}
 	}
 	
 	public class ActionPanel extends JPanel {

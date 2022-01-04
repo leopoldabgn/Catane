@@ -92,7 +92,6 @@ public class AI extends Player {
 
 	public void useDev(Game game, DevelopmentCard card) {
 		if(card instanceof Knight) {
-			game.refreshMostPowerfulArmyOwner();
 			// thiefAction();
 		}
 		else if(card == Progress.MONOPOLY) {

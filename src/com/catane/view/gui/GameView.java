@@ -179,19 +179,7 @@ public class GameView extends JPanel {
 		});
 		
 		nextTurnButton.addActionListener(e -> {
-			game.getActualPlayer().refreshDevCards();
-			game.nextRound();
-			dicesLbl.setText("");
-			actionPanel.setButtonsEnabled(false);
-			refreshTradeButton(true);
-			dices.setEnabled(true);
-			buyDevCardButton.setEnabled(game.getActualPlayer().canBuyDevCard(game) == 0);
-			nextTurnButton.setEnabled(false);
-			refreshInfos();
-			if (game.getActualPlayer().isAI()) {
-				((AI) game.getActualPlayer()).midGame(game);
-				nextTurnButton.doClick();
-			}
+			nextTurn();
 		});
 		
 		tradeButton.addActionListener(e -> {
@@ -271,7 +259,7 @@ public class GameView extends JPanel {
 				actionPanel.refreshOptions();
 				early = false;
 				startGame(boardView, northPan, eastPan, southPan);
-			}else {
+			} else {
 				if (game.getActualPlayer().isReady()) {
 					game.nextRound();
 					setSelectedColony(true);
@@ -281,6 +269,7 @@ public class GameView extends JPanel {
 					}
 				}
 			}
+			boardView.reset();
 			refreshInfos();
 			refreshActionsEarly();
 			revalidate();
@@ -308,17 +297,51 @@ public class GameView extends JPanel {
 		// this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
 		// setSelectedColony(true);
 		// refreshActionsEarly();
-		if (game.getActualPlayer().isAI()) {
-			((AI) game.getActualPlayer()).earlyGame(game);
-			nextTurnButtonEarly.doClick();
-		}
+
+		
+		new Thread() {
+			public void run() {
+				if (game.getActualPlayer().isAI()) {
+					((AI) game.getActualPlayer()).earlyGame(game);
+					nextTurnButtonEarly.doClick();
+				}
+			}
+		}.start();
 		
 		// pour ne pas avoir à placer toutes les colonies/routes a chaque fois (à enlever)
-		startGame(boardView, northPan, eastPan, southPan);
-		early = false;
+		//startGame(boardView, northPan, eastPan, southPan);
+		//early = false;
 		
 	}
 
+	public void nextTurn() {
+		game.getActualPlayer().refreshDevCards();
+		game.nextRound();
+		dicesLbl.setText("");
+		actionPanel.setButtonsEnabled(false);
+		refreshTradeButton(true);
+		dices.setEnabled(true);
+		buyDevCardButton.setEnabled(game.getActualPlayer().canBuyDevCard(game) == 0);
+		nextTurnButton.setEnabled(false);
+		refreshInfos();
+		System.out.println("aaa");
+		if (game.getActualPlayer().isAI()) {
+			((AI) game.getActualPlayer()).midGame(game);
+			System.out.println(game.getHistory());
+			sleep(500);
+			nextTurn();
+		}
+	}
+	
+	public void sleep(long s) {
+		try {
+			Thread.sleep(s);
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void setEnabledActions(boolean enabled) { // appel de isBeforeDices() avant
 		dices.setEnabled(enabled);
 		tradeButton.setEnabled(enabled);
@@ -480,6 +503,7 @@ public class GameView extends JPanel {
 		dices.setVisible(true);
 		if (game.getActualPlayer().isAI()) {
 			((AI) game.getActualPlayer()).midGame(game);
+			nextTurnButton.setEnabled(true);
 			nextTurnButton.doClick();
 		}
 	}

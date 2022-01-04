@@ -205,7 +205,7 @@ public class AI extends Player {
 		if (players.isEmpty())
 			return;
 		Random r = new Random();
-		stealResource(players.get(r.nextInt(players.size()) - 1));
+		stealResource(players.get(r.nextInt(players.size())));
 	}
 	
 	public DevelopmentCard getUsableDevCard() {

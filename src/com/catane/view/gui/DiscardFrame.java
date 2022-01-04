@@ -19,7 +19,7 @@ public class DiscardFrame extends JFrame {
 	private ResourceChoicePanel choice;
     private JLabel error1;
     private JLabel error2;
-
+    
     public DiscardFrame(List<Player> players, int i, int nb) {
         setTitle("Défausser carte");
 		setSize(450, 270);
@@ -27,10 +27,25 @@ public class DiscardFrame extends JFrame {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         
         Player p = players.get(i);
-
+        boolean visible = true;
+        
         // Si c'est une AI
         if (p instanceof AI) {
-            dispose();
+        	visible = false;
+    		Thread th = new Thread() {
+    			public void run() {
+    				try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    				dispose();
+    			}
+    		};
+    		
+    		th.start();
+            
             ((AI) p).discard();
             if (players.size() > i + 1)
                 new DiscardFrame(players, i + 1, players.get(i+1).getResources()/2);
@@ -92,7 +107,7 @@ public class DiscardFrame extends JFrame {
 
 		panel.add(buttons);
 
-		setVisible(true);
+		setVisible(visible);
     }
     
 }

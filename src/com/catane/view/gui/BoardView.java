@@ -321,6 +321,13 @@ public class BoardView extends JPanel {
 		changeSelectableCases(null, null, false);
 	}
 	
+	public void reset() {
+		this.removeAll();
+		casesView = generateAndAddCases();
+		revalidate();
+		repaint();
+	}
+	
 	public GameView getGameView() {
 		return gameView;
 	}

@@ -124,7 +124,7 @@ public class AI extends Player {
 		Random rd = new Random();
 		char[] actions = {'c', 'v', 'r', 'd', 'u', 'e'};
 		int rand = rd.nextInt(actions.length);
-		Colony c;
+		Case c;
 		switch(actions[rand]) {
 			case 'c':
 				if(!canAffordColony())
@@ -132,7 +132,7 @@ public class AI extends Player {
 				c = findColony(board, false);
 				if(c == null)
 					break;
-				board.putColony(this, c, false);
+				board.putColony(this, (Colony)c, false);
 				break;
 			case 'v':
 				if(!canAffordTown())
@@ -140,9 +140,15 @@ public class AI extends Player {
 				c = findTown(board);
 				if(c == null)
 					break;
-				board.putTown(this, c);
+				board.putTown(this, (Colony)c);
 				break;
 			case 'r':
+				if(!canAffordRoad())
+					break;
+				c = findRoad(board, false);
+				if(c == null)
+					break;
+				board.putRoad(this, (Road)c, false);
 				break;
 			case 'd':
 				break;

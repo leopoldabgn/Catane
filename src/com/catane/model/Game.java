@@ -88,7 +88,7 @@ public class Game {
 			player.setHistory(history);
 			players.add(player);
 		}
-		for (int i = 0 + p; i < ia + p; i++) {
+		for (int i = p - ia; i < p; i++) {
 			switch (i) {
 				case 0:	player = new AI(Color.WHITE);
 						break;

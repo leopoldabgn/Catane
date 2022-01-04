@@ -64,6 +64,8 @@ public class CLI {
 						break;
 					}
 				}while (true);
+			else
+				((AI) player).setCLI(this);
 		}
 
 		//ajout des ressources pour test

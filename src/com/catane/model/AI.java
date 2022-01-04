@@ -12,8 +12,13 @@ import com.catane.model.cases.Case;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.ResourceCase;
 import com.catane.model.cases.Road;
+import com.catane.view.cli.CLI;
+import com.catane.view.gui.GameView;
 
 public class AI extends Player {
+
+	private CLI cli;
+	private GameView gameView;
 
 	public AI(Color color) {
 		super(color);
@@ -33,6 +38,14 @@ public class AI extends Player {
 
 	}
 
+	public void setCLI(CLI cli) {
+		this.cli = cli;
+	}
+
+	public void setGameView(GameView gameView) {
+		this.gameView = gameView;
+	}
+
 	public void earlyGame(Game game) {
 		Board board = game.getBoard();
 		for (int i = 0; i < 2; i++) {
@@ -47,7 +60,6 @@ public class AI extends Player {
 
 	public History midGame(Game game) {
 		int beginIndexHist = game.getHistory().size();
-		Board board = game.getBoard();
 		rollDices(game);
 
 		// Action de l'IA

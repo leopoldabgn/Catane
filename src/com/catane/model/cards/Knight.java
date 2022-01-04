@@ -18,14 +18,4 @@ public class Knight implements DevelopmentCard {
 		return "Chevalier";
 	}
 	
-	@Override
-	public void canUse() {
-		usable = true;
-	}
-
-	@Override
-	public boolean isUsable() {
-		return usable;
-	}
-	
 }

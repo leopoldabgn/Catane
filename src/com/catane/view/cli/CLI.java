@@ -143,11 +143,11 @@ public class CLI {
 	public void playRound() {
 		Player player = game.getActualPlayer();
 
-		if (player instanceof AI) {
+		// if (player instanceof AI) {
 
-		// 	((AI) player).midGame(game);
+		// // 	((AI) player).midGame(game);
 
-		}else {
+		// }else {
 		
 			System.out.println("Au tour de "+player+"\n");
 			boolean endRound;
@@ -155,8 +155,6 @@ public class CLI {
 			int[] coord;
 			boolean error;
 			boolean devBought = false;
-
-			useDev(player);
 			
 			devBought = dices();
 			
@@ -252,10 +250,11 @@ public class CLI {
 							error = false;
 							break;
 						case 'u': // Utiliser une carte de développement
-							if (player.getUsableDevCard(new Knight()) == 0 && player.getUsableDevCard(Progress.ROAD_CONSTRUCTION) == 0 && player.getUsableDevCard(Progress.INVENTION) == 0 && player.getUsableDevCard(Progress.MONOPOLY) == 0)
+							if (!player.canUseDev(new Knight()) && !player.canUseDev(Progress.ROAD_CONSTRUCTION) && !player.canUseDev(Progress.INVENTION) && !player.canUseDev(Progress.MONOPOLY))
 								System.out.println("Vous n'avez pas de carte de développement utilisable !");
 							else
 								useDev(player);
+							error = false;
 							break;
 						case 'e': // Echanger des ressources
 							error = !portAction();
@@ -272,77 +271,80 @@ public class CLI {
 				
 			} while(!endRound && !player.hasWon());
 
-		}
+		// }
 		
 	}
 
-	public boolean useDev(Player player) {
+	public void useDev(Player player) {
 		char c = ' ';
+		boolean hasUsed = true;
 		do {
-			System.out.println("Choisissez une carte développement à utiliser (c -> Chevalier / m -> Monopole / r -> Construction de route / i -> Invention)");
-			System.out.println("annuler -> a");
-			String s = sc.nextLine();
-			if (!s.isBlank())
-				c = s.charAt(0);
-			else
-				c = ' ';
-		}while (c != 'c' && c != 'm' && c != 'r' && c != 'i' && c != 'a');
-		switch (c) {
-			case 'a':
-				break;
-			case 'c': // Chevalier
-				if (player.getUsableDevCard(new Knight()) == 0) {
-					System.out.println("Vous n'avez pas de carte de développement 'Chevalier' utilisable");
-					return false;
-				}
-				game.refreshMostPowerfulArmyOwner();
-				thiefAction();
-				break;
-			case 'm': // Monopole
-				if (player.getUsableDevCard(Progress.MONOPOLY) == 0) {
-					System.out.println("Vous n'avez pas de carte de développement 'Monopole'");
-					return false;
-				}
-				// Demander quelle ressource
-				System.out.println("De quelle ressource voulez-vous avoir le monopole ?");
-				Resource r = askResource();
-				// Prendre les ressources
-				game.monopoly(r);
-				break;
-			case 'r': // Construction de route
-				if (player.getUsableDevCard(Progress.ROAD_CONSTRUCTION) == 0) {
-					System.out.println("Vous n'avez pas de carte de développement 'Construction de route'");
-					return false;
-				}
-				int[] coord = new int[2];
-				for (int i = 0; i < 2; i++) {
-					int n = i + 1;
-					System.out.println("Où voulez-vous poser la route " + n);
-					int ans = 2;
-					while (ans == 2) {
-						coord = askCoord(); // Coordonnees forcement dans le plateau.
-						ans = player.canBuildRoadOn(board, coord, true);
-						if(ans == 2)
-							System.out.println("Vous ne pouvez pas poser de route ici !");
+			hasUsed = true;
+			do {
+				System.out.println("Choisissez une carte développement à utiliser (c -> Chevalier / m -> Monopole / r -> Construction de route / i -> Invention)");
+				System.out.println("annuler -> a");
+				String s = sc.nextLine();
+				if (!s.isBlank())
+					c = s.charAt(0);
+				else
+					c = ' ';
+			}while (c != 'c' && c != 'm' && c != 'r' && c != 'i' && c != 'a');
+			switch (c) {
+				case 'a':
+					break;
+				case 'c': // Chevalier
+					if (!player.canUseDev(new Knight())) {
+						System.out.println("Vous n'avez pas de carte de développement 'Chevalier' utilisable");
+						hasUsed = false;
 					}
-					board.putRoad(player, coord[0], coord[1], true);
-				}
-				game.refreshLongestRoadOwner();
-				player.devCardUsed(Progress.ROAD_CONSTRUCTION);
-				break;
-			case 'i': // Invention
-				if (player.getUsableDevCard(Progress.INVENTION) == 0) {
-					System.out.println("Vous n'avez pas de carte de développement 'Invention'");
-					return false;
-				}
-				System.out.println("Choisissez la première ressource");
-				Resource r1 = askResource();
-				System.out.println("Choisissez la deuxième ressource");
-				Resource r2 = askResource();
-				game.invention(r1, r2);
-				break;
-		}
-		return true;
+					game.refreshMostPowerfulArmyOwner();
+					thiefAction();
+					break;
+				case 'm': // Monopole
+					if (!player.canUseDev(Progress.MONOPOLY)) {
+						System.out.println("Vous n'avez pas de carte de développement 'Monopole'");
+						hasUsed = false;
+					}
+					// Demander quelle ressource
+					System.out.println("De quelle ressource voulez-vous avoir le monopole ?");
+					Resource r = askResource();
+					// Prendre les ressources
+					game.monopoly(r);
+					break;
+				case 'r': // Construction de route
+					if (!player.canUseDev(Progress.ROAD_CONSTRUCTION)) {
+						System.out.println("Vous n'avez pas de carte de développement 'Construction de route'");
+						hasUsed = false;
+					}
+					int[] coord = new int[2];
+					for (int i = 0; i < 2; i++) {
+						int n = i + 1;
+						System.out.println("Où voulez-vous poser la route " + n);
+						int ans = 2;
+						while (ans == 2) {
+							coord = askCoord(); // Coordonnees forcement dans le plateau.
+							ans = player.canBuildRoadOn(board, coord, true);
+							if(ans == 2)
+								System.out.println("Vous ne pouvez pas poser de route ici !");
+						}
+						board.putRoad(player, coord[0], coord[1], true);
+					}
+					game.refreshLongestRoadOwner();
+					player.devCardUsed(Progress.ROAD_CONSTRUCTION);
+					break;
+				case 'i': // Invention
+					if (!player.canUseDev(Progress.INVENTION)) {
+						System.out.println("Vous n'avez pas de carte de développement 'Invention'");
+						hasUsed = false;
+					}
+					System.out.println("Choisissez la première ressource");
+					Resource r1 = askResource();
+					System.out.println("Choisissez la deuxième ressource");
+					Resource r2 = askResource();
+					game.invention(r1, r2);
+					break;
+			}
+		}while (!hasUsed);
 	}
 
 	public boolean dices() {
@@ -386,7 +388,7 @@ public class CLI {
 				c = ' ';
 		}while (c != 'o' && c != 'n');
 		if (c == 'o') {
-			if (game.getActualPlayer().getUsableDevCard(new Knight()) == 0 && game.getActualPlayer().getUsableDevCard(Progress.ROAD_CONSTRUCTION) == 0 && game.getActualPlayer().getUsableDevCard(Progress.INVENTION) == 0 && game.getActualPlayer().getUsableDevCard(Progress.MONOPOLY) == 0)
+			if (!game.getActualPlayer().canUseDev(new Knight()) && !game.getActualPlayer().canUseDev(Progress.ROAD_CONSTRUCTION) && !game.getActualPlayer().canUseDev(Progress.INVENTION) && !game.getActualPlayer().canUseDev(Progress.MONOPOLY))
 				System.out.println("Vous n'avez pas de carte de développement utilisable !");
 			else
 				useDev(game.getActualPlayer());
@@ -428,7 +430,7 @@ public class CLI {
 				System.out.println("Ces coordonnées ne sont pas sur le plateau !");
 			System.out.print("Donnez les coordonnées (ex: A8) : ");
 			coordStr = checkCoord();
-			coord = game.convertCoord(coordStr);
+			coord = Game.convertCoord(coordStr);
 		} while(board.outOfBorders(coord[0], coord[1]));
 		
 		return coord;

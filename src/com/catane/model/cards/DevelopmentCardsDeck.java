@@ -16,7 +16,6 @@ public class DevelopmentCardsDeck extends LinkedList<DevelopmentCard> {
 		tab = Progress.values();
 		addCards(tab, 2); // en deux exemplaires
 		addCards(new Knight(), 14);
-		
 		mixCards();
 	}
 	

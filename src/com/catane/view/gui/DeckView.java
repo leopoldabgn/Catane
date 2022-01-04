@@ -84,7 +84,7 @@ public class DeckView extends JPanel {
 
 	public boolean isUsable() {
 		for (DevCardView cardView : cards)
-			if (cardView.getDevCard().isUsable())
+			if (player.canUseDev(cardView.getDevCard()))
 				return true;
 		return false;
 	}

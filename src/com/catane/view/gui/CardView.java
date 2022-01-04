@@ -75,7 +75,7 @@ public class CardView extends JPanel {
 					@Override
 					public void mousePressed(MouseEvent e) {
 						super.mousePressed(e);
-						if (!devCard.isUsable())
+						if (!gameView.getGame().getActualPlayer().canUseDev(devCard))
 							return;
 						if (!gameView.isDev()) {
 							int ans = JOptionPane.showOptionDialog(null,

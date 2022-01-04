@@ -21,15 +21,5 @@ public enum Progress implements DevelopmentCard {
 	public String getEnglishName() {
 		return super.toString().toLowerCase();
 	}
-	
-	@Override
-	public void canUse() {
-		usable = true;
-	}
-
-	@Override
-	public boolean isUsable() {
-		return usable;
-	}
 
 }

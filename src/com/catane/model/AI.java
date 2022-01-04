@@ -111,84 +111,82 @@ public class AI extends Player {
 	public void action(Game game) {
 		Board board = game.getBoard();
 		Random rd = new Random();
-		char[] actions = {'c', 'v', 'r', 'd', 'u', 'e'};
-		int rand = rd.nextInt(actions.length);
+		char[] actions = {'v', 'r', 'd', 'u', 'e'};
 		Case c;
-		List<Port> ports;
-		switch(actions[rand]) {
-			case 'c':
-				if(!canAffordColony())
-					break;
-				c = findColony(board, false);
-				if(c == null)
-					break;
-				board.putColony(this, (Colony)c, false);
-				break;
-			case 'v':
-				if(!canAffordTown())
-					break;
-				c = findTown(board);
-				if(c == null)
-					break;
-				board.putTown(this, (Colony)c);
-				break;
-			case 'r':
-				if(!canAffordRoad())
-					break;
-				c = findRoad(board, false);
-				if(c == null)
-					break;
-				board.putRoad(this, (Road)c, false);
-				break;
-			case 'd':
-				if(canBuyDevCard(game) == 0) {
-					getDevCard(game);
-				}
-				break;
-			case 'u':
-				DevelopmentCard card = getUsableDevCard();
-				if(card != null) {
-					useDev(game, card);
-				}
-				break;
-			case 'e':
-				ports = board.getPorts(this);
-				List<Resource> resources;
-				Resource r;
-				if(ports.isEmpty()) {
-					resources = getResourcesByNb(4);
-					if(!resources.isEmpty()) {
-						r = resources.get(0);
-						trade(r, 4, askResource(r));
-					}
-				}
-				else {
-					for(Port p : ports) {
-						if(p.getResourceType() == null) {
-							resources = getResourcesByNb(p.getResourcesToGive());
-							if(resources.isEmpty())
-								continue;
-							r = resources.get(0);
-						}
-						else {
-							int nb = getResource(p.getResourceType());
-							if(nb < p.getResourcesToGive())
-								continue;
-							r = p.getResourceType();
-						}
-
-						trade(r, p.getResourcesToGive(), askResource(r));
-					}
-				}
-				break;
+		if (canAffordColony()) {
+			c = findColony(board, false);
+			if (c != null)
+				board.putColony(this, (Colony) c, false);
 		}
+		//for (int i = 0; i < 2; i++) {
+			int rand = rd.nextInt(actions.length);
+			List<Port> ports;
+			switch(actions[rand]) {
+				case 'v':
+					if(!canAffordTown())
+						break;
+					c = findTown(board);
+					if(c == null)
+						break;
+					board.putTown(this, (Colony)c);
+					break;
+				case 'r':
+					if(!canAffordRoad())
+						break;
+					c = findRoad(board, false);
+					if(c == null)
+						break;
+					board.putRoad(this, (Road)c, false);
+					break;
+				case 'd':
+					if(canBuyDevCard(game) == 0) {
+						getDevCard(game);
+					}
+					break;
+				case 'u':
+					DevelopmentCard card = getUsableDevCard();
+					if(card != null) {
+						useDev(game, card);
+					}
+					break;
+				case 'e':
+					ports = board.getPorts(this);
+					List<Resource> resources;
+					Resource r;
+					if(ports.isEmpty()) {
+						resources = getResourcesByNb(4);
+						if(!resources.isEmpty()) {
+							r = resources.get(0);
+							trade(r, 4, askResource(r));
+						}
+					}
+					else {
+						for(Port p : ports) {
+							if(p.getResourceType() == null) {
+								resources = getResourcesByNb(p.getResourcesToGive());
+								if(resources.isEmpty())
+									continue;
+								r = resources.get(0);
+							}
+							else {
+								int nb = getResource(p.getResourceType());
+								if(nb < p.getResourcesToGive())
+									continue;
+								r = p.getResourceType();
+							}
+
+							trade(r, p.getResourcesToGive(), askResource(r));
+						}
+					}
+					break;
+				}
+		//}
 	}
 
 	public void discard() {
-		Collections.shuffle(getResourceList());
 		int n = getResourceList().size() / 2;
 		for (int i = 0; i < n; i++)
-			pay(getResourceList().get(0));
+			pay(askResourceMax());
 		addHistory(this + " s'est défaussé de " + n + " cartes");
 	}
 	
@@ -260,15 +258,27 @@ public class AI extends Player {
 		return askResource(null);
 	}
 
-	// Retourne une ressource au hasard differente de re
+	// Retournz la ressource qu'il a le moins
 	public Resource askResource(Resource re) {
 		Resource[] res = Resource.values();
-		Random r = new Random();
-		int rand;
-		do {
-			rand = r.nextInt(res.length);
-		} while(res[rand] == re);
-		return res[rand];
+		Resource resource;
+		if (res[0] != re)
+			resource = res[0];
+		else
+			resource = res[1];
+		for (Resource r : res)
+			if (getResource(r) < getResource(resource) && r != re)
+				resource = r;
+		return resource;
+	}
+
+	public Resource askResourceMax() {
+		Resource[] res = Resource.values();
+		Resource resource = res[0];
+		for (Resource r : res)
+			if (getResource(r) > getResource(resource))
+				resource = r;
+		return resource;
 	}
 	
 	public String getName() {

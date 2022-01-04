@@ -32,6 +32,9 @@ import com.catane.view.gui.cases.ResourceCaseView.ForestView;
 import com.catane.view.gui.cases.ResourceCaseView.HillView;
 import com.catane.view.gui.cases.ResourceCaseView.MountainView;
 import com.catane.view.gui.cases.ResourceCaseView.PreView;
+
+import java.awt.event.MouseEvent;
+
 import com.catane.view.gui.cases.RoadView;
 import com.catane.view.gui.cases.SeaView;
 import com.catane.view.gui.cases.TownView;
@@ -322,8 +325,12 @@ public class BoardView extends JPanel {
 	}
 	
 	public void reset() {
-		this.removeAll();
-		casesView = generateAndAddCases();
+		//this.removeAll();
+		//casesView = generateAndAddCases();
+		for (CaseView[] tab : casesView)
+			for (CaseView c : tab)
+				if (c instanceof MovableCaseView)
+					((MovableCaseView) c).reset();
 		revalidate();
 		repaint();
 	}

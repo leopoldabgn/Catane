@@ -26,5 +26,7 @@ public class MovableCaseView extends CaseView {
 	public boolean isEmpty() {
 		return getPlayer() == null;
 	}
+
+	public void reset() {}
 	
 }

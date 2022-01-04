@@ -324,7 +324,7 @@ public class GameView extends JPanel {
 		buyDevCardButton.setEnabled(game.getActualPlayer().canBuyDevCard(game) == 0);
 		nextTurnButton.setEnabled(false);
 		refreshInfos();
-		System.out.println("aaa");
+		boardView.reset();
 		if (game.getActualPlayer().isAI()) {
 			((AI) game.getActualPlayer()).midGame(game);
 			System.out.println(game.getHistory());

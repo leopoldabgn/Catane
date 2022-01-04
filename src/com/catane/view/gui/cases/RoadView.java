@@ -23,6 +23,24 @@ public class RoadView extends MovableCaseView {
 	public Road getModelCase() {
 		return road;
 	}
+
+	@Override
+	public void reset() {
+		if (road.getPlayer() == null)
+			return;
+		this.isSelectable = false; // Cette case n'est plus selectionable
+		this.setOpaque(true);
+		this.setLayout(new BorderLayout());
+		this.setBackground(road.getPlayer().getColor());
+		IconPanel iconPan;
+		if(road.isVertical())
+			iconPan = new IconPanel("road_v_64", 32);
+		else
+			iconPan = new IconPanel("road_h_64", 32, false);
+		add(iconPan, BorderLayout.CENTER);
+		revalidate();
+		repaint();
+	}
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {

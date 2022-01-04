@@ -23,6 +23,18 @@ public class ColonyView extends MovableCaseView {
 	public Colony getModelCase() {
 		return colony;
 	}
+
+	@Override
+	public void reset() {
+		if (colony.getPlayer() == null)
+			return;
+		this.setOpaque(true);
+		this.setLayout(new BorderLayout());
+		this.setBackground(colony.getPlayer().getColor());
+		add(new IconPanel("colony_64", 32), BorderLayout.CENTER);
+		revalidate();
+		repaint();
+	}
 	
 	@Override
 	public void mouseReleased(MouseEvent e) { // Pas besoin de redefinir cette methode dans Town.

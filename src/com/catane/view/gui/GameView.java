@@ -21,6 +21,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import com.catane.model.AI;
 import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.Resource;
@@ -109,6 +110,11 @@ public class GameView extends JPanel {
 				p.gainResource(Resource.WOOD);
 			}
 		}
+
+		// Programmation AI
+		for (Player p : game.getPlayers())
+			if (p instanceof AI)
+				((AI) p).setGameView(this);
 		
 		dices = new IconPanel("dices_64", 32);
 		dices.setVisible(false);

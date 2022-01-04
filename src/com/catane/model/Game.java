@@ -23,14 +23,13 @@ public class Game {
 		Player.nextPlayerNb = 1; // On remet a 1 au cas ou il s'agirait d'une nouvelle partie.
 		developmentCardsDeck = new DevelopmentCardsDeck();
 		this.history = new History();
-		history.add("Configuration de la partie : ");
 	}
 
 	public void setBoard(int n) {
 		if (n == 4 || n == 6)
-			board = new Board(n);
+			board = new Board(history, n);
 		else
-			board = new Board(4);
+			board = new Board(history, 4);
 		history.add("Plateau "+n+"x"+n);
 	}
 	
@@ -47,7 +46,7 @@ public class Game {
 		return vals;
 	}
 	
-	public int[] convertCoord(String coord) {
+	public static int[] convertCoord(String coord) {
 		if(coord == null || coord.length() < 2 || coord.length() > 3)
 			return null;
 		int[] tab = new int[2];
@@ -60,6 +59,17 @@ public class Game {
 		return tab;
 	}
 
+	public static String convertCoord(int x, int y) {
+		String coord = "";
+		try {
+			coord += (char)('A'+x-1); // On saute la ligne avec les ports
+			coord += y; // On saute la ligne avec les ports
+		} catch(Exception e) {
+			return "erreur";
+		}
+		return coord;
+	}
+	
 	public void setupPlayers(int p, int ia) {
 		players = new ArrayList<Player>();
 		Player player = null;
@@ -75,6 +85,7 @@ public class Game {
 						break;
 			}
 			player.setScore(new Score(this, player));
+			player.setHistory(history);
 			players.add(player);
 		}
 		for (int i = 0 + p; i < ia + p; i++) {
@@ -89,6 +100,7 @@ public class Game {
 						break;
 			}
 			player.setScore(new Score(this, player));
+			player.setHistory(history);
 			players.add(player);
 		}
 		
@@ -114,6 +126,7 @@ public class Game {
 	}
 
 	public void refreshMostPowerfulArmyOwner() {
+		Player oldOwner = mostPowerfulArmyOwner;
 		actualPlayer.armyIncreased();
 		if (actualPlayer.getArmy() >= 3) {
 			if (mostPowerfulArmyOwner == null)
@@ -123,9 +136,16 @@ public class Game {
 					mostPowerfulArmyOwner = actualPlayer;
 		}
 		actualPlayer.devCardUsed(new Knight());
+		if(mostPowerfulArmyOwner == null)
+			return;
+		if(oldOwner == null)
+			history.add(actualPlayer+" a obtenu la carte de l'armée la plus puissante");
+		else if(oldOwner != actualPlayer)
+			history.add(oldOwner+" a donné la carte de l'armée la plus puissante à "+actualPlayer);
 	}
 
 	public void monopoly(Resource r) {
+		history.add(actualPlayer+" a utilisé une carte MONOPOLE :\n");
 		List<Player> otherPlayers = new ArrayList<Player>();
 		for (Player p : players)
 			if (!p.equals(actualPlayer))
@@ -136,11 +156,17 @@ public class Game {
 				p.pay(r);
 				actualPlayer.gainResource(r);
 			}
+			if(n > 0)
+				history.add(p+" a donné "+n+" "+r+" à "+actualPlayer);
+			else
+				history.add(p+" n'a pas pu donner de "+r+" à "+actualPlayer);
 		}
 		actualPlayer.devCardUsed(Progress.MONOPOLY);
 	}
 
 	public void invention(Resource r1, Resource r2) {
+		history.add(actualPlayer+" a utilisé une carte INVENTION et"+
+					" a obtenu :\n1 "+r1+" et 1 "+r2);
 		actualPlayer.gainResource(r1);
 		actualPlayer.gainResource(r2);
 		actualPlayer.devCardUsed(Progress.INVENTION);
@@ -148,6 +174,7 @@ public class Game {
 	
 	// On verifie qui a la plus grande route, et on lui donne la carte.
 	public void refreshLongestRoadOwner() {
+		Player oldOwner = longestRoadOwner;
 		Player p;
 		int maxSize = 0;
 		int[] roads = new int[players.size()];
@@ -155,24 +182,27 @@ public class Game {
 		for(int i=0;i<roads.length;i++) {
 			p = players.get(i);
 			roads[i] = board.getLongestRoad(p);
-			
 			if(roads[i] >= 5 && roads[i] > maxSize) {
 					maxSize = roads[i];
-					
 					longestRoadOwner = p;
 			}
 		}
 		
-		if(longestRoadOwner == null)
-			return;
-		
 		for(int i=0;i<roads.length;i++) {
 			p = players.get(i);
-			if(p != longestRoadOwner && roads[i] == maxSize) {
-				
+			if(p != longestRoadOwner && roads[i] == maxSize)
 				longestRoadOwner = null;
-			}
 		}
+		
+		if(oldOwner == null && longestRoadOwner == null)
+			return;
+		
+		if(oldOwner == null)
+			history.add(longestRoadOwner+" a obtenu la carte de la route la plus longue");
+		else if(longestRoadOwner != null && oldOwner != longestRoadOwner)
+			history.add(oldOwner+" a donné la carte de la route la plus longue à "+longestRoadOwner);
+		else if(longestRoadOwner == null)
+			history.add(oldOwner+" a perdu la carte de la route la plus longue");
 	}
 	// Si deux joueurs ont la même longueur de route la carte n'est pas donnée (longestRoadOwner = null)
 	
@@ -206,6 +236,12 @@ public class Game {
 
 	public History getHistory() {
 		return history;
+	}
+	
+	public void addHistory(String str) {
+		if(str == null || str.length() == 0)
+			return;
+		history.add(str);
 	}
 	
 }

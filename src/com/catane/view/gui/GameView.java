@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import com.catane.model.Game;
@@ -233,14 +234,19 @@ public class GameView extends JPanel {
 		border.setBorder(BorderFactory.createEtchedBorder());
 		border.add(actions, BorderLayout.NORTH);
 		
-		// Pour faire des tests. Je vais faire mieux que ça demain.
-		eastPan.add(historyView, BorderLayout.CENTER);
-		// a decommenter pour retrouver le panel actions
-		//eastPan.add(border, BorderLayout.CENTER);
+		tmp = new JPanel();
+		tmp.setBorder(new EmptyBorder(10, 10, 10, 10));
+		tmp.setOpaque(false);
+		tmp.setLayout(new GridLayout(2, 1));
+
+		tmp.add(border);
 		
+		JScrollPane scroll = new JScrollPane(historyView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		tmp.add(scroll);
 		
+		eastPan.add(tmp);
 		refreshActions();
-		
 		
 		JPanel boardContainer = new JPanel();
 		boardContainer.setLayout(new GridBagLayout());

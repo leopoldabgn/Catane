@@ -22,6 +22,8 @@ public class Player {
 	private List<DevelopmentCard> developmentCards;
 	private String name;
 
+	private History history;
+	
 	private Color color;
 	
 	public Player(Color color) {
@@ -217,6 +219,7 @@ public class Player {
 	}
 
 	public void trade(Resource aPayer, int nbAPayer, Resource aGagner){
+		addHistory(this+" a échangé "+nbAPayer+" "+aPayer+" contre 1 "+aGagner);
 		for(int i=0;i<nbAPayer;i++)
 			pay(aPayer);
 		gainResource(aGagner);
@@ -226,6 +229,7 @@ public class Player {
 		Random r = new Random();
 		int x = r.nextInt(p.getResources());
 		Resource res = p.resources.get(x);
+		addHistory(this+" a volé 1 "+res+" à "+p);
 		p.pay(res);
 		gainResource(res);
 		return res;
@@ -253,6 +257,7 @@ public class Player {
 	}
 	
 	public void getDevCard(Game game) {
+		addHistory(this+" a acheté une carte de developpement");
 		payDevCard();
 		DevelopmentCard card = game.getDevCard();
 		if(card != null) // Normalement il est impossible que card soit null !
@@ -328,6 +333,10 @@ public class Player {
 		this.score = score;
 	}
 	
+	public void setHistory(History history) {
+		this.history = history;
+	}
+	
 	public int getNumber() {
 		return number;
 	}
@@ -346,6 +355,12 @@ public class Player {
 	
 	public List<Road> getRoads() {
 		return roads;
+	}
+	
+	public void addHistory(String str) {
+		if(history == null)
+			return;
+		history.add(str);
 	}
 	
 	@Override

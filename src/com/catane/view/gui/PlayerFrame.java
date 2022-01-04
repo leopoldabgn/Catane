@@ -15,8 +15,9 @@ import javax.swing.JPanel;
 import com.catane.model.Player;
 
 public class PlayerFrame extends JFrame {
-
-    private PlayerPanel selectedPanel;
+	private static final long serialVersionUID = 1L;
+	
+	private PlayerPanel selectedPanel;
 
     public PlayerFrame(List<Player> players, GameView gameView) {
         setTitle("Voler un joueur");
@@ -83,7 +84,11 @@ public class PlayerFrame extends JFrame {
 
     private class PlayerPanel extends JPanel {
 
-        private Player player;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private Player player;
         private boolean isSelected = false;
 
         public PlayerPanel(Player p) {

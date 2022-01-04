@@ -23,8 +23,10 @@ public class Board {
 	private int size;
 	private Case[][] cases;
 	private int[] thief;
+	private History history;
 	
-	public Board(int size) {
+	public Board(History history, int size) {
+		this.history = history;
 		this.size = size * 2 + 3;
 		cases = generateAndAddCases();
 		cases = mixCases(cases);
@@ -205,6 +207,7 @@ public class Board {
 	}
 	
 	public Colony putColony(Player player, int x, int y, boolean early) {
+		history.add(player+" a construit une colonie en ("+Game.convertCoord(x, y)+")");
 		Colony c = (Colony)cases[x][y];
 		c.setPlayer(player);
 		player.buildColony(c, early);
@@ -218,6 +221,7 @@ public class Board {
 	
 	// Retourne la ville. Important uniquement pour la GUI.
 	public Town putTown(Player player, int x, int y) {
+		history.add(player+" a construit une ville en ("+Game.convertCoord(x, y)+")");
 		Colony c = (Colony)cases[x][y];
 		Town t = new Town(c);
 		cases[x][y] = t;
@@ -232,6 +236,7 @@ public class Board {
 	}
 	
 	public Road putRoad(Player player, int x, int y, boolean early) {
+		history.add(player+" a construit une route en ("+Game.convertCoord(x, y)+")");
 		Road r = (Road)cases[x][y];
 		r.setPlayer(player);
 		player.buildRoad(r, early);
@@ -271,6 +276,9 @@ public class Board {
 	}
 
 	public void switchThief(int[] newThief) { // Change le voleur de case
+		history.add("Le voleur a été déplacé de "+
+				Game.convertCoord(thief[0], thief[1])+" à "+
+				Game.convertCoord(newThief[0], newThief[1]));
 		((ResourceCase) getCase(newThief[0], newThief[1])).setThief(true);
 		((ResourceCase) getCase(thief[0], thief[1])).setThief(false);
 		thief = newThief;

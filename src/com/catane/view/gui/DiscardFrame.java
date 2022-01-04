@@ -13,8 +13,9 @@ import com.catane.model.Player;
 import com.catane.model.Resource;
 
 public class DiscardFrame extends JFrame {
-
-    private ResourceChoicePanel choice;
+	private static final long serialVersionUID = 1L;
+	
+	private ResourceChoicePanel choice;
     private JLabel error1;
     private JLabel error2;
 

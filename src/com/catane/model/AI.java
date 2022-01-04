@@ -11,8 +11,13 @@ import com.catane.model.cards.Progress;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.MovableCase;
 import com.catane.model.cases.Road;
+import com.catane.view.cli.CLI;
+import com.catane.view.gui.GameView;
 
 public class AI extends Player {
+
+	private CLI cli;
+	private GameView gameView;
 
 	public AI(Color color) {
 		super(color);
@@ -30,6 +35,14 @@ public class AI extends Player {
 	@Override
 	public void setName(String name) {
 
+	}
+
+	public void setCLI(CLI cli) {
+		this.cli = cli;
+	}
+
+	public void setGameView(GameView gameView) {
+		this.gameView = gameView;
 	}
 
 	public void earlyGame(Game game) {

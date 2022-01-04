@@ -1,6 +1,9 @@
 package com.catane.model;
 
 import java.awt.Color;
+import java.util.Random;
+
+import com.catane.model.cards.DevelopmentCard;
 
 public class AI extends Player {
 
@@ -51,6 +54,34 @@ public class AI extends Player {
 		// Action de l'IA
 	}
 
+	public void action(Game game) {
+		Random rd = new Random();
+		int nbActions = 2;
+		switch(rd.nextInt(nbActions)+1) {
+			case 0:
+				
+				break;
+			case 1:
+				break;
+			case 2:
+				//drawDevCard(game);
+				break;
+		}
+	}
+	
+	public DevelopmentCard getUsableDevCard() {
+		Random rd = new Random();
+		int rand = getDevCards().size();
+		if(rand == 0)
+			return null;
+		return getDevCards().get(rd.nextInt(rand));
+	}
+	
+	public boolean wantsTo() {
+		Random rd = new Random();
+		return rd.nextInt(2) == 0;
+	}
+	
 	public int[] findColony() {
 		int[] coord = new int[2];
 		return coord;

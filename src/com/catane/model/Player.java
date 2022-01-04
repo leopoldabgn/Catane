@@ -357,6 +357,10 @@ public class Player {
 		return roads;
 	}
 	
+	public boolean isAI() {
+		return (this instanceof AI);
+	}
+	
 	public void addHistory(String str) {
 		if(history == null)
 			return;

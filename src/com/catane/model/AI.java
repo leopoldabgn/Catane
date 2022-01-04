@@ -70,29 +70,37 @@ public class AI extends Player {
 		if(wantsTo()) {
 			DevelopmentCard card = getUsableDevCard();
 			if(card != null) {
-				if(card instanceof Knight) {
-					game.refreshMostPowerfulArmyOwner();
-					// thiefAction();
-				}
-				else if(card == Progress.MONOPOLY) {
-					// Resource r = askResource();
-					// game.monopoly(r);
-				}
-				else if(card == Progress.ROAD_CONSTRUCTION) {
-					//board.putRoad(player, coord[0], coord[1], true);
-					// game.refreshLongestRoadOwner();
-					// player.devCardUsed(Progress.ROAD_CONSTRUCTION);
-				}
-				else if(card == Progress.INVENTION) {
-					/*
-						Resource r1 = askResource();
-						Resource r2 = askResource();
-						game.invention(r1, r2);
-					 */			
-				}
+				useDev(game, card);
 			}
 		}
 			
+	}
+
+	public void useDev(Game game, DevelopmentCard card) {
+		if(card instanceof Knight) {
+			game.refreshMostPowerfulArmyOwner();
+			// thiefAction();
+		}
+		else if(card == Progress.MONOPOLY) {
+			Resource r = askResource();
+			game.monopoly(r);
+		}
+		else if(card == Progress.ROAD_CONSTRUCTION) {
+			Board board = game.getBoard();
+			Road road = null;
+			for (int i = 0; i < 2; i++) {
+				road = findRoad(board, true);
+				if (road != null)
+					board.putRoad(this, road, true);
+			}
+			game.refreshLongestRoadOwner();
+			devCardUsed(Progress.ROAD_CONSTRUCTION);
+		}
+		else if(card == Progress.INVENTION) {
+			Resource r1 = askResource();
+			Resource r2 = askResource();
+			game.invention(r1, r2);	
+		}
 	}
 
 	
@@ -154,7 +162,7 @@ public class AI extends Player {
 	}
 
 	public Road findRoad(Board board, boolean early) {
-		List<MovableCase> list = board.findFreeCase(new Colony(), null);
+		List<MovableCase> list = board.findFreeCase(new Road(), null);
 		Collections.shuffle(list);
 		for (MovableCase c : list)
 			if (canBuildColonyOn(board, board.getIndexesOf(c), early) == 0)
@@ -166,9 +174,15 @@ public class AI extends Player {
 		List<MovableCase> list = board.findFreeCase(new Colony(), this);
 		Collections.shuffle(list);
 		for (MovableCase c : list)
-			if (canBuildColonyOn(board, board.getIndexesOf(c), early) == 0)
+			if (canBuildTownOn(board, board.getIndexesOf(c)) == 0)
 				return (Colony) c;
 		return null;
+	}
+
+	public Resource askResource() {
+		Resource[] res = Resource.values();
+		Random r = new Random();
+		return res[r.nextInt(res.length)];
 	}
 
 	public int[] moveThief() {

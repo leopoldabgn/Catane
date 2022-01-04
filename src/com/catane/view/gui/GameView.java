@@ -59,6 +59,8 @@ public class GameView extends JPanel {
 	private boolean isDev = false;
 	private boolean isThiefActive = false;
 
+	private Thread AIThread;
+	
 	public void endThief() {
 		isThiefActive = false;
 		setEnabledActions(true);
@@ -264,8 +266,17 @@ public class GameView extends JPanel {
 					game.nextRound();
 					setSelectedColony(true);
 					if (game.getActualPlayer().isAI()) {
-						((AI) game.getActualPlayer()).earlyGame(game);
-						nextTurnButtonEarly.doClick();
+						new Thread() {
+							public void run() {
+								try {
+									sleep(1000);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								((AI) game.getActualPlayer()).earlyGame(game);
+								nextTurnButtonEarly.doClick();
+							}
+						}.start();
 					}
 				}
 			}
@@ -294,24 +305,19 @@ public class GameView extends JPanel {
 		////////////////
 		
 		// Lancer earlyGame (à décommenter)
-		// this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
-		// setSelectedColony(true);
-		// refreshActionsEarly();
+		this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
+		 setSelectedColony(true);
+		 refreshActionsEarly();
 
-		
-		new Thread() {
-			public void run() {
-				if (game.getActualPlayer().isAI()) {
-					((AI) game.getActualPlayer()).earlyGame(game);
-					nextTurnButtonEarly.doClick();
-				}
-			}
-		}.start();
-		
 		// pour ne pas avoir à placer toutes les colonies/routes a chaque fois (à enlever)
 		//startGame(boardView, northPan, eastPan, southPan);
 		//early = false;
 		
+		if(game.getActualPlayer().isAI() && early) {
+			((AI) game.getActualPlayer()).earlyGame(game);
+			nextTurnButtonEarly.doClick();
+		}
+		 
 	}
 
 	public void nextTurn() {
@@ -324,22 +330,23 @@ public class GameView extends JPanel {
 		buyDevCardButton.setEnabled(game.getActualPlayer().canBuyDevCard(game) == 0);
 		nextTurnButton.setEnabled(false);
 		refreshInfos();
-		System.out.println("aaa");
 		if (game.getActualPlayer().isAI()) {
-			((AI) game.getActualPlayer()).midGame(game);
-			System.out.println(game.getHistory());
-			sleep(500);
-			nextTurn();
+			new Thread() {
+				public void run() {
+					((AI) game.getActualPlayer()).midGame(game);
+					try {
+						sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					nextTurn();
+				}
+			}.start();
 		}
 	}
 	
-	public void sleep(long s) {
-		try {
-			Thread.sleep(s);
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	public void sleep(long s) throws InterruptedException {
+		Thread.sleep(s);
 	}
 	
 	public void setEnabledActions(boolean enabled) { // appel de isBeforeDices() avant
@@ -355,8 +362,16 @@ public class GameView extends JPanel {
 		for (Player p : game.getPlayers())
 			if (p.getResources() > 7)
 				players.add(p);
-		if (!players.isEmpty())
-			new DiscardFrame(players, 0, players.get(0).getResources()/2);
+	//	if (!players.isEmpty())
+		//	new DiscardFrame(players, 0, players.get(0).getResources()/2);
+		for(Player p : players) {
+	        if (p instanceof AI) {
+	            ((AI) p).discard();
+	        }
+	        else {
+	        	new DiscardFrame(players, 1, p.getResources()/2);
+	        }
+		}
 	}
 
 	public void thiefAction() {
@@ -502,9 +517,7 @@ public class GameView extends JPanel {
 		this.add(southPan, BorderLayout.SOUTH);
 		dices.setVisible(true);
 		if (game.getActualPlayer().isAI()) {
-			((AI) game.getActualPlayer()).midGame(game);
-			nextTurnButton.setEnabled(true);
-			nextTurnButton.doClick();
+			nextTurn();
 		}
 	}
 	

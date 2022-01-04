@@ -221,6 +221,10 @@ public class Player {
 	}
 
 	public Resource stealResource(Player p) { // vole une ressource au joueur p
+		if(p.getResources() == 0) {
+			addHistory(this+" n'a pas pu voler de ressources à "+p);
+			return null;
+		}
 		Random r = new Random();
 		int x = r.nextInt(p.getResources());
 		Resource res = p.resources.get(x);

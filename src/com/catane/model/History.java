@@ -18,7 +18,8 @@ public class History extends ArrayList<String> {
 	public History cutHistory(int beginIndex) {
 		if(beginIndex < 0 || beginIndex >= size())
 			return new History();
-		return new History(this.subList(beginIndex, size()));
+		List<String> list = this.subList(beginIndex, size());
+		return new History(list);
 	}
 	
 	@Override

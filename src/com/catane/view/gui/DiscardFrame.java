@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.catane.model.AI;
 import com.catane.model.Player;
 import com.catane.model.Resource;
 
@@ -28,28 +27,6 @@ public class DiscardFrame extends JFrame {
         
         Player p = players.get(i);
         boolean visible = true;
-        
-        // Si c'est une AI
-        if (p instanceof AI) {
-        	visible = false;
-    		Thread th = new Thread() {
-    			public void run() {
-    				try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-    				dispose();
-    			}
-    		};
-    		
-    		th.start();
-            
-            ((AI) p).discard();
-            if (players.size() > i + 1)
-                new DiscardFrame(players, i + 1, players.get(i+1).getResources()/2);
-        }
 
         ResourcePanel res = new ResourcePanel(p);
         

@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.catane.model.cases.Case;
 import com.catane.model.cases.Colony;
+import com.catane.model.cases.MovableCase;
 import com.catane.model.cases.Port;
 import com.catane.model.cases.ResourceCase;
 import com.catane.model.cases.ResourceCase.Desert;
@@ -217,6 +218,27 @@ public class Board {
 	public Colony putColony(Player player, Colony colony, boolean early) { // colonie vide
 		int[] coord = getIndexesOf(colony);
 		return putColony(player, coord[0], coord[1], early);
+	}
+
+	public List<MovableCase> findFreeCase(MovableCase movableCase, Player player) {
+		List<MovableCase> list = new ArrayList<MovableCase>();
+		for (Case[] tab : cases)
+			for (Case c : tab) {
+				if (movableCase instanceof Colony && c instanceof Colony) {
+					if (player == null) { // On cherche une colonie libre
+						if (((Colony) c).isEmpty())
+							list.add((MovableCase) c);
+					}else { // On cherche une colonie pour poser une ville
+						if (((Colony) c).getPlayer().equals(player))
+							list.add((MovableCase) c);
+					}
+				}
+				if (movableCase instanceof Road && c instanceof Road) { // On cherche une route libre
+					if (((Road) c).isEmpty())
+							list.add((MovableCase) c);
+				}
+			}
+		return list;
 	}
 	
 	// Retourne la ville. Important uniquement pour la GUI.

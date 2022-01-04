@@ -154,8 +154,15 @@ public class AI extends Player {
 				board.putRoad(this, (Road)c, false);
 				break;
 			case 'd':
+				if(canBuyDevCard(game) == 0) {
+					getDevCard(game);
+				}
 				break;
 			case 'u':
+				DevelopmentCard card = getUsableDevCard();
+				if(card != null) {
+					useDev(game, card);
+				}
 				break;
 			case 'e':
 				ports = board.getPorts(this);
@@ -189,6 +196,14 @@ public class AI extends Player {
 				break;
 		}
 	}
+
+	public void discard() {
+		Collections.shuffle(getResourceList());
+		int n = getResourceList().size() / 2;
+		for (int i = 0; i < n; i++)
+			pay(getResourceList().get(0));
+		addHistory(this + " s'est défaussé de " + n + " cartes");
+	}
 	
 	public void thiefAction(Game game) {
 		Board board = game.getBoard();
@@ -203,7 +218,7 @@ public class AI extends Player {
 		if (players.isEmpty())
 			return;
 		Random r = new Random();
-		stealResource(players.get(r.nextInt(players.size() - 1)));
+		stealResource(players.get(r.nextInt(players.size()) - 1));
 	}
 	
 	public DevelopmentCard getUsableDevCard() {

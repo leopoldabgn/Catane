@@ -92,7 +92,7 @@ public class CLI {
 		for (Player player : game.getPlayers()) {
 			if (player instanceof AI) {
 
-				//((AI) player).earlyGame(game);
+				((AI) player).earlyGame(game);
 
 			}else {
 
@@ -500,17 +500,21 @@ public class CLI {
 		// plus des 7 cartes ressources : se défausser de la moitié inf (au choix)
 		for (Player p : game.getPlayers())
 			if (p.getResources() > 7) {
-				int nb = p.getResources()/2;
-				System.out.println(p.getName() + "doit se défausser de " + nb + " ressources");
-				while (nb != 0) {
-					PlayerView.printResources(p);
-					System.out.println("De quelle ressource voulez-vous vous défausser ? (encore " + nb + ")");
-					Resource res = askResource();
-					if (p.getResourceList().contains(res)) {
-						p.pay(res);
-						nb--;
-					}else {
-						System.out.println("Ressource insuffisante");
+				if (p instanceof AI) {
+					((AI) p).discard();
+				}else {
+					int nb = p.getResources()/2;
+					System.out.println(p.getName() + "doit se défausser de " + nb + " ressources");
+					while (nb != 0) {
+						PlayerView.printResources(p);
+						System.out.println("De quelle ressource voulez-vous vous défausser ? (encore " + nb + ")");
+						Resource res = askResource();
+						if (p.getResourceList().contains(res)) {
+							p.pay(res);
+							nb--;
+						}else {
+							System.out.println("Ressource insuffisante");
+						}
 					}
 				}
 			}

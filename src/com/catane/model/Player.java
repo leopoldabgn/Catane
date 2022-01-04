@@ -274,6 +274,10 @@ public class Player {
 		return false;
 	}
 
+	public boolean hasDrawDev() {
+		return hasDrawDev;
+	}
+
 	public void devCardUsed(DevelopmentCard card) {
 		DevelopmentCard toRemove = null;
 		for (DevelopmentCard c : developmentCards)

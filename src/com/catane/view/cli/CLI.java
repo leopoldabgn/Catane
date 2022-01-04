@@ -154,9 +154,8 @@ public class CLI {
 			char c;
 			int[] coord;
 			boolean error;
-			boolean devBought = false;
 			
-			devBought = dices();
+			dices();
 			
 			do {
 				PlayerView.printScore(player);
@@ -174,7 +173,7 @@ public class CLI {
 				//thiefAction();
 				//
 
-				c = askAction(devBought);
+				c = askAction(player.hasDrawDev());
 				System.out.println();
 				coord = null;
 				error = true;
@@ -244,7 +243,6 @@ public class CLI {
 									System.out.println("Il n'y a plus de carte développement dans le paquet !");
 								else {
 									player.getDevCard(game);
-									devBought = true;
 								}
 							}
 							error = false;
@@ -347,10 +345,9 @@ public class CLI {
 		}while (!hasUsed);
 	}
 
-	public boolean dices() {
+	public void dices() {
 		// Achat facultatif d'une carte de développement avant le lancement des dés
 		char c;
-		boolean devBought = false;
 		do {
 			System.out.println("Voulez-vous acheter une carte développement ? (o/n)");
 			String s = sc.nextLine();
@@ -370,7 +367,6 @@ public class CLI {
 					System.out.println("Il n'y a plus de carte developpement dans le paquet !");
 				else {
 					game.getActualPlayer().getDevCard(game);
-					devBought = true;
 				}
 			}
 		}
@@ -404,9 +400,6 @@ public class CLI {
 		}
 		else
 			board.gainResource(gain);
-
-		// retourne si oui ou non le joueur a acheté une carte développement
-		return devBought;
 	}
 	
 	public int askNumber() {

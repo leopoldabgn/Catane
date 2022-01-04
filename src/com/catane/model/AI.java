@@ -26,20 +26,6 @@ public class AI extends Player {
 		super(color);
 	}
 
-	public String getName() {
-		return "Ordi"+getNumber();
-	}
-
-	@Override
-	public String toString() {
-		return getName();
-	}
-
-	@Override
-	public void setName(String name) {
-
-	}
-
 	public void setCLI(CLI cli) {
 		this.cli = cli;
 	}
@@ -268,12 +254,12 @@ public class AI extends Player {
 		return (ResourceCase)list.get(0);
 	}
 	
+	// Retourne une ressource au hasard
 	public Resource askResource() {
-		Resource[] res = Resource.values();
-		Random r = new Random();
-		return res[r.nextInt(res.length)];
+		return askResource(null);
 	}
 
+	// Retourne une ressource au hasard differente de re
 	public Resource askResource(Resource re) {
 		Resource[] res = Resource.values();
 		Random r = new Random();
@@ -284,9 +270,18 @@ public class AI extends Player {
 		return res[rand];
 	}
 	
-	public int[] moveThief() {
-		int[] coord = new int[2];
-		return coord;
+	public String getName() {
+		return "Ordi"+getNumber();
+	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
+
+	@Override
+	public void setName(String name) {
+
 	}
 	
 }

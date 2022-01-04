@@ -83,7 +83,10 @@ public class AI extends Player {
 		int[] d = game.rollDices();
 		int gain = d[0] + d[1];
 		if (gain == 7) {
-			// discard();
+			if (cli != null)
+				cli.discard();
+			else
+				gameView.discard();
 			thiefAction(game);
 		}
 		else

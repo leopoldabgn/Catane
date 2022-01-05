@@ -19,6 +19,12 @@ import com.catane.model.Player;
 public class SettingsView extends JPanel {
 	private static final long serialVersionUID = 1L;
 
+    private JTextField j1 = new JTextField();
+    private JTextField j2 = new JTextField();
+    private JTextField j3 = new JTextField();
+    private JTextField j4 = new JTextField();
+    private NamePanel names = new NamePanel();
+
 	public SettingsView(GUI frame, Game game) {
         setBackground(Color.ORANGE);
         FlowLayout layout = new FlowLayout();
@@ -37,32 +43,11 @@ public class SettingsView extends JPanel {
         buttons.add(start);
         buttons.setOpaque(false);
 
-        // Noms des joueurs
-        JPanel names = new JPanel();
-        names.setLayout(new GridLayout(2, 4));
-        JTextField j1 = new JTextField();
         j1.setColumns(15);
-        JLabel l1 = new JLabel("Joueur 1");
-        JTextField j2 = new JTextField();
         j2.setColumns(15);
-        JLabel l2 = new JLabel("Joueur 2");
-        JTextField j3 = new JTextField();
         j3.setColumns(15);
-        JLabel l3 = new JLabel("Joueur 3");
-        JTextField j4 = new JTextField();
         j4.setColumns(15);
-        j4.setVisible(false);
-        JLabel l4 = new JLabel("Joueur 4");
-        l4.setVisible(false);
-        names.add(l1);
-        names.add(l2);
-        names.add(l3);
-        names.add(l4);
-        names.add(j1);
-        names.add(j2);
-        names.add(j3);
-        names.add(j4);
-        names.setOpaque(false);
+        names.refresh(3, 0);
 
         // Taille du plateau
         JLabel sizeLabel = new JLabel("Taille du plateau :");
@@ -85,15 +70,6 @@ public class SettingsView extends JPanel {
         JSlider nbJ = new JSlider(3, 4, 3);
         nbJ.setMajorTickSpacing(1);
         nbJ.setPaintLabels(true);
-        nbJ.addChangeListener(event -> {
-            if (nbJ.getValue() == 4) {
-                j4.setVisible(true);
-                l4.setVisible(true);
-            }else {
-                j4.setVisible(false);
-                l4.setVisible(false);
-            }
-        });
         JPanel joueurs = new JPanel();
         joueurs.setLayout(new BorderLayout());
         joueurs.add(labelJ, BorderLayout.NORTH);
@@ -106,63 +82,14 @@ public class SettingsView extends JPanel {
         nbIA.setMajorTickSpacing(1);
         nbIA.setPaintLabels(true);
         nbIA.addChangeListener(event -> {
-            switch (nbIA.getValue()) {
-                case 0: j1.setEditable(true);
-                        l1.setText("Joueur 1");
-                        j2.setEditable(true);
-                        l2.setText("Joueur 2");
-                        j3.setEditable(true);
-                        l3.setText("Joueur 3");
-                        j4.setEditable(true);
-                        l4.setText("Joueur 4");
-                        break;
-                case 1: j1.setEditable(true);
-                        l1.setText("Joueur 1");
-                        j2.setEditable(true);
-                        l2.setText("Joueur 2");
-                        j3.setEditable(true);
-                        l3.setText("Joueur 3");
-                        j4.setEditable(false);
-                        l4.setText("Ordi 4");
-                        j4.setText("");
-                        break;
-                case 2: j1.setEditable(true);
-                        l1.setText("Joueur 1");
-                        j2.setEditable(true);
-                        l2.setText("Joueur 2");
-                        j3.setEditable(false);
-                        l3.setText("Ordi 3");
-                        j3.setText("");
-                        j4.setEditable(false);
-                        l4.setText("Ordi 4");
-                        j4.setText("");
-                        break;
-                case 3: j1.setEditable(true);
-                        l1.setText("Joueur 1");
-                        j2.setEditable(false);
-                        l2.setText("Ordi 2");
-                        j2.setText("");
-                        j3.setEditable(false);
-                        l3.setText("Ordi 3");
-                        j3.setText("");
-                        j4.setEditable(false);
-                        l4.setText("Ordi 4");
-                        j4.setText("");
-                        break;
-                case 4: j1.setEditable(false);
-                        l1.setText("Ordi 1");
-                        j1.setText("");
-                        j2.setEditable(false);
-                        l2.setText("Ordi 2");
-                        j2.setText("");
-                        j3.setEditable(false);
-                        l3.setText("Ordi 3");
-                        j3.setText("");
-                        j4.setEditable(false);
-                        l4.setText("Ordi 4");
-                        j4.setText("");
-                    break;
-            }
+            names.refresh(nbJ.getValue(), nbIA.getValue());
+            names.revalidate();
+            names.repaint();
+        });
+        nbJ.addChangeListener(event -> {
+            names.refresh(nbJ.getValue(), nbIA.getValue());
+            names.revalidate();
+            names.repaint();
         });
         JPanel ia = new JPanel();
         ia.setLayout(new BorderLayout());
@@ -193,6 +120,55 @@ public class SettingsView extends JPanel {
             }
             frame.setGameViewPage(game);
         });
+    }
+
+    private class NamePanel extends JPanel {
+
+        public NamePanel() {
+            this.setOpaque(false);
+        }
+
+        public void refresh(int p, int ai) {
+            this.removeAll();
+            if (ai > p)
+                ai = p;
+            this.setLayout(new GridLayout(2, p));
+            for (int i = 0; i < p - ai; i++) {
+                int n = i + 1;
+                this.add(new JLabel("Joueur " + n));
+            }
+            for (int i = p - ai; i < p; i++) {
+                int n = i + 1;
+                this.add(new JLabel("Ordi" + n));
+            }
+            j1.setEditable(true);
+            j2.setEditable(true);
+            j3.setEditable(true);
+            j4.setEditable(true);
+            this.add(j1);
+            if (ai == p) {
+                j1.setText("");
+                j1.setEditable(false);
+            }
+            this.add(j2);
+            if (ai >= p - 1) {
+                j2.setText("");
+                j2.setEditable(false);
+            }
+            this.add(j3);
+            if (ai >= p - 2) {
+                j3.setText("");
+                j3.setEditable(false);
+            }
+            if (p == 4) {
+                this.add(j4);
+                if (ai != 0) {
+                    j4.setText("");
+                    j4.setEditable(false);
+                }
+            }
+        }
+
     }
     
 }

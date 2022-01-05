@@ -50,6 +50,8 @@ public class AI extends Player {
 		int beginIndexHist = game.getHistory().size();
 		rollDices(game);
 		
+		action(game);
+		
 		// Action de l'IA
 		return game.getHistory().cutHistory(beginIndexHist);
 	}
@@ -113,6 +115,7 @@ public class AI extends Player {
 		Random rd = new Random();
 		char[] actions = {'v', 'r', 'd', 'u', 'e'};
 		Case c;
+		
 		if (canAffordColony()) {
 			c = findColony(board, false);
 			if (c != null)

@@ -58,8 +58,6 @@ public class GameView extends JPanel {
 	private boolean isBeforeDices;
 	private boolean isDev = false;
 	private boolean isThiefActive = false;
-
-	private Thread AIThread;
 	
 	public void endThief() {
 		isThiefActive = false;

@@ -28,6 +28,7 @@ public class ColonyView extends MovableCaseView {
 	public void reset() {
 		if (colony.getPlayer() == null)
 			return;
+		this.isSelectable = false; // Cette case n'est plus selectionable
 		this.setOpaque(true);
 		this.setLayout(new BorderLayout());
 		this.setBackground(colony.getPlayer().getColor());
@@ -52,11 +53,7 @@ public class ColonyView extends MovableCaseView {
 					boardView.getGame().refreshLongestRoadOwner(); // On verifie si la personne qui detient la carte a change.
 					boardView.getGameView().getActionPanel().refreshOptions();
 					
-					this.isSelectable = false; // Cette case n'est plus selectionable
-					this.setOpaque(true);
-					this.setLayout(new BorderLayout());
-					this.setBackground(actualPlayer.getColor());
-					add(new IconPanel("colony_64", 32), BorderLayout.CENTER);
+					reset();
 				}
 			}
 			else {

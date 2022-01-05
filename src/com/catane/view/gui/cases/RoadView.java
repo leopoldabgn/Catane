@@ -56,16 +56,7 @@ public class RoadView extends MovableCaseView {
 			boardView.getGameView().getActionPanel().refreshOptions();
 			boardView.getGame().refreshLongestRoadOwner(); // On verifie si la personne qui detient la carte a change.
 			
-			this.isSelectable = false; // Cette case n'est plus selectionable
-			this.setOpaque(true);
-			this.setLayout(new BorderLayout());
-			this.setBackground(actualPlayer.getColor());
-			IconPanel iconPan;
-			if(road.isVertical())
-				iconPan = new IconPanel("road_v_64", 32);
-			else
-				iconPan = new IconPanel("road_h_64", 32, false);
-			add(iconPan, BorderLayout.CENTER);
+			reset();
 			
 			if (boardView.getGameView().isEarly() && boardView.getGame().getActualPlayer().getNbRoads() == 2)
 				boardView.getGameView().clear();

@@ -51,8 +51,7 @@ public class AI extends Player {
 		rollDices(game);
 		
 		action(game);
-		
-		// Action de l'IA
+
 		return game.getHistory().cutHistory(beginIndexHist);
 	}
 

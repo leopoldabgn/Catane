@@ -228,7 +228,7 @@ public class Board {
 						if (((Colony) c).isEmpty())
 							list.add(c);
 					}else { // On cherche une colonie pour poser une ville
-						if (((Colony) c).getPlayer().equals(player))
+						if (!((Colony) c).isEmpty() && ((Colony) c).getPlayer().equals(player))
 							list.add(c);
 					}
 				}

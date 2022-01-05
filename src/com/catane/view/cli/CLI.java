@@ -164,7 +164,12 @@ public class CLI {
 				PlayerView.printScore(player);
 				PlayerView.printResources(player);
 				PlayerView.printDevelopmentCards(player);
-				System.out.println("\n");
+				System.out.println();
+				if (game.longestRoadOwner() != null)
+					System.out.println("Route la plus longue : " + game.longestRoadOwner());
+				if (game.mostPowerfulArmyOwner() != null)
+					System.out.println("Armée la plus puissante : " + game.mostPowerfulArmyOwner());
+				System.out.println();
 				endRound = false;
 
 				// print mostPowerfulArmy et longestRoad ?
@@ -553,7 +558,11 @@ public class CLI {
 			}
 			p = askPlayer();
 		} while (!p.isIn(players));
-		System.out.println(game.getActualPlayer() + " vient de voler 1 " + game.getActualPlayer().stealResource(p) + " à " + p);
+		Resource r = game.getActualPlayer().stealResource(p);
+		if (r == null)
+			System.out.println(game.getActualPlayer() + "n'a pas pu voler de ressource à " + p);
+		else
+			System.out.println(game.getActualPlayer() + " vient de voler 1 " + r + " à " + p);
 	}
 	
 	public Resource askResource() {

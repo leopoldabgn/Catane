@@ -139,6 +139,7 @@ public class AI extends Player {
 					if(c == null)
 						break;
 					board.putRoad(this, (Road)c, false);
+					game.refreshLongestRoadOwner();
 					break;
 				case 'd':
 					if(canBuyDevCard(game) == 0) {

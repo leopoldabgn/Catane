@@ -17,6 +17,7 @@ La partie se termine lorsqu'un joueur atteint les dix points de victoire.
 Un joueurs peut gagner des points de victoire de différentes façons :
 - Une colonie rapporte un point
 - Une ville rapporte deux points
+- Une carte point de victoire rapport un point
 - Le joueur ayant la route continue la plus longue gagne deux points
 - Le joueur ayant l'armée la plus grande gagne deux points
 

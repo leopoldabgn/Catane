@@ -26,7 +26,7 @@ public class SettingsView extends JPanel {
     private NamePanel names = new NamePanel();
 
 	public SettingsView(GUI frame, Game game) {
-        setBackground(Color.ORANGE);
+        setBackground(new Color(241, 117, 63));
         FlowLayout layout = new FlowLayout();
         layout.setHgap(500);
         layout.setVgap(75);

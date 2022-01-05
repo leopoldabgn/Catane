@@ -1,17 +1,17 @@
 package com.catane.view.gui;
 
-import java.awt.Color;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
 
 import com.catane.model.Game;
 import com.catane.model.Player;
@@ -52,9 +52,11 @@ public class SettingsView extends JPanel {
         // Taille du plateau
         JLabel sizeLabel = new JLabel("Taille du plateau :");
         JRadioButton size4 = new JRadioButton("4x4");
+        size4.setOpaque(false);
         size4.setSelected(true);
         size4.setActionCommand("4");
         JRadioButton size6 = new JRadioButton("6x6");
+        size6.setOpaque(false);
         size6.setActionCommand("6");
         ButtonGroup selectSize = new ButtonGroup();
         selectSize.add(size4);
@@ -68,6 +70,7 @@ public class SettingsView extends JPanel {
         // Sélection du nombre de joueurs
         JLabel labelJ = new JLabel("Nombre de joueurs");
         JSlider nbJ = new JSlider(3, 4, 3);
+        nbJ.setOpaque(false);
         nbJ.setMajorTickSpacing(1);
         nbJ.setPaintLabels(true);
         JPanel joueurs = new JPanel();
@@ -79,6 +82,7 @@ public class SettingsView extends JPanel {
         // Sélection du nombre d'IA
         JLabel labelIA = new JLabel("Nombre d'IA");
         JSlider nbIA = new JSlider(0, 4, 0);
+        nbIA.setOpaque(false);
         nbIA.setMajorTickSpacing(1);
         nbIA.setPaintLabels(true);
         nbIA.addChangeListener(event -> {

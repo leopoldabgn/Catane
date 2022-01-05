@@ -34,7 +34,8 @@ public class AI extends Player {
 		this.gameView = gameView;
 	}
 
-	public void earlyGame(Game game) {
+	public History earlyGame(Game game) {
+		int beginIndexHist = game.getHistory().size();
 		Board board = game.getBoard();
 		for (int i = 0; i < 2; i++) {
 			Colony col = findColony(board, true);
@@ -44,6 +45,7 @@ public class AI extends Player {
 			Road road = findRoad(board, true);
 			board.putRoad(this, road, true);
 		}
+		return game.getHistory().cutHistory(beginIndexHist);
 	}
 
 	public History midGame(Game game) {
@@ -51,7 +53,7 @@ public class AI extends Player {
 		rollDices(game);
 
 		action(game);
-
+		refreshDevCards();
 		return game.getHistory().cutHistory(beginIndexHist);
 	}
 
@@ -59,6 +61,7 @@ public class AI extends Player {
 		if(wantsTo()) {
 			if(canBuyDevCard(game) == 0) {
 				getDevCard(game);
+				drawDev();
 			}
 		}
 		
@@ -142,8 +145,9 @@ public class AI extends Player {
 					game.refreshLongestRoadOwner();
 					break;
 				case 'd':
-					if(canBuyDevCard(game) == 0) {
+					if(canBuyDevCard(game) == 0 && !hasDrawDev()) {
 						getDevCard(game);
+						drawDev();
 					}
 					break;
 				case 'u':

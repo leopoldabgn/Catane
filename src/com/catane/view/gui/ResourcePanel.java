@@ -39,19 +39,19 @@ public class ResourcePanel extends JPanel {
 		this.removeAll();
 		Resource[] resources = Resource.values();
 		for(Resource res : resources) {
-			IconPanel iconPanel = new IconPanel(res);
+			ResIconPanel iconPanel = new ResIconPanel(res);
 			this.add(iconPanel);
 		}
 	}
 	
 	public void refresh() {
 		for(Component c : this.getComponents()) {
-			IconPanel pan = (IconPanel)c;
+			ResIconPanel pan = (ResIconPanel)c;
 			pan.refreshPan();
 		}
 	}
 	
-	private class IconPanel extends JPanel {
+	private class ResIconPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 
 		private int ICON_SIZE = 32;
@@ -59,7 +59,7 @@ public class ResourcePanel extends JPanel {
 		private JLabel number;
 		private Resource res;
 		
-		public IconPanel(Resource res) {
+		public ResIconPanel(Resource res) {
 			this.res = res;
 			if (game != null)
 				this.number = new JLabel(game.getActualPlayer().getResource(res)+"");

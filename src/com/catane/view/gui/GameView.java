@@ -336,12 +336,12 @@ public class GameView extends JPanel {
 		if (game.getActualPlayer().isAI()) {
 			new Thread() {
 				public void run() {
-					((AI) game.getActualPlayer()).midGame(game);
 					try {
-						sleep(500);
+						sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					((AI) game.getActualPlayer()).midGame(game);
 					nextTurn();
 				}
 			}.start();

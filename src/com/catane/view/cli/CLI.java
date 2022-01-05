@@ -93,7 +93,12 @@ public class CLI {
 		for (Player player : game.getPlayers()) {
 			if (player.isAI()) {
 
-				((AI) player).earlyGame(game);
+				try {
+					Thread.sleep(500);
+				}catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				System.out.println(player + " pose ses premières constructions\n" + ((AI) player).earlyGame(game));
 
 			}else {
 
@@ -146,11 +151,16 @@ public class CLI {
 	public void playRound() {
 		Player player = game.getActualPlayer();
 
-		// if (player.isAI()) {
+		if (player.isAI()) {
 
-		// // 	((AI) player).midGame(game);
+			try {
+				Thread.sleep(500);
+			}catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.out.println("Au tour de " + player + "\n" + ((AI) player).midGame(game));
 
-		// }else {
+		}else {
 		
 			System.out.println("Au tour de "+player+"\n");
 			boolean endRound;
@@ -277,7 +287,7 @@ public class CLI {
 				
 			} while(!endRound && !player.hasWon());
 
-		// }
+		}
 		
 	}
 

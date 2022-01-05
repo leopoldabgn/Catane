@@ -261,7 +261,7 @@ public class Player {
 		DevelopmentCard card = game.getDevCard();
 		if(card != null) { // Normalement il est impossible que card soit null !
 			developmentCards.add(card);
-			hasDrawDev = true;
+			drawDev();
 		}
 	}
 
@@ -282,6 +282,10 @@ public class Player {
 
 	public boolean hasDrawDev() {
 		return hasDrawDev;
+	}
+
+	public void drawDev() {
+		hasDrawDev = true;
 	}
 
 	public void devCardUsed(DevelopmentCard card) {

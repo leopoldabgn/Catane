@@ -334,7 +334,7 @@ public class Player {
 	}
 	
 	public boolean hasWon() {
-		return getScore() == Score.SCORE_WIN;
+		return getScore() >= Score.SCORE_WIN;
 	}
 	
 	public int getScore() {

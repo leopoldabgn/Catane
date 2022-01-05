@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
@@ -51,6 +52,7 @@ public class GameView extends JPanel {
 	private JPanel actions, actionsEarly;
 	private JPanel knight;
 	private HistoryView historyView;
+	private JScrollPane scroll;
 	
 	private int nbReady;
 	private boolean early = true;
@@ -102,7 +104,7 @@ public class GameView extends JPanel {
 		for(Player p : game.getPlayers()) {
 			if(++count == 3)
 				continue;
-			for(int i=0;i<20;i++) {
+			for(int i=0;i<2;i++) {
 				p.gainResource(Resource.CLAY);
 				p.gainResource(Resource.WHEAT);
 				p.gainResource(Resource.STONE);
@@ -237,8 +239,8 @@ public class GameView extends JPanel {
 		tmp.setLayout(new GridLayout(2, 1));
 
 		tmp.add(border);
-		
-		JScrollPane scroll = new JScrollPane(historyView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+
+		scroll = new JScrollPane(historyView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		tmp.add(scroll);
 		
@@ -317,7 +319,7 @@ public class GameView extends JPanel {
 	public void nextTurn() {
 		game.getActualPlayer().refreshDevCards();
 		if(!game.getActualPlayer().hasWon())
-			game.nextRound();
+		game.nextRound();
 		dicesLbl.setText("");
 		actionPanel.setButtonsEnabled(false);
 		refreshTradeButton(true);
@@ -365,16 +367,18 @@ public class GameView extends JPanel {
 				players.add(p);
 	//	if (!players.isEmpty())
 		//	new DiscardFrame(players, 0, players.get(0).getResources()/2);
-		int i=0;
+		List<Player> ai = new ArrayList<Player>();
 		for(Player p : players) {
 	        if (p instanceof AI) {
-	            ((AI) p).discard();
+	            ai.add(p);
 	        }
-	        else {
-	        	new DiscardFrame(players, i, p.getResources()/2);
-	        }
-	        i++;
 		}
+		players.removeAll(ai);
+		for (Player a : ai)
+			((AI) a).discard();
+		if (players.isEmpty())
+			return;
+		new DiscardFrame(players, 0, players.get(0).getResources() / 2);
 	}
 
 	public void thiefAction() {
@@ -519,6 +523,7 @@ public class GameView extends JPanel {
 		this.add(eastPan, BorderLayout.EAST);
 		this.add(southPan, BorderLayout.SOUTH);
 		dices.setVisible(true);
+		clear();
 		if (game.getActualPlayer().isAI()) {
 			((AI)game.getActualPlayer()).midGame(game);
 			nextTurn();
@@ -617,6 +622,8 @@ public class GameView extends JPanel {
 		refreshActions();
 		refreshKnight();
 		historyView.refresh();
+		JScrollBar bar = scroll.getVerticalScrollBar();
+		bar.setValue(bar.getMaximum());
 	}
 	
 	public void refreshDecks() {

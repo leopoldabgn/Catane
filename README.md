@@ -30,6 +30,8 @@ Chaque joueur peut, en fonction de ses ressources :
 - Acheter ou utiliser une carte de développement
 - Effectuer du commerce 
 
+Il est maintenant temps de lancer votre première partie des colons de Catane !
+
 
 ## Lancer le jeu
 

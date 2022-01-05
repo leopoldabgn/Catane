@@ -17,6 +17,7 @@ public class ColonyView extends MovableCaseView {
 	public ColonyView(BoardView boardView, Colony colony) {
 		super(boardView, colony); // Utilisé uniquement pour les cases vides.
 		this.colony = colony;
+		reset();
 	}
 	
 	@Override
@@ -26,8 +27,15 @@ public class ColonyView extends MovableCaseView {
 
 	@Override
 	public void reset() {
-		if (colony.getPlayer() == null)
+		if (colony == null)
 			return;
+		if(isEmpty()) {
+			this.removeAll();
+			return;
+		}
+		if(getComponentCount() > 0)
+			return;
+		
 		this.isSelectable = false; // Cette case n'est plus selectionable
 		this.setOpaque(true);
 		this.setLayout(new BorderLayout());
@@ -52,7 +60,6 @@ public class ColonyView extends MovableCaseView {
 					boardView.putColony(actualPlayer, this, boardView.getGameView().isEarly());
 					boardView.getGame().refreshLongestRoadOwner(); // On verifie si la personne qui detient la carte a change.
 					boardView.getGameView().getActionPanel().refreshOptions();
-					
 					reset();
 				}
 			}

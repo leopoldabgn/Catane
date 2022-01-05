@@ -17,6 +17,7 @@ public class RoadView extends MovableCaseView {
 	public RoadView(BoardView boardView, Road road) {
 		super(boardView, road);
 		this.road = road;
+		reset();
 	}
 	
 	@Override
@@ -26,8 +27,16 @@ public class RoadView extends MovableCaseView {
 
 	@Override
 	public void reset() {
-		if (road.getPlayer() == null)
+		if (road == null)
 			return;
+		if(isEmpty()) {
+			this.removeAll();
+			return;
+		}
+		if(getComponentCount() > 0)
+			return;
+		
+		this.removeAll();
 		this.isSelectable = false; // Cette case n'est plus selectionable
 		this.setOpaque(true);
 		this.setLayout(new BorderLayout());

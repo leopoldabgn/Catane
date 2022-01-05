@@ -3,7 +3,6 @@ package com.catane.view.gui.cases;
 import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
 
-import com.catane.model.Player;
 import com.catane.model.cases.Town;
 import com.catane.view.gui.BoardView;
 import com.catane.view.gui.IconPanel;

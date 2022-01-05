@@ -49,7 +49,7 @@ public class AI extends Player {
 	public History midGame(Game game) {
 		int beginIndexHist = game.getHistory().size();
 		rollDices(game);
-		
+
 		action(game);
 
 		return game.getHistory().cutHistory(beginIndexHist);

@@ -50,7 +50,7 @@ public class AI extends Player {
 		int beginIndexHist = game.getHistory().size();
 		rollDices(game);
 		
-		// Action de l'IA
+		action(game);
 		return game.getHistory().cutHistory(beginIndexHist);
 	}
 

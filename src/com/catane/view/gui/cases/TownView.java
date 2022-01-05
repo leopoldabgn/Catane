@@ -21,8 +21,7 @@ public class TownView extends ColonyView {
 		/////
 		this.setOpaque(true);
 		this.setLayout(new BorderLayout());
-		Player actualPlayer = boardView.getActualPlayer();
-		this.setBackground(actualPlayer.getColor());
+		this.setBackground(town.getPlayer().getColor());
 		add(new IconPanel("town_64", 32), BorderLayout.CENTER);
 	}
 	

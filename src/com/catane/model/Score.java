@@ -23,7 +23,7 @@ public class Score {
 		points += player.getNbColonies();
 		points += player.getNbTowns()*2;
 		points += player.getNbVictoryCards();
-		
+		points+=7;
 		return points;
 	}
 	

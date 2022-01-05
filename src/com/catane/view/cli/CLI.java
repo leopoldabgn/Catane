@@ -74,7 +74,7 @@ public class CLI {
 		actualPlayer.gainResource(Resource.WHEAT);
 		actualPlayer.gainResource(Resource.WOOD);
 		actualPlayer.gainResource(Resource.SHEEP);
-		*/
+		
 
 		for(int i=0;i<2;i++) {
 			game.getActualPlayer().gainResource(Resource.WHEAT);
@@ -84,6 +84,7 @@ public class CLI {
 			game.getActualPlayer().gainResource(Resource.CLAY);
 			game.getActualPlayer().gainResource(Resource.WOOD);
 		}
+		*/
 		
 		BoardView.display(board);
 		boolean endGame = game.endGame();
@@ -136,7 +137,7 @@ public class CLI {
 				game.nextRound();
 		}
 		
-		System.out.println(game.getActualPlayer()+" a gagné !"); // J2 non !!! C est J1 !!
+		System.out.println(game.getActualPlayer()+" a gagné !");
 		
 		closeScan();
 

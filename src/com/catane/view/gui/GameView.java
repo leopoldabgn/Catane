@@ -97,6 +97,7 @@ public class GameView extends JPanel {
 	public GameView(GUI gui, Game game) {
 		this.gui = gui;
 		this.game = game;
+		
 		int count = 0;
 		for(Player p : game.getPlayers()) {
 			if(++count == 3)
@@ -109,6 +110,7 @@ public class GameView extends JPanel {
 				p.gainResource(Resource.WOOD);
 			}
 		}
+		
 
 		// Programmation AI
 		for (Player p : game.getPlayers())
@@ -135,7 +137,7 @@ public class GameView extends JPanel {
 				// Le mettre apres le refreshOptions ! Important !
 				if(value == 7) {
 					setEnabledActions(false);
-					// discard();
+					discard();
 					thiefAction();
 				}
 
@@ -296,16 +298,10 @@ public class GameView extends JPanel {
 		this.add(boardView, BorderLayout.CENTER);
 		this.add(actionsEarly, BorderLayout.EAST);
 		
-		// Tu mets ça en commentaire si tu veux continuer ton travail (à enlever)
-		////////////////
-		// this.add(eastPan, BorderLayout.EAST);
-		// this.add(southPan, BorderLayout.SOUTH);
-		////////////////
-		
 		// Lancer earlyGame (à décommenter)
 		this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
-		 setSelectedColony(true);
-		 refreshActionsEarly();
+		setSelectedColony(true);
+		refreshActionsEarly();
 
 		// pour ne pas avoir à placer toutes les colonies/routes a chaque fois (à enlever)
 		//startGame(boardView, northPan, eastPan, southPan);
@@ -320,7 +316,8 @@ public class GameView extends JPanel {
 
 	public void nextTurn() {
 		game.getActualPlayer().refreshDevCards();
-		game.nextRound();
+		if(!game.getActualPlayer().hasWon())
+			game.nextRound();
 		dicesLbl.setText("");
 		actionPanel.setButtonsEnabled(false);
 		refreshTradeButton(true);
@@ -329,6 +326,11 @@ public class GameView extends JPanel {
 		nextTurnButton.setEnabled(false);
 		refreshInfos();
 		boardView.reset();
+		if(game.getActualPlayer().hasWon()) {
+			System.out.println(game.getActualPlayer().getScore());
+			displayVictoryFrame();
+			return;
+		}
 		if (game.getActualPlayer().isAI()) {
 			new Thread() {
 				public void run() {
@@ -363,13 +365,15 @@ public class GameView extends JPanel {
 				players.add(p);
 	//	if (!players.isEmpty())
 		//	new DiscardFrame(players, 0, players.get(0).getResources()/2);
+		int i=0;
 		for(Player p : players) {
 	        if (p instanceof AI) {
 	            ((AI) p).discard();
 	        }
 	        else {
-	        	new DiscardFrame(players, 1, p.getResources()/2);
+	        	new DiscardFrame(players, i, p.getResources()/2);
 	        }
+	        i++;
 		}
 	}
 
@@ -516,6 +520,7 @@ public class GameView extends JPanel {
 		this.add(southPan, BorderLayout.SOUTH);
 		dices.setVisible(true);
 		if (game.getActualPlayer().isAI()) {
+			((AI)game.getActualPlayer()).midGame(game);
 			nextTurn();
 		}
 	}

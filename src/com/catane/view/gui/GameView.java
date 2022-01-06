@@ -317,6 +317,7 @@ public class GameView extends JPanel {
 		if (game.getActualPlayer().isAI()) {
 			new Thread() {
 				public void run() {
+					setEnabledActions(false);
 					try {
 						sleep(1000);
 					} catch (InterruptedException e) {
@@ -372,7 +373,7 @@ public class GameView extends JPanel {
 		List<Colony> col = game.getBoard().getColonies(coord[0], coord[1]);
 		List<Player> players = new ArrayList<Player>();
 		for (Colony c : col)
-			if (game.getActualPlayer() != c.getPlayer() && !players.contains(c.getPlayer()))
+			if (game.getActualPlayer() != c.getPlayer() && !players.contains(c.getPlayer()) && c.getPlayer().getResources() != 0)
 				players.add(c.getPlayer());
 		if (players.isEmpty()) {
 			endThief();

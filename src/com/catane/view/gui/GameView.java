@@ -25,7 +25,6 @@ import javax.swing.border.EmptyBorder;
 import com.catane.model.AI;
 import com.catane.model.Game;
 import com.catane.model.Player;
-import com.catane.model.Resource;
 import com.catane.model.cards.Progress;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.Port;
@@ -318,6 +317,7 @@ public class GameView extends JPanel {
 		if (game.getActualPlayer().isAI()) {
 			new Thread() {
 				public void run() {
+					setEnabledActions(false);
 					try {
 						sleep(1000);
 					} catch (InterruptedException e) {

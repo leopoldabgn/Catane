@@ -11,10 +11,10 @@ import com.catane.model.Player;
 import com.catane.model.Resource;
 import com.catane.model.cards.Knight;
 import com.catane.model.cards.Progress;
+import com.catane.model.cases.Case;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.Port;
 import com.catane.model.cases.ResourceCase;
-import com.catane.view.gui.BoardView;
 
 public class CLI {
 
@@ -86,7 +86,7 @@ public class CLI {
 		}
 		*/
 		
-		BoardView.display(board);
+		displayBoard(board);
 		boolean endGame = game.endGame();
 
 		// Mise en place du jeu
@@ -136,7 +136,7 @@ public class CLI {
 		
 		while(!endGame) {
 			playRound();
-			BoardView.display(board);
+			displayBoard(board);
 			endGame = game.endGame();
 			if(!endGame)
 				game.nextRound();
@@ -291,6 +291,110 @@ public class CLI {
 		
 	}
 
+	public static void displayBoard(Board board) {
+		int size = board.getSize(), maxSize = 15;
+		int size2 = size-2; // size sans les ports.
+		
+		char letter = 'A';
+		System.out.print(" ".repeat(18));
+		for(int i=0;i<size2;i++) {
+			String s = "" + letter;
+			if (i % 2 == 0)
+				System.out.print(addSpaces(s, 4));
+			else
+				System.out.print(addSpaces(s, 15));
+			System.out.print(" ");
+			letter++;
+		}
+		System.out.println();
+		
+		int line = 1;
+		if(size2%2 == 0)
+			line += (size2/2)*5;
+		else
+			line += (size2/2+1)*5;
+		line += (size2/2)*(maxSize+1);
+
+		boolean b = false;
+		
+		for(int j=0;j<size;j++) {
+
+			if (j == 0 || j == size - 1) {
+				System.out.print(" ");
+				for (int i = 0; i < size; i++) {
+					Case p = board.getCase(i, j);
+					if (p instanceof Port) {
+						System.out.print("|" + addSpaces(((Port) p).toString(), maxSize) + "|");
+					}else {
+						if (i % 2 == 0)
+							System.out.print(" ".repeat(17));
+						else
+							System.out.print(" ".repeat(4));
+					}
+				}
+				System.out.println();
+			}else {
+				System.out.print(j);
+				if(j < 10)
+					System.out.print(" ");
+				Case p = board.getCase(0, j);
+				if (p instanceof Port) {
+					System.out.print(addSpaces(((Port) p).toString(), maxSize));
+				}else {
+					System.out.print(" ".repeat(maxSize));
+				}
+				System.out.print("|");
+				
+				for(int i=1;i<size-1;i++) {
+					Case c = board.getCase(i, j);
+					if(c instanceof ResourceCase) {
+						System.out.print(addSpaces(c.toString(), maxSize));
+					}
+					else {
+						if(i%2 == 1)
+							System.out.print(" "+c+" ");
+						else
+							System.out.print(addSpaces(c.toString(), maxSize));
+					}
+					System.out.print("|");
+				}
+				
+				p = board.getCase(size - 1, j);
+				if (p instanceof Port)
+					System.out.println(addSpaces(((Port) p).toString(), maxSize) + " " + j);
+				else
+					System.out.println(" ".repeat(16)+j);
+			}
+			if (j != size - 1) {
+				if (j == size - 2 || j == 0)
+					System.out.print("  " + " ".repeat(maxSize) +"-".repeat(line));
+				else {
+					if (b)
+						System.out.print("  " + "-".repeat(maxSize) +"-".repeat(line));
+					else
+						System.out.print("  " + " ".repeat(maxSize) +"-".repeat(line) + "-".repeat(maxSize));
+				}
+				if (j % 2 == 0)
+					b = !b;
+			}
+			System.out.println();
+		}
+		
+	}
+	
+	// Si besoin, on rajoute des espaces avant et apres pour que
+	// la taille de la string soit egale a newSize
+	private static String addSpaces(String str, int newSize) {
+		if(str.length() >= newSize)
+			return str;
+		int reste = newSize-str.length();
+		int before = reste/2, after = reste/2;
+		if(reste%2 == 1)
+			before += 1;
+		str = " ".repeat(before)+str+" ".repeat(after);
+		return str;
+	}
+	
 	public void useDev(Player player) {
 		char c = ' ';
 		boolean hasUsed = true;

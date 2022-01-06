@@ -215,8 +215,6 @@ public class BoardView extends JPanel {
 	}
 	
 	public void reset() {
-		//this.removeAll();
-		//casesView = generateAndAddCases();
 		for (CaseView[] tab : casesView)
 			for (CaseView c : tab) {
 				if (c instanceof MovableCaseView)

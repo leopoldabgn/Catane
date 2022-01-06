@@ -84,9 +84,6 @@ public class PlayerFrame extends JFrame {
 
     private class PlayerPanel extends JPanel {
 
-        /**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		private Player player;
         private boolean isSelected = false;

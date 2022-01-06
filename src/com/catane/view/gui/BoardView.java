@@ -176,7 +176,6 @@ public class BoardView extends JPanel {
 		if(coord == null)
 			return;
 		casesView[coord[0]][coord[1]] = newCase;
-		//newCase.mouseEntered(null); // Sinon le contour s'enleve meme si on a la souris dessus.
 		this.remove(c);
 		this.add(newCase, coord[1]*board.getSize()+coord[0]); // coord[1] -> line, coord[0] -> column.
 		this.revalidate();

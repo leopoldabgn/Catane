@@ -123,71 +123,68 @@ public class AI extends Player {
 			if (c != null)
 				board.putColony(this, (Colony) c, false);
 		}
-		//for (int i = 0; i < 2; i++) {
-			int rand = rd.nextInt(actions.length);
-			List<Port> ports;
-			switch(actions[rand]) {
-				case 'v':
-					if(!canAffordTown())
-						break;
-					c = findTown(board);
-					if(c == null)
-						break;
-					board.putTown(this, (Colony)c);
+		int rand = rd.nextInt(actions.length);
+		List<Port> ports;
+		switch(actions[rand]) {
+			case 'v':
+				if(!canAffordTown())
 					break;
-				case 'r':
-					if(!canAffordRoad())
-						break;
-					c = findRoad(board, false);
-					if(c == null)
-						break;
-					board.putRoad(this, (Road)c, false);
-					game.refreshLongestRoadOwner();
+				c = findTown(board);
+				if(c == null)
 					break;
-				case 'd':
-					if(canBuyDevCard(game) == 0 && !hasDrawDev()) {
-						getDevCard(game);
-						drawDev();
-					}
+				board.putTown(this, (Colony)c);
+				break;
+			case 'r':
+				if(!canAffordRoad())
 					break;
-				case 'u':
-					DevelopmentCard card = getUsableDevCard();
-					if(card != null) {
-						useDev(game, card);
-					}
+				c = findRoad(board, false);
+				if(c == null)
 					break;
-				case 'e':
-					ports = board.getPorts(this);
-					List<Resource> resources;
-					Resource r;
-					if(ports.isEmpty()) {
-						resources = getResourcesByNb(4);
-						if(!resources.isEmpty()) {
-							r = resources.get(0);
-							trade(r, 4, askResource(r));
-						}
-					}
-					else {
-						for(Port p : ports) {
-							if(p.getResourceType() == null) {
-								resources = getResourcesByNb(p.getResourcesToGive());
-								if(resources.isEmpty())
-									continue;
-								r = resources.get(0);
-							}
-							else {
-								int nb = getResource(p.getResourceType());
-								if(nb < p.getResourcesToGive())
-									continue;
-								r = p.getResourceType();
-							}
-
-							trade(r, p.getResourcesToGive(), askResource(r));
-						}
-					}
-					break;
+				board.putRoad(this, (Road)c, false);
+				game.refreshLongestRoadOwner();
+				break;
+			case 'd':
+				if(canBuyDevCard(game) == 0 && !hasDrawDev()) {
+					getDevCard(game);
+					drawDev();
 				}
-		//}
+				break;
+			case 'u':
+				DevelopmentCard card = getUsableDevCard();
+				if(card != null) {
+					useDev(game, card);
+				}
+				break;
+			case 'e':
+				ports = board.getPorts(this);
+				List<Resource> resources;
+				Resource r;
+				if(ports.isEmpty()) {
+					resources = getResourcesByNb(4);
+					if(!resources.isEmpty()) {
+						r = resources.get(0);
+						trade(r, 4, askResource(r));
+					}
+				}
+				else {
+					for(Port p : ports) {
+						if(p.getResourceType() == null) {
+							resources = getResourcesByNb(p.getResourcesToGive());
+							if(resources.isEmpty())
+								continue;
+							r = resources.get(0);
+						}
+						else {
+							int nb = getResource(p.getResourceType());
+							if(nb < p.getResourcesToGive())
+								continue;
+							r = p.getResourceType();
+						}
+						trade(r, p.getResourcesToGive(), askResource(r));
+					}
+				}
+				break;
+		}
 	}
 
 	public void discard() {

@@ -81,7 +81,7 @@ public class CardView extends JPanel {
 							int ans = JOptionPane.showOptionDialog(null,
 										"Voulez-vous utiliser votre carte "+devCard.toString().toLowerCase()+" ?",
 										devCard.toString(),
-										JOptionPane.YES_NO_OPTION, // même en appuyant sur non ca ouvre la fenêtre
+										JOptionPane.YES_NO_OPTION,
 										JOptionPane.QUESTION_MESSAGE,
 										null,
 										new String[] {"Oui", "Non"}, "Oui");

@@ -41,9 +41,7 @@ public class ResourceCaseView extends CaseView {
 	
 	public void setupView() {
 		setBorder(BorderFactory.createBevelBorder(EtchedBorder.RAISED));
-		//setBorder(BorderFactory.createBevelBorder(EtchedBorder.RAISED));
 		setBackground(getColor());
-		//setBackground(Color.WHITE);
 		setLayout(new BorderLayout());
 		
 		mainPan = new JPanel();
@@ -65,7 +63,6 @@ public class ResourceCaseView extends CaseView {
 			mainPan.add(tmp);
 		}
 		else if(!(this instanceof DesertView)) { // Le desert n'a pas de chiffre.
-			//add(new Circle(getNumber(), (int)getPreferredSize().getWidth()/5), gbc); // 80
 			JLabel lbl = new JLabel(getNumber()+"", SwingConstants.CENTER);
 			lbl.setFont(new Font("Verdana", Font.BOLD, 13));
 			if(getNumber() == 6 || getNumber() == 8)
@@ -145,7 +142,7 @@ public class ResourceCaseView extends CaseView {
 		private static final long serialVersionUID = 1L;
 
 		public ForestView(BoardView board, Forest forest) {
-			super(board, forest); // Dark green*
+			super(board, forest); // Dark green
 		}
 
 		

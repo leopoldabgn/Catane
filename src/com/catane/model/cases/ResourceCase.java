@@ -78,7 +78,7 @@ public class ResourceCase extends Case {
 	public static class Forest extends ResourceCase {
 
 		public Forest(int number) {
-			super(number, new Color(0, 125, 33)); // Dark green*
+			super(number, new Color(0, 125, 33)); // Color = Dark green
 		}
 
 		@Override
@@ -135,7 +135,7 @@ public class ResourceCase extends Case {
 	public static class Pre extends ResourceCase {
 		
 		public Pre(int number) {
-			super(number, new Color(166, 255, 163)); // Light green
+			super(number, new Color(166, 255, 163)); // Color = Light green
 		}
 
 		@Override

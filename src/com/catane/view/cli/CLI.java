@@ -67,24 +67,6 @@ public class CLI {
 			else
 				((AI) player).setCLI(this);
 		}
-
-		//ajout des ressources pour test
-		/*
-		actualPlayer.gainResource(Resource.CLAY);
-		actualPlayer.gainResource(Resource.WHEAT);
-		actualPlayer.gainResource(Resource.WOOD);
-		actualPlayer.gainResource(Resource.SHEEP);
-		
-
-		for(int i=0;i<2;i++) {
-			game.getActualPlayer().gainResource(Resource.WHEAT);
-			game.getActualPlayer().gainResource(Resource.STONE);
-			game.getActualPlayer().gainResource(Resource.WOOL);
-			game.getActualPlayer().gainResource(Resource.STONE);
-			game.getActualPlayer().gainResource(Resource.CLAY);
-			game.getActualPlayer().gainResource(Resource.WOOD);
-		}
-		*/
 		
 		displayBoard(board);
 		boolean endGame = game.endGame();
@@ -130,6 +112,7 @@ public class CLI {
 				}
 			}
 
+			displayBoard(board);
 			System.out.println();
 
 		}
@@ -159,6 +142,8 @@ public class CLI {
 				e.printStackTrace();
 			}
 			System.out.println("Au tour de " + player + "\n" + ((AI) player).midGame(game));
+			PlayerView.printScore(player);
+			System.out.println();
 
 		}else {
 		
@@ -181,15 +166,6 @@ public class CLI {
 					System.out.println("Armée la plus puissante : " + game.mostPowerfulArmyOwner());
 				System.out.println();
 				endRound = false;
-
-				// print mostPowerfulArmy et longestRoad ?
-
-				// A enlever
-				// System.out.println("éteindre ? (o/n)");
-				// if (sc.nextLine().charAt(0) == 'o')
-				// 	System.exit(0);
-				//thiefAction();
-				//
 
 				c = askAction(player.hasDrawDev());
 				System.out.println();

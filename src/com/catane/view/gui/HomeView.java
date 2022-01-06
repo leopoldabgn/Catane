@@ -67,9 +67,6 @@ public class HomeView extends JPanel {
         pan2.add(pan3);
         
         add(pan);
-        
-        // Placement des boutons
-       
     }
 
     public void paintComponent(Graphics g) {

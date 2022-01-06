@@ -51,7 +51,6 @@ public class DeckView extends JPanel {
 			cards.add(cardView);
 			add(cardView);
 			cardView.setLocation(x, upSpace);
-			//x += CardView.WIDTH-15;
 			x += getCoeff();
 		}
 		revalidate();

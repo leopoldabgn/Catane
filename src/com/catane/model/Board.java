@@ -34,7 +34,7 @@ public class Board {
 
 	private Case[][] generateAndAddCases() {
 		Case[][] cases = new Case[size][size];
-		Port[] ports = getPorts(getRealSize()); // On recupere la vrai taille du plateau (4x4, 5x5, 6x6(max))
+		Port[] ports = getPorts(getRealSize()); // On recupere la vrai taille du plateau (4x4, 6x6)
 		int index = 0;
 		
 		// On ajoute les ports.
@@ -51,7 +51,8 @@ public class Board {
 			cases[j][size-1] = ports[index++];
 		
 		index = 0;
-		// Ajout des cases de ressource
+
+		// Ajout des cases ressource
 		for (int i = 2; i < size-2; i += 2){
 			for (int j = 2; j < size-2; j += 2) {
 				cases[i][j] = createCase(index++);
@@ -89,7 +90,7 @@ public class Board {
 				new Port(2, Resource.WOOD), new Port(2, Resource.WHEAT),
 				new Port(3), new Port(2, Resource.STONE), new Port(2, Resource.CLAY)};
 		}
-		else { // Pour 5x5 ou 6x6 (max)
+		else { // Pour 6x6
 			return new Port[] {new Port(2, Resource.WOOL), new Port(3), new Port(3),
 				   new Port(2, Resource.WOOD), new Port(2, Resource.WHEAT),
 				   new Port(3), new Port(2, Resource.STONE), new Port(2, Resource.CLAY),
@@ -426,93 +427,6 @@ public class Board {
 		visited[j][i] = false;
 		
 		return max+1;
-		
-		/*
-		if(vertical) {
-			if(isValidColony(player, visited, j, i+1)) {
-				visited[j][i+1] = true;
-				if(isValidRoad(player, visited, j, i+2)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j, i+2));
-				}
-				if(isValidRoad(player, visited, j-1, i+1)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j-1, i+1));
-				}
-				if(isValidRoad(player, visited, j+1, i+1)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j+1, i+1));
-				}
-				visited[j][i+1] = false;
-			}
-			if(isValidColony(player, visited, j, i-1)) {
-				visited[j][i-1] = true;
-				if(isValidRoad(player, visited, j, i-2)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j, i-2));
-				}
-				if(isValidRoad(player, visited, j-1, i-1)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j-1, i-1));
-				}
-				if(isValidRoad(player, visited, j+1, i-1)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j+1, i-1));
-				}
-				visited[j][i-1] = false;
-			}
-		}
-		else {
-			if(isValidColony(player, visited, j+1, i)) {
-				visited[j+1][i] = true;
-				if(isValidRoad(player, visited, j+2, i)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j+2, i));
-				}
-				if(isValidRoad(player, visited, j+1, i-1)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j+1, i-1));
-				}
-				if(isValidRoad(player, visited, j+1, i+1)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j+1, i+1));
-				}
-				visited[j+1][i] = false;
-			}
-			if(isValidColony(player, visited, j-1, i)) {
-				visited[j-1][i] = true;
-				if(isValidRoad(player, visited, j-2, i)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j-2, i));
-				}
-				if(isValidRoad(player, visited, j-1, i-1)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j-1, i-1));
-				}
-				if(isValidRoad(player, visited, j-1, i+1)) {
-					max = Math.max(max, getLongestRoadAux(player, visited, j-1, i+1));
-				}
-				visited[j-1][i] = false;
-			}
-		}
-		*/
-		
-		/*
-		 	int max = 0;
-			boolean vertical = false;
-			int[] colonies, roads;
-			if(vertical) {
-				colonies = new int[] {0, 1};
-				roads = new int[] {0, 2, -1, 1, 1, 1};
-			}
-			else {
-				colonies = new int[] {1, 0};
-				roads = new int[] {2, 0, 1, -1, 1, 1};
-			}
-			
-			int m = 1, f = 1; // Varie entre 1 et -1
-			
-			for(int l=0;l<2;l++) {
-				System.out.println(m*colonies[0]+" "+f*colonies[1]);
-				for(int k=0;k<roads.length;k+=2) {
-					System.out.println(m*roads[k]+" "+f*roads[k+1]);
-				}
-				if(vertical)
-					f *= -1;
-				else
-					m *= -1;
-			}
-		 */
-		
 	}
 	
 	/////////////////////////////////////////////////////

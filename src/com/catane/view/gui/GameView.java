@@ -99,20 +99,6 @@ public class GameView extends JPanel {
 	public GameView(GUI gui, Game game) {
 		this.gui = gui;
 		this.game = game;
-		
-		int count = 0;
-		for(Player p : game.getPlayers()) {
-			if(++count == 3)
-				continue;
-			for(int i=0;i<2;i++) {
-				p.gainResource(Resource.CLAY);
-				p.gainResource(Resource.WHEAT);
-				p.gainResource(Resource.STONE);
-				p.gainResource(Resource.WOOL);
-				p.gainResource(Resource.WOOD);
-			}
-		}
-		
 
 		// Programmation AI
 		for (Player p : game.getPlayers())
@@ -300,14 +286,10 @@ public class GameView extends JPanel {
 		this.add(boardView, BorderLayout.CENTER);
 		this.add(actionsEarly, BorderLayout.EAST);
 		
-		// Lancer earlyGame (à décommenter)
+		// Lancer earlyGame
 		this.add(nextTurnButtonEarly, BorderLayout.SOUTH);
 		setSelectedColony(true);
 		refreshActionsEarly();
-
-		// pour ne pas avoir à placer toutes les colonies/routes a chaque fois (à enlever)
-		//startGame(boardView, northPan, eastPan, southPan);
-		//early = false;
 		
 		if(game.getActualPlayer().isAI() && early) {
 			((AI) game.getActualPlayer()).earlyGame(game);
@@ -365,8 +347,6 @@ public class GameView extends JPanel {
 		for (Player p : game.getPlayers())
 			if (p.getResources() > 7)
 				players.add(p);
-	//	if (!players.isEmpty())
-		//	new DiscardFrame(players, 0, players.get(0).getResources()/2);
 		List<Player> ai = new ArrayList<Player>();
 		for(Player p : players) {
 	        if (p instanceof AI) {

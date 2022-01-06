@@ -141,8 +141,9 @@ public class CLI {
 			}catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Au tour de " + player + "\n" + ((AI) player).midGame(game));
+			System.out.println("Au tour de " + player);
 			PlayerView.printScore(player);
+			System.out.println(((AI) player).midGame(game));
 			System.out.println();
 
 		}else {

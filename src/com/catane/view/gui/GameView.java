@@ -503,7 +503,6 @@ public class GameView extends JPanel {
 		this.add(eastPan, BorderLayout.EAST);
 		this.add(southPan, BorderLayout.SOUTH);
 		dices.setVisible(true);
-		tradeButton.setEnabled(false);
 		buyDevCardButton.setEnabled(false);
 		clear();
 		if (game.getActualPlayer().isAI()) {

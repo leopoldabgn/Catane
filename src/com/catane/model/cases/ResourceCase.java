@@ -20,7 +20,7 @@ public class ResourceCase extends Case {
 	
 	@Override
 	public String toString() {
-		String str = getClass().getSimpleName();
+		String str = "";
 		if(!(this instanceof Desert))
 			str += " "+number;
 		if(hasThief())
@@ -52,7 +52,7 @@ public class ResourceCase extends Case {
 		
 		@Override
 		public String toString() {
-			return "Désert";
+			return "Désert" + super.toString();
 		}
 	}
 	
@@ -71,7 +71,7 @@ public class ResourceCase extends Case {
 		
 		@Override
 		public String toString() {
-			return "Champ";
+			return "Champ" + super.toString();
 		}
 	}
 	
@@ -90,7 +90,7 @@ public class ResourceCase extends Case {
 		
 		@Override
 		public String toString() {
-			return "Forêt";
+			return "Forêt" + super.toString();
 		}
 	}
 	
@@ -109,7 +109,7 @@ public class ResourceCase extends Case {
 		
 		@Override
 		public String toString() {
-			return "Colline";
+			return "Colline" + super.toString();
 		}
 	}
 	
@@ -128,7 +128,7 @@ public class ResourceCase extends Case {
 		
 		@Override
 		public String toString() {
-			return "Montagne";
+			return "Montagne" + super.toString();
 		}
 	}
 	
@@ -147,7 +147,7 @@ public class ResourceCase extends Case {
 		
 		@Override
 		public String toString() {
-			return "Pré";
+			return "Pré" + super.toString();
 		}
 	}
 	

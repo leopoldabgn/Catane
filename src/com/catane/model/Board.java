@@ -426,8 +426,6 @@ public class Board {
 		
 		visited[j][i] = false;
 		
-		return max+1;
-		
 		// La boucle for au dessus procède de la façon suivante :
 		/*
 		if(vertical) {
@@ -515,6 +513,19 @@ public class Board {
 			}
 		 */
 		
+		return max+1;
+	}
+	
+	public List<Town> getTowns() {
+		List<Town> towns = new ArrayList<Town>();
+		for(Case[] ca : cases) {
+			for(Case c : ca) {
+				if(c instanceof Town) {
+					towns.add((Town)c);
+				}
+			}
+		}
+		return towns;
 	}
 	
 	/////////////////////////////////////////////////////

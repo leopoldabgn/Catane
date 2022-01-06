@@ -25,7 +25,6 @@ import javax.swing.border.EmptyBorder;
 import com.catane.model.AI;
 import com.catane.model.Game;
 import com.catane.model.Player;
-import com.catane.model.Resource;
 import com.catane.model.cards.Progress;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.Port;
@@ -99,7 +98,7 @@ public class GameView extends JPanel {
 	public GameView(GUI gui, Game game) {
 		this.gui = gui;
 		this.game = game;
-
+		
 		// Programmation AI
 		for (Player p : game.getPlayers())
 			if (p instanceof AI)

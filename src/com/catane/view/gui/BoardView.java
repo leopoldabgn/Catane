@@ -2,6 +2,7 @@ package com.catane.view.gui;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -215,15 +216,26 @@ public class BoardView extends JPanel {
 	}
 	
 	public void reset() {
-		//this.removeAll();
-		//casesView = generateAndAddCases();
-		for (CaseView[] tab : casesView)
+		List<Town> towns = board.getTowns();
+		for (CaseView[] tab : casesView) {
 			for (CaseView c : tab) {
 				if (c instanceof MovableCaseView)
 					((MovableCaseView) c).reset();
 				if (c instanceof ResourceCaseView)
 					((ResourceCaseView) c).refreshThiefView();
+				if(c instanceof ColonyView && !towns.isEmpty()) {
+					int[] coordCol = getIndexesOf(c);
+					for(Town t : towns) {
+						int[] coordTown = board.getIndexesOf(t);
+						if(coordTown[0] == coordCol[0] && coordTown[1] == coordCol[1]) {
+							TownView townView = new TownView(this, t); // On cree une case TownView pour la nouvelle ville.
+							replaceCaseBy((ColonyView)c, townView); // On remplace : colonyView -> townView.
+							break;
+						}
+					}
+				}
 			}
+		}
 		revalidate();
 		repaint();
 	}

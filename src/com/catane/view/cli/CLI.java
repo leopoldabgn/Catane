@@ -653,7 +653,6 @@ public class CLI {
 	}
 	
 	public void thiefAction() {
-		if (demo) return;
 
 		// déplacer le voleur sur une case différente
 		System.out.println("Choisissez les nouvelles coordonnées du voleur");

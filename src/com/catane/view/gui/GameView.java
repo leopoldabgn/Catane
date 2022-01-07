@@ -379,8 +379,6 @@ public class GameView extends JPanel {
 	}
 
 	public void thiefAction() {
-		if(demo)
-			return;
 		// Déplacer le voleur
 		isThiefActive = true;
 		boardView.changeSelectableCases(new ResourceCaseView(), null, false);

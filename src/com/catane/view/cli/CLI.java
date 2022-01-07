@@ -422,6 +422,7 @@ public class CLI {
 					if (!player.canUseDev(new Knight())) {
 						System.out.println("Vous n'avez pas de carte de développement 'Chevalier' utilisable");
 						hasUsed = false;
+						break;
 					}
 					game.refreshMostPowerfulArmyOwner();
 					thiefAction();
@@ -430,6 +431,7 @@ public class CLI {
 					if (!player.canUseDev(Progress.MONOPOLY)) {
 						System.out.println("Vous n'avez pas de carte de développement 'Monopole'");
 						hasUsed = false;
+						break;
 					}
 					// Demander quelle ressource
 					System.out.println("De quelle ressource voulez-vous avoir le monopole ?");
@@ -441,6 +443,7 @@ public class CLI {
 					if (!player.canUseDev(Progress.ROAD_CONSTRUCTION)) {
 						System.out.println("Vous n'avez pas de carte de développement 'Construction de route'");
 						hasUsed = false;
+						break;
 					}
 					int[] coord = new int[2];
 					for (int i = 0; i < 2; i++) {
@@ -462,6 +465,7 @@ public class CLI {
 					if (!player.canUseDev(Progress.INVENTION)) {
 						System.out.println("Vous n'avez pas de carte de développement 'Invention'");
 						hasUsed = false;
+						break;
 					}
 					System.out.println("Choisissez la première ressource");
 					Resource r1 = askResource();

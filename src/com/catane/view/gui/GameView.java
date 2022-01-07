@@ -332,7 +332,6 @@ public class GameView extends JPanel {
 		refreshInfos();
 		boardView.reset();
 		if(game.getActualPlayer().hasWon()) {
-			System.out.println(game.getActualPlayer().getScore());
 			displayVictoryFrame();
 			return;
 		}

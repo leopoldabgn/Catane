@@ -25,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 import com.catane.model.AI;
 import com.catane.model.Game;
 import com.catane.model.Player;
+import com.catane.model.Resource;
 import com.catane.model.cards.Progress;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.Port;
@@ -59,6 +60,8 @@ public class GameView extends JPanel {
 	private boolean isBeforeDices;
 	private boolean isDev = false;
 	private boolean isThiefActive = false;
+	
+	private boolean demo;
 	
 	public void endThief() {
 		isThiefActive = false;
@@ -95,9 +98,21 @@ public class GameView extends JPanel {
 		actionPanel.group.clearSelection();
 	}
 	
-	public GameView(GUI gui, Game game) {
+	public GameView(GUI gui, Game game, boolean demo) {
 		this.gui = gui;
 		this.game = game;
+		this.demo = demo;
+		
+		if(demo) {
+			int count = 0;
+			for(Player p : game.getPlayers()) {
+				if(count++ == 2)
+					break;
+				for(int i=0;i<20;i++)
+					for(Resource r : Resource.values())
+						p.gainResource(r);
+			}
+		}
 		
 		// Programmation AI
 		for (Player p : game.getPlayers())
@@ -122,7 +137,7 @@ public class GameView extends JPanel {
 				nextTurnButton.setEnabled(true);
 				
 				// Le mettre apres le refreshOptions ! Important !
-				if(value == 7) {
+				if(value == 7 && !demo) {
 					setEnabledActions(false);
 					discard();
 					thiefAction();
@@ -343,6 +358,8 @@ public class GameView extends JPanel {
 	}
 
 	public void discard() {
+		if(demo)
+			return;
 		List<Player> players = new ArrayList<Player>();
 		for (Player p : game.getPlayers())
 			if (p.getResources() > 7)
@@ -362,6 +379,8 @@ public class GameView extends JPanel {
 	}
 
 	public void thiefAction() {
+		if(demo)
+			return;
 		// Déplacer le voleur
 		isThiefActive = true;
 		boardView.changeSelectableCases(new ResourceCaseView(), null, false);

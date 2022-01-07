@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -24,12 +25,13 @@ public class SettingsView extends JPanel {
     private JTextField j3 = new JTextField();
     private JTextField j4 = new JTextField();
     private NamePanel names = new NamePanel();
-
+    private JCheckBox demo = new JCheckBox("Demo");
+    
 	public SettingsView(GUI frame, Game game) {
         setBackground(new Color(241, 117, 63));
         FlowLayout layout = new FlowLayout();
         layout.setHgap(500);
-        layout.setVgap(75);
+        layout.setVgap(60);
         setLayout(layout);
 
         // Boutons
@@ -101,10 +103,13 @@ public class SettingsView extends JPanel {
         ia.add(nbIA, BorderLayout.SOUTH);
         ia.setOpaque(false);
         
+        demo.setOpaque(false);
+        
         add(sizePanel);
         add(joueurs);
         add(ia);
         add(names);
+        add(demo);
         add(buttons);
 
         start.addActionListener(event -> {
@@ -122,13 +127,14 @@ public class SettingsView extends JPanel {
                             break;
                 }
             }
-            frame.setGameViewPage(game);
+            frame.setGameViewPage(game, demo.isSelected());
         });
     }
 
     private class NamePanel extends JPanel {
+		private static final long serialVersionUID = 1L;
 
-        public NamePanel() {
+		public NamePanel() {
             this.setOpaque(false);
         }
 

@@ -32,13 +32,13 @@ public class GUI extends JFrame {
 	
 	// Theoriquement, on appelle ça depuis la page où on creer les
 	// joueurs puis on lance
-	public void setGameViewPage(Game game) {
+	public void setGameViewPage(Game game, boolean demo) {
 		this.getContentPane().removeAll();
 		this.setMinimumSize(new Dimension(width, height));
 		this.setSize(new Dimension(width, height));
 		this.setResizable(true);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.getContentPane().add(new GameView(this, game));
+		this.getContentPane().add(new GameView(this, game, demo));
 		revalidate();
 	}
 

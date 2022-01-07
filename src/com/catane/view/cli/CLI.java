@@ -21,6 +21,7 @@ public class CLI {
 	private Game game;
 	private Board board;
 	private Scanner sc;
+	private boolean demo;
 	
 	public CLI() {
 		this.game = new Game();
@@ -33,6 +34,19 @@ public class CLI {
 
 		System.out.println("Bonjour,");
 		System.out.println("Vous vous apprêtez à lancer une partie des Colons de Catane.\n");
+
+		// Démo
+		char c = ' ';
+		do {
+			System.out.println("Voulez-vous jouer en mode démo ? (o/n)");
+			String s = sc.nextLine();
+			if (s.isEmpty())
+				c = ' ';
+			else
+				c = s.charAt(0);
+		}while (c != 'o' && c != 'n');
+		demo = c == 'o';
+		
 		int size;
 		do {
 			System.out.println("Combien de case doit comporter le plateau ? (4x4 -> 4, 6x6 -> 6)");
@@ -54,17 +68,28 @@ public class CLI {
 		game.setupPlayers(p, Math.min(ia, p));
 		System.out.println();
 
+		int count = 0;
 		for (Player player : game.getPlayers()) {
-			if (!(player instanceof AI))
-				do {
-					System.out.println("Choisissez un nom pour " + player.getName());
-					String s = sc.nextLine();
-					if (!s.isBlank()) {
-						player.setName(s);
+			if (!(player instanceof AI)) {
+				if (demo) { // Mode démo, on ne demande pas les noms pour gagner du temps et on donne des ressources
+					player.setName("");
+					if (count++ == 2)
 						break;
+					for (Resource r : Resource.values()) {
+						for (int i = 0; i < 20; i++)
+							player.gainResource(r);
 					}
-				}while (true);
-			else
+				}else { // Mode de jeu original
+					do {
+						System.out.println("Choisissez un nom pour " + player.getName());
+						String s = sc.nextLine();
+						if (!s.isBlank()) {
+							player.setName(s);
+							break;
+						}
+					}while (true);
+				}
+			}else
 				((AI) player).setCLI(this);
 		}
 		
@@ -72,49 +97,51 @@ public class CLI {
 		boolean endGame = game.endGame();
 
 		// Mise en place du jeu
-		for (Player player : game.getPlayers()) {
-			if (player.isAI()) {
+		if (!demo) {
+			for (Player player : game.getPlayers()) {
+				if (player.isAI()) {
 
-				try {
-					Thread.sleep(500);
-				}catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				System.out.println(player + " pose ses premières constructions\n" + ((AI) player).earlyGame(game));
-
-			}else {
-
-				System.out.println(player + " doit choisir où poser ses premières constructions");
-				int[] coord = new int[2];
-				for (int i = 0; i < 2; i++) {
-					int n = i + 1;
-					System.out.println("Où voulez-vous poser la colonie " + n);
-					int ans = 2;
-					while (ans != 0) {
-						coord = askCoord(); // Coordonnees forcement dans le plateau.
-						ans = player.canBuildColonyOn(board, coord, true);
-						if(ans != 0)
-							System.out.println("Vous ne pouvez pas poser de route ici !");
+					try {
+						Thread.sleep(500);
+					}catch (InterruptedException e) {
+						e.printStackTrace();
 					}
-					board.putColony(player, coord[0], coord[1], true);
-				}
-				for (int i = 0; i < 2; i++) {
-					int n = i + 1;
-					System.out.println("Où voulez-vous poser la route " + n);
-					int ans = 2;	
-					while (ans == 2) {
-						coord = askCoord(); // Coordonnees forcement dans le plateau.
-						ans = player.canBuildRoadOn(board, coord, true);
-						if(ans == 2)
-							System.out.println("Vous ne pouvez pas poser de route ici !");
+					System.out.println(player + " pose ses premières constructions\n" + ((AI) player).earlyGame(game));
+
+				}else {
+
+					System.out.println(player + " doit choisir où poser ses premières constructions");
+					int[] coord = new int[2];
+					for (int i = 0; i < 2; i++) {
+						int n = i + 1;
+						System.out.println("Où voulez-vous poser la colonie " + n);
+						int ans = 2;
+						while (ans != 0) {
+							coord = askCoord(); // Coordonnees forcement dans le plateau.
+							ans = player.canBuildColonyOn(board, coord, true);
+							if(ans != 0)
+								System.out.println("Vous ne pouvez pas poser de route ici !");
+						}
+						board.putColony(player, coord[0], coord[1], true);
 					}
-					board.putRoad(player, coord[0], coord[1], true);
+					for (int i = 0; i < 2; i++) {
+						int n = i + 1;
+						System.out.println("Où voulez-vous poser la route " + n);
+						int ans = 2;	
+						while (ans == 2) {
+							coord = askCoord(); // Coordonnees forcement dans le plateau.
+							ans = player.canBuildRoadOn(board, coord, true);
+							if(ans == 2)
+								System.out.println("Vous ne pouvez pas poser de route ici !");
+						}
+						board.putRoad(player, coord[0], coord[1], true);
+					}
 				}
+
+				displayBoard(board);
+				System.out.println();
+
 			}
-
-			displayBoard(board);
-			System.out.println();
-
 		}
 		
 		while(!endGame) {
@@ -261,6 +288,8 @@ public class CLI {
 					System.out.println();
 					
 				} while(error && !player.hasWon());
+
+				displayBoard(board);
 				
 			} while(!endRound && !player.hasWon());
 
@@ -493,7 +522,7 @@ public class CLI {
 		int[] d = game.rollDices();
 		int gain = d[0] + d[1];
 		System.out.println("\nLes dés ont été lancés\nLe résultat est : "+gain+"\n");
-		if (gain == 7) {
+		if (gain == 7 && !demo) {
 			discard();
 			thiefAction();
 		}
@@ -593,6 +622,8 @@ public class CLI {
 	}
 
 	public void discard() {
+		if (demo) return;
+
 		System.out.println("Le voleur est déclenché");
 		// plus des 7 cartes ressources : se défausser de la moitié inf (au choix)
 		for (Player p : game.getPlayers())
@@ -618,6 +649,7 @@ public class CLI {
 	}
 	
 	public void thiefAction() {
+		if (demo) return;
 
 		// déplacer le voleur sur une case différente
 		System.out.println("Choisissez les nouvelles coordonnées du voleur");

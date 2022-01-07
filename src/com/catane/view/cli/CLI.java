@@ -687,7 +687,7 @@ public class CLI {
 				System.out.println(p2.getName());
 			}
 			p = askPlayer();
-		} while (!p.isIn(players));
+		} while (p != null && !p.isIn(players));
 		Resource r = game.getActualPlayer().stealResource(p);
 		if (r == null)
 			System.out.println(game.getActualPlayer() + "n'a pas pu voler de ressource à " + p);

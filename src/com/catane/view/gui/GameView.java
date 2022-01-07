@@ -26,6 +26,7 @@ import com.catane.model.AI;
 import com.catane.model.Game;
 import com.catane.model.Player;
 import com.catane.model.Resource;
+import com.catane.model.cards.Knight;
 import com.catane.model.cards.Progress;
 import com.catane.model.cases.Colony;
 import com.catane.model.cases.Port;
@@ -112,6 +113,12 @@ public class GameView extends JPanel {
 					for(Resource r : Resource.values())
 						p.gainResource(r);
 			}
+			game.getActualPlayer().getDevCards().add(new Knight());
+			game.getActualPlayer().getDevCards().add(new Knight());
+			game.getActualPlayer().getDevCards().add(new Knight());
+			game.getActualPlayer().getDevCards().add(Progress.INVENTION);
+			game.getActualPlayer().getDevCards().add(Progress.MONOPOLY);
+			game.getActualPlayer().getDevCards().add(Progress.ROAD_CONSTRUCTION);
 		}
 		
 		// Programmation AI

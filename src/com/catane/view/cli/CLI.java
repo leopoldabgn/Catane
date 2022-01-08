@@ -108,7 +108,7 @@ public class CLI {
 					}
 					System.out.println(player + " pose ses premières constructions\n" + ((AI) player).earlyGame(game));
 
-				}else {
+				} else {
 
 					System.out.println(player + " doit choisir où poser ses premières constructions");
 					int[] coord = new int[2];
@@ -142,6 +142,21 @@ public class CLI {
 				System.out.println();
 
 			}
+		}
+		else {
+			for (Player player : game.getPlayers()) {
+				if (player.isAI()) {
+					try {
+						Thread.sleep(500);
+					}catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					System.out.println(player + " pose ses premières constructions\n" + ((AI) player).earlyGame(game));
+	
+				}
+			}
+			displayBoard(board);
+			System.out.println();
 		}
 		
 		while(!endGame) {
@@ -530,8 +545,9 @@ public class CLI {
 		int[] d = game.rollDices();
 		int gain = d[0] + d[1];
 		System.out.println("\nLes dés ont été lancés\nLe résultat est : "+gain+"\n");
-		if (gain == 7 && !demo) {
-			discard();
+		if (gain == 7) {
+			if(!demo)
+				discard();
 			thiefAction();
 		}
 		else
@@ -687,7 +703,7 @@ public class CLI {
 				System.out.println(p2.getName());
 			}
 			p = askPlayer();
-		} while (p != null && !p.isIn(players));
+		} while (p == null || !p.isIn(players));
 		Resource r = game.getActualPlayer().stealResource(p);
 		if (r == null)
 			System.out.println(game.getActualPlayer() + "n'a pas pu voler de ressource à " + p);

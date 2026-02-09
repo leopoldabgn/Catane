@@ -36,15 +36,20 @@ Il est maintenant temps de lancer votre première partie des colons de Catane !
 
 ## Lancer le jeu
 
-Tout d'abord, vous devez donner des permissions au fichier run.sh pour
-que le programme puisse s'executer:
-	chmod u+x ./run.sh
+Tout d'abord, vous devez donner des permissions au fichier run.sh pour que le programme puisse s'executer:
+```bash
+chmod u+x ./run.sh
+```
 
 Ensuite, pour lancer le jeu :
-- Terminal : ./run.sh
-
-- GUI : ./run.sh gui
-
+- CLI :
+```bash
+./run.sh
+```
+- GUI :
+```bash
+./run.sh gui
+```
 
 ## Auteurs du projet
 
